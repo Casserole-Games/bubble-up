@@ -28,14 +28,11 @@ namespace Assets._Scripts
         void Start()
         {
             remainingSoap = 100f;
-
-            bubble = CreateBubble(GetNextColor());
-            bubble.layer = LayerMask.NameToLayer("ShooterBubble");
         }
 
         void Update()
         {
-            if ((bubble == null || transform.childCount < 1) && remainingSoap > 0)
+            if ((bubble == null || transform.childCount < 2) && remainingSoap > 0)
             {
                 bubble = CreateBubble(GetNextColor());
                 bubble.layer = LayerMask.NameToLayer("ShooterBubble");
@@ -69,7 +66,9 @@ namespace Assets._Scripts
             remainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
             if (bubble.transform.localScale.x < GameParameters.Instance.MaximalBubbleSize)
             {
-                bubble.transform.localScale += GameParameters.Instance.BubbleInflationRate * Time.deltaTime * Vector3.one;
+                var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime;
+                bubble.transform.position += (diff * Vector3.down) / 2;
+                bubble.transform.localScale += diff * Vector3.one;
                 bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
             }
 
@@ -80,8 +79,9 @@ namespace Assets._Scripts
         private GameObject CreateBubble(Color color)
         {
             Debug.Log("Creating bubble with color " + color.ToString());
-            GameObject newBubble = Instantiate(BubblePrefab, transform.position, Quaternion.identity);
-            newBubble.transform.parent = transform;
+            Vector2 newPos = new(0, GameParameters.Instance.InitialBubbleSize / -2);
+            GameObject newBubble = Instantiate(BubblePrefab, newPos, Quaternion.identity);
+            newBubble.transform.SetParent(transform, false);
             newBubble.GetComponent<Rigidbody2D>().simulated = false;
             newBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             newBubble.transform.localScale = new Vector2(GameParameters.Instance.InitialBubbleSize, GameParameters.Instance.InitialBubbleSize);
