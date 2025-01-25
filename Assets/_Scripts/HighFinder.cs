@@ -35,11 +35,11 @@ namespace Assets._Scripts
                 float screenPos = Camera.main.WorldToScreenPoint(child.position + child.localScale / 2).y;
                 if (screenPos > globalHighestY)
                 {
-                    globalHighestY = screenPos;
+                    globalHighestY = Math.Min(screenPos, Screen.height);
                 }
                 if (screenPos > localHighestY)
                 {
-                    localHighestY = screenPos;
+                    localHighestY = Math.Min(screenPos, Screen.height);
                 }
             }
 
