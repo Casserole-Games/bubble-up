@@ -14,6 +14,7 @@ namespace Assets._Scripts
             {
                 GameObject left = new("Left");
                 left.transform.parent = boundaries.transform;
+                left.layer = LayerMask.NameToLayer("Boundaries");
                 BoxCollider2D collider = left.AddComponent<BoxCollider2D>();
 
                 // set height to match the size of the screen
@@ -25,6 +26,7 @@ namespace Assets._Scripts
             {
                 GameObject right = new("Right");
                 right.transform.parent = boundaries.transform;
+                right.layer = LayerMask.NameToLayer("Boundaries");
                 BoxCollider2D collider = right.AddComponent<BoxCollider2D>();
 
                 // set height to match the size of the screen
@@ -36,6 +38,7 @@ namespace Assets._Scripts
             {
                 GameObject bottom = new("Bottom");
                 bottom.transform.parent = boundaries.transform;
+                bottom.layer = LayerMask.NameToLayer("Boundaries");
                 BoxCollider2D collider = bottom.AddComponent<BoxCollider2D>();
 
                 // set width to match the size of the screen
