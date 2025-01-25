@@ -21,7 +21,15 @@ namespace Assets._Scripts
         internal void SetColor(Color color)
         {
             this.color = color;
-            this.GetComponent<SpriteRenderer>().color = color;
+            GetComponent<SpriteRenderer>().color = color;
+        }
+        
+        private void Merge(Bubble otherBubble)
+        {
+            Debug.Log("Merged!");
+
+            transform.localScale += otherBubble.transform.localScale; 
+            Destroy(otherBubble.gameObject);
         }
     }
 }
