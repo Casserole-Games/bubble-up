@@ -10,7 +10,7 @@ namespace Assets._Scripts
     internal class GameParameters : MonoBehaviour
     {
         [Header("Bubbles")]
-        public float BubbleSpawnerSpeed = 1.0f;
+        public float GunLatSpeed = 1.0f;
         public float InitialBubbleSize = 1.0f;
         public float MaximalBubbleSize = 8.0f;
         public float SoapFlowRate = 0.1f;

@@ -905,17 +905,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56e6e9c176b54334483df0ab04400712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BubbleSpawnerSpeed: 5
+  GunLatSpeed: 1.75
   InitialBubbleSize: 0.25
   MaximalBubbleSize: 8
-  SoapFlowRate: 5
-  BubbleColorsCount: 3
+  SoapFlowRate: 4
+  BubbleColorsCount: 4
   BubbleInflationRate: 1.25
-  BubbleFlowSpeed: 1.5
+  BubbleFlowSpeed: 1.15
   SpikeCount: 6
   MinSpikeLength: 0.3
   MaxSpikeLength: 0.6
-  MinSpikeCountOnEachSide: 2
+  MinSpikeCountOnEachSide: 1
 --- !u!4 &403856389
 Transform:
   m_ObjectHideFlags: 0
