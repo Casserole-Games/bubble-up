@@ -56,9 +56,10 @@ namespace Assets._Scripts
                 rb.simulated = true;
                 rb.constraints = RigidbodyConstraints2D.None;
 
-                float speed = GameParameters.Instance.BubbleFlowSpeed;
-                speed *= (float)Math.Sqrt(rb.mass);
-                rb.AddForce(new Vector2(speed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
+                float baseSpeed = GameParameters.Instance.BubbleFlowSpeed;
+                baseSpeed *= (float)Math.Sqrt(rb.mass);
+                float appliedSpeed = Mathf.Min(baseSpeed, GameParameters.Instance.GunLatSpeed);
+                rb.AddForce(new Vector2(appliedSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
             }
         }
 

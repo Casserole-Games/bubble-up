@@ -6,7 +6,7 @@ namespace Assets._Scripts
     {
         internal static float direction = 1;
 
-        private float speed => GameParameters.Instance.BubbleSpawnerSpeed * direction;
+        private float speed => GameParameters.Instance.GunLatSpeed * direction;
         public float leftLimit = -5f;
         public float rightLimit = 5f;
 
