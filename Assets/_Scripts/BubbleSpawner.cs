@@ -9,10 +9,10 @@ namespace Assets._Scripts
         public GameObject BubbleContainer;
 
         private GameObject bubble;
-
-        private float initialBubbleSize;
+        private float bubbleInflationRate => GameParameters.Instance.BubbleInflationRate;
+        private float soapFlowRate => GameParameters.Instance.SoapFlowRate;
+        private float initialBubbleSize => GameParameters.Instance.InitialBubbleSize;
         private float inflatedBubbleSize;
-        private float soapFlowRate;
 
         List<Color> bubbleColors;
 
@@ -21,16 +21,10 @@ namespace Assets._Scripts
         public KeyCode keyToDetect = KeyCode.Space;
 
         private bool isKeyPressed = false;
-        private float bubbleInflationRate;
-        private int colorCount;
+        private int colorCount => GameParameters.Instance.BubbleColorsCount;
 
         void Start()
         {
-            initialBubbleSize = GameParameters.Instance.InitialBubbleSize;
-            soapFlowRate = GameParameters.Instance.SoapFlowRate;
-            bubbleInflationRate = GameParameters.Instance.BubbleInflationRate;
-            colorCount = GameParameters.Instance.BubbleColorsCount;
-
             remainingSoap = 100f;
 
             bubbleColors = new List<Color>()
@@ -47,7 +41,6 @@ namespace Assets._Scripts
             inflatedBubbleSize = initialBubbleSize;
             bubble = CreateBubble(GetNextColor(), inflatedBubbleSize);
         }
-
 
         void Update()
         {
