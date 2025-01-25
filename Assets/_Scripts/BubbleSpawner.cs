@@ -10,11 +10,11 @@ namespace Assets._Scripts
         public GameObject BubbleContainer;
         public KeyCode keyToDetect = KeyCode.Space;
 
+        internal static float remainingSoap;
+
         private const float localScaleBase = 0.25f;
 
         private GameObject bubble;
-
-        private float remainingSoap;
 
         private static List<Color> colors = new List<Color>(){
             Color.red,

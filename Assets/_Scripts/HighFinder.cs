@@ -12,6 +12,7 @@ namespace Assets._Scripts
         public GameObject LocalHighLine;
 
         internal float globalHighestY = 0;
+        internal float localHighestY = 0;
 
         public void Awake()
         {
@@ -23,7 +24,6 @@ namespace Assets._Scripts
 
         void FixedUpdate()
         {
-            float localHighestY = 0;
             foreach (Transform child in BubbleContainer.transform)
             {
                 Bubble bubble = child.GetComponent<Bubble>();
@@ -57,7 +57,6 @@ namespace Assets._Scripts
 
             UIManager.Instance.SetBestScore((int)globalHighestY);
             UIManager.Instance.SetCurrentScore((int)localHighestY);
-
         }
     }
 }

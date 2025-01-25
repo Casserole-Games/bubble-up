@@ -59,7 +59,6 @@ namespace Assets._Scripts
 
         void OnCollisionEnter2D(Collision2D col)
         {
-            Debug.Log("Collision ! " + col.gameObject.tag);
             if (col.gameObject.CompareTag("Boundary"))
             {
                 OnBoundaryCollision?.Invoke(col.gameObject);
