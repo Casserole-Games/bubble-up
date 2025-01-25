@@ -11,12 +11,25 @@ namespace Assets._Scripts
         private GameObject bubble;
 
         private float initialBubbleSize;
+        private float inflatedBubbleSize;
+        private float soapFlowRate;
 
         List<Color> bubbleColors;
+
+        private float remainingSoap;
+
+        public KeyCode keyToDetect = KeyCode.Space;
+
+        private bool isKeyPressed = false;
+        private float bubbleInflationRate;
 
         void Start()
         {
             initialBubbleSize = GameParameters.Instance.InitialBubbleSize;
+            soapFlowRate = GameParameters.Instance.SoapFlowRate;
+            bubbleInflationRate = GameParameters.Instance.BubbleInflationRate;
+            remainingSoap = 100f;
+
             bubbleColors = new List<Color>()
             {
                 Color.red,
@@ -28,19 +41,46 @@ namespace Assets._Scripts
                 Color.grey,
                 Color.black
             };
-            bubble = CreateBubble(GetNextColor(), initialBubbleSize);
+            inflatedBubbleSize = initialBubbleSize;
+            bubble = CreateBubble(GetNextColor(), inflatedBubbleSize);
         }
+
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(keyToDetect) )
             {
-                Debug.Log("Space key was pressed");
-                bubble.transform.parent = BubbleContainer.transform;
-                bubble.GetComponent<Rigidbody2D>().simulated = true;
-                Color color = GetNextColor();
-                bubble = CreateBubble(color, initialBubbleSize);
+                if (!isKeyPressed)
+                {
+                    isKeyPressed = true;
+                }
+                InflateBubble();
             }
+
+            if (isKeyPressed && Input.GetKeyUp(keyToDetect))
+            {
+                // simulate gravity
+                Debug.Log("Drop !");
+                bubble.transform.SetParent(BubbleContainer.transform);
+                bubble.GetComponent<Rigidbody2D>().simulated = true;
+                
+                // create new bubble
+                Color color = GetNextColor();
+                inflatedBubbleSize = initialBubbleSize;
+                bubble = CreateBubble(color, inflatedBubbleSize);
+                bubble.transform.parent = transform;
+            }
+        }
+
+        private void InflateBubble()
+        {
+            Debug.Log("Inflate !");
+            remainingSoap -= soapFlowRate * Time.deltaTime;
+            inflatedBubbleSize += bubbleInflationRate * Time.deltaTime;
+            bubble.transform.localScale = new Vector3(inflatedBubbleSize, inflatedBubbleSize, 1);
+
+            int newSoapValue = (int)remainingSoap;
+            GameManager.Instance.SetTankValue(newSoapValue);
         }
 
         private GameObject CreateBubble(Color color)

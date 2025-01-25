@@ -1,19 +1,30 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets._Scripts
 {
     public class GameManager : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        public static GameManager Instance { get; private set; }
+
+        private void Awake()
         {
+            if (Instance == null)
+                Instance = this;
+            else
+                Destroy(gameObject);
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
+        public Slider soapTankSlider;
+        public TMP_Text soapTankText;
 
+        public void SetTankValue(int value)
+        {
+            soapTankSlider.value = value;
+            soapTankText.text = value.ToString();
         }
+
     }
 }
