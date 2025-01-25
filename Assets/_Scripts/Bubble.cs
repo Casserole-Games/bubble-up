@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets._Scripts
 {
     internal class Bubble : MonoBehaviour
     {
+        internal bool alreadyCollided = false;
+
         private Color color = Color.white;
 
         public void Pop()
         {
             Debug.Log("Popped!");
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
         internal void SetColor(Color color)
         {
             this.color = color;
-            this.GetComponent<SpriteRenderer>().color = color;
+            GetComponent<SpriteRenderer>().color = color;
+        }
+
+        void OnCollisionEnter2D(Collision2D col)
+        {
+            alreadyCollided = true;
+
+            Bubble bubble = col.gameObject.GetComponent<Bubble>();
+            if (bubble == null) return;
         }
     }
 }
