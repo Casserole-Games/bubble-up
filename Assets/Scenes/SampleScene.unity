@@ -912,7 +912,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GunLatSpeed: 1.75
   InitialBubbleSize: 0.25
-  MaximalBubbleSize: 8
+  MaximalBubbleSize: 3
   SoapFlowRate: 4
   BubbleColorsCount: 4
   BubbleInflationRate: 1.25
