@@ -19,6 +19,12 @@ namespace Assets._Scripts
             this.color = color;
             GetComponent<SpriteRenderer>().color = color;
         }
+        
+        private void Merge(Bubble otherBubble)
+        {
+            transform.localScale += otherBubble.transform.localScale; 
+            Destroy(otherBubble.gameObject);
+        }
 
         void OnCollisionEnter2D(Collision2D col)
         {
@@ -28,6 +34,11 @@ namespace Assets._Scripts
 
             Bubble bubble = col.gameObject.GetComponent<Bubble>();
             if (bubble == null) return;
+
+            if (bubble.color == color)
+            {
+                Merge(bubble);
+            }
         }
     }
 }
