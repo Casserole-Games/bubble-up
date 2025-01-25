@@ -39,13 +39,16 @@ namespace Assets._Scripts
                 alreadyCollided = true;
             }
 
-            Bubble bubble = col.gameObject.GetComponent<Bubble>();
-            if (bubble == null) return;
-
-            // don't call it on both bubbles
-            if (bubble.color == color && col.transform.position.y >= transform.position.y)
+            if (col.gameObject.CompareTag("Bubble"))
             {
-                Merge(bubble, col.transform.position);
+                Bubble bubble = col.gameObject.GetComponent<Bubble>();
+                if (bubble == null) return;
+
+                // don't call it on both bubbles
+                if (bubble.color == color && col.transform.position.y >= transform.position.y)
+                {
+                    Merge(bubble, col.transform.position);
+                }
             }
         }
     }

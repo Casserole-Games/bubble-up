@@ -10,10 +10,13 @@ namespace Assets._Scripts
 
         private GameObject bubble;
 
+        private float initialBubbleSize;
+
         List<Color> bubbleColors;
 
         void Start()
         {
+            initialBubbleSize = GameParameters.Instance.InitialBubbleSize;
             bubbleColors = new List<Color>()
             {
                 Color.red,
@@ -25,7 +28,7 @@ namespace Assets._Scripts
                 Color.grey,
                 Color.black
             };
-            bubble = CreateBubble(GetNextColor());
+            bubble = CreateBubble(GetNextColor(), initialBubbleSize);
         }
 
         void Update()
@@ -36,7 +39,7 @@ namespace Assets._Scripts
                 bubble.transform.parent = BubbleContainer.transform;
                 bubble.GetComponent<Rigidbody2D>().simulated = true;
                 Color color = GetNextColor();
-                bubble = CreateBubble(color);
+                bubble = CreateBubble(color, initialBubbleSize);
             }
         }
 
@@ -48,6 +51,13 @@ namespace Assets._Scripts
             bubble.GetComponent<Rigidbody2D>().simulated = false;
             Bubble bubbleComponent = bubble.GetComponent<Bubble>();
             bubbleComponent.SetColor(color);
+            return bubble;
+        }
+
+        private GameObject CreateBubble(Color color, float size)
+        {
+            GameObject bubble = CreateBubble(color);
+            bubble.transform.localScale = new Vector3(size, size, 1);
             return bubble;
         }
 
