@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a01149e7e7108c84fba29f9b1942f0ff
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 184042
+  packageName: 2D Round Softbody with Sticky
+  packageVersion: 1.0
+  assetPath: Assets/2D Softbody/Prefabs/Floor.prefab
+  uploadId: 405194

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 331db8099b087544fa513abbb953f4e8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 184042
+  packageName: 2D Round Softbody with Sticky
+  packageVersion: 1.0
+  assetPath: Assets/2D Softbody/Prefabs/Pre Explosion Marker.prefab
+  uploadId: 405194

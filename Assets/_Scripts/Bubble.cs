@@ -17,7 +17,7 @@ namespace Assets._Scripts
         internal void SetColor(Color color)
         {
             this.color = color;
-            GetComponent<SpriteRenderer>().color = color;
+            //GetComponent<MeshRenderer>(). = color;
         }
         
         private void Merge(Bubble otherBubble, Vector3 pos)

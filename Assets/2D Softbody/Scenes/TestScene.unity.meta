@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2c450952c011d2d42b685e8a6465a83d
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 184042
+  packageName: 2D Round Softbody with Sticky
+  packageVersion: 1.0
+  assetPath: Assets/2D Softbody/Scenes/TestScene.unity
+  uploadId: 405194
