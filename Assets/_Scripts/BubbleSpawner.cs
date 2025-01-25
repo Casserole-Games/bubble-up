@@ -86,7 +86,7 @@ namespace Assets._Scripts
             bubble.transform.localScale = new Vector3(inflatedBubbleSize, inflatedBubbleSize, 1);
 
             int newSoapValue = (int)remainingSoap;
-            GameManager.Instance.SetTankValue(newSoapValue);
+            UIManager.Instance.SetTankValue(newSoapValue);
         }
 
         private GameObject CreateBubble(Color color)
