@@ -10,6 +10,8 @@ namespace Assets._Scripts
         public GameObject BubbleContainer;
         public KeyCode keyToDetect = KeyCode.Space;
 
+        private const float localScaleBase = 0.25f;
+
         private GameObject bubble;
 
         private float remainingSoap;
@@ -52,9 +54,14 @@ namespace Assets._Scripts
         {
             // Debug.Log("Inflate !");
             remainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
-            if (bubble.transform.localScale.x < GameParameters.Instance.MaximalBubbleSize)
+            var localScale = bubble.transform.localScale.x;
+            if (localScale < GameParameters.Instance.MaximalBubbleSize)
             {
-                var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime;
+                var increasedScaleRation = localScale / localScaleBase;
+                var multiplier = (1 / (increasedScaleRation * increasedScaleRation));
+                Debug.Log("Multiplier : " + multiplier + ", localScale: " + localScale);
+                var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime * multiplier;
+
                 bubble.transform.position += (diff * Vector3.down) / 2;
                 bubble.transform.localScale += diff * Vector3.one;
                 bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
