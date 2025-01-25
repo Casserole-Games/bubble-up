@@ -19,6 +19,7 @@ namespace Assets._Scripts
         public float MaxSpikeLength = 0.6f;
         public int MinSpikeCountOnEachSide = 2;
         public float SoapFlowRate = 0.1f;
+        public int BubbleColorsCount = 5;
         public float BubbleInflationRate = 0.1f;
 
         public static GameParameters Instance { get; private set; }

@@ -22,12 +22,15 @@ namespace Assets._Scripts
 
         private bool isKeyPressed = false;
         private float bubbleInflationRate;
+        private int colorCount;
 
         void Start()
         {
             initialBubbleSize = GameParameters.Instance.InitialBubbleSize;
             soapFlowRate = GameParameters.Instance.SoapFlowRate;
             bubbleInflationRate = GameParameters.Instance.BubbleInflationRate;
+            colorCount = GameParameters.Instance.BubbleColorsCount;
+
             remainingSoap = 100f;
 
             bubbleColors = new List<Color>()
@@ -103,7 +106,7 @@ namespace Assets._Scripts
 
         private Color GetNextColor()
         {
-            int colorIndex = Random.Range(0, bubbleColors.Count);
+            int colorIndex = Random.Range(0, colorCount);
 
             Color color = bubbleColors[colorIndex];
 
