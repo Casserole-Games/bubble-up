@@ -36,6 +36,12 @@ namespace Assets._Scripts
 
         void Update()
         {
+            if ((bubble == null || transform.childCount < 1) && remainingSoap > 0)
+            {
+                bubble = CreateBubble(GetNextColor());
+                bubble.layer = LayerMask.NameToLayer("ShooterBubble");
+            }
+
             if (Input.GetKey(keyToDetect) && remainingSoap > 0)
             {
                 InflateBubble();
@@ -48,13 +54,6 @@ namespace Assets._Scripts
                 bubble.GetComponent<Rigidbody2D>().simulated = true;
                 bubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
                 bubble.layer = LayerMask.NameToLayer("Bubble");
-
-                // create new bubble
-                if (remainingSoap > 0)
-                {
-                    bubble = CreateBubble(GetNextColor());
-                    bubble.layer = LayerMask.NameToLayer("ShooterBubble");
-                }
             }
         }
 
@@ -62,7 +61,10 @@ namespace Assets._Scripts
         {
             Debug.Log("Inflate !");
             remainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
-            bubble.transform.localScale += GameParameters.Instance.BubbleInflationRate * Time.deltaTime * Vector3.one;
+            if (bubble.transform.localScale.x < GameParameters.Instance.MaximalBubbleSize)
+            {
+                bubble.transform.localScale += GameParameters.Instance.BubbleInflationRate * Time.deltaTime * Vector3.one;
+            }
 
             int newSoapValue = (int)remainingSoap;
             GameManager.Instance.SetTankValue(newSoapValue);
