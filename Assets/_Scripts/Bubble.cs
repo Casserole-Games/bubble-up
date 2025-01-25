@@ -48,10 +48,12 @@ namespace Assets._Scripts
                 Bubble bubble = col.gameObject.GetComponent<Bubble>();
                 if (bubble == null) return;
 
+                var newPos = (transform.position + col.gameObject.transform.position) / 2;
+
                 // don't call it on both bubbles
                 if (bubble.color == color && col.transform.position.y >= transform.position.y)
                 {
-                    Merge(bubble, col.transform.position);
+                    Merge(bubble, newPos);
                 }
             }
         }
