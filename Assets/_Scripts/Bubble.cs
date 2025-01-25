@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets._Scripts
 {
     internal class Bubble : MonoBehaviour
     {
         internal bool alreadyCollided = false;
+        internal event Action<GameObject> OnBoundaryCollision;
+
 
         private Color color = Color.white;
 
@@ -41,9 +44,16 @@ namespace Assets._Scripts
 
         void OnCollisionEnter2D(Collision2D col)
         {
+            Debug.Log("Collision ! " + col.gameObject.tag);
+            if (col.gameObject.CompareTag("Boundary"))
+            {
+                OnBoundaryCollision?.Invoke(col.gameObject);
+            }
+
             if (Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.globalHighestY)
             {
                 alreadyCollided = true;
+                OnBoundaryCollision = null;
             }
 
             if (col.contacts.Length > 0 && col.gameObject.CompareTag("Bubble") && alreadyCollided)
