@@ -19,15 +19,16 @@ namespace Assets._Scripts
             this.color = color;
             GetComponent<SpriteRenderer>().color = color;
         }
-        
+
         private void Merge(Bubble otherBubble, Vector3 pos)
         {
+            Debug.Log("Merged!");
             // make an instance of itself
             Bubble newBubble = Instantiate(this, pos, Quaternion.identity);
             newBubble.SetColor(color);
             newBubble.alreadyCollided = true;
 
-            float newScale = Mathf.Sqrt(transform.localScale.x * transform.localScale.x 
+            float newScale = Mathf.Sqrt(transform.localScale.x * transform.localScale.x
                 + otherBubble.transform.localScale.x * otherBubble.transform.localScale.x);
 
             newBubble.transform.localScale = new Vector3(newScale, newScale, 1);
@@ -39,11 +40,12 @@ namespace Assets._Scripts
 
         void OnCollisionEnter2D(Collision2D col)
         {
-            if (Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.globalHighestY) {
+            if (Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.globalHighestY)
+            {
                 alreadyCollided = true;
             }
 
-            if (col.gameObject.CompareTag("Bubble"))
+            if (col.contacts.Length > 0 && col.gameObject.CompareTag("Bubble") && alreadyCollided)
             {
                 Bubble bubble = col.gameObject.GetComponent<Bubble>();
                 if (bubble == null) return;

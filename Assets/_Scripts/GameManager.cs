@@ -11,7 +11,10 @@ namespace Assets._Scripts
         private void Awake()
         {
             if (Instance == null)
+            {
                 Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
             else
                 Destroy(gameObject);
 
@@ -25,6 +28,5 @@ namespace Assets._Scripts
             soapTankSlider.value = value;
             soapTankText.text = value.ToString();
         }
-
     }
 }
