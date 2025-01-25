@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ namespace Assets._Scripts
                 Color.grey,
                 Color.black
             };
-            bubble = CreateBubble(Color.white);
+            bubble = CreateBubble(GetNextColor());
         }
 
         void Update()
