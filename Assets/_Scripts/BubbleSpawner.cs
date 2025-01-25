@@ -42,7 +42,7 @@ namespace Assets._Scripts
             {
                 InflateBubble();
             }
-            else if (Input.GetKeyUp(keyToDetect))
+            if (Input.GetKeyUp(keyToDetect) || bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize)
             {
                 // simulate gravity
                 Debug.Log("Drop !");
