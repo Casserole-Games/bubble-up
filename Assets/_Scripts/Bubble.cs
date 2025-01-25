@@ -20,10 +20,17 @@ namespace Assets._Scripts
             GetComponent<SpriteRenderer>().color = color;
         }
         
-        private void Merge(Bubble otherBubble)
+        private void Merge(Bubble otherBubble, Vector3 pos)
         {
-            transform.localScale += otherBubble.transform.localScale; 
+            // make an instance of itself
+            Bubble newBubble = Instantiate(this, pos, Quaternion.identity);
+            newBubble.SetColor(color);
+            newBubble.alreadyCollided = true;
+            newBubble.transform.localScale = transform.localScale + otherBubble.transform.localScale;
+            newBubble.transform.parent = transform.parent;
+
             Destroy(otherBubble.gameObject);
+            Destroy(gameObject);
         }
 
         void OnCollisionEnter2D(Collision2D col)
@@ -35,9 +42,10 @@ namespace Assets._Scripts
             Bubble bubble = col.gameObject.GetComponent<Bubble>();
             if (bubble == null) return;
 
-            if (bubble.color == color)
+            // don't call it on both bubbles
+            if (bubble.color == color && col.transform.position.y >= transform.position.y)
             {
-                Merge(bubble);
+                Merge(bubble, col.transform.position);
             }
         }
     }
