@@ -42,27 +42,15 @@ namespace Assets._Scripts
             {
                 InflateBubble();
             }
-            else if (Input.GetKeyUp(keyToDetect))
+            if (Input.GetKeyUp(keyToDetect) || bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize)
             {
-                // simulate gravity
-                Debug.Log("Drop !");
-                bubble.transform.parent = BubbleContainer.transform;
-                bubble.layer = LayerMask.NameToLayer("Bubble");
-
-                Rigidbody2D rb = bubble.GetComponent<Rigidbody2D>();
-                rb.simulated = true;
-                rb.constraints = RigidbodyConstraints2D.None;
-
-                float baseSpeed = GameParameters.Instance.BubbleFlowSpeed;
-                baseSpeed *= (float)Math.Sqrt(rb.mass);
-                float appliedSpeed = Mathf.Min(baseSpeed, GameParameters.Instance.GunLatSpeed);
-                rb.AddForce(new Vector2(appliedSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
+                DropBubble();
             }
         }
 
         private void InflateBubble()
         {
-            Debug.Log("Inflate !");
+            // Debug.Log("Inflate !");
             remainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
             if (bubble.transform.localScale.x < GameParameters.Instance.MaximalBubbleSize)
             {
@@ -82,14 +70,39 @@ namespace Assets._Scripts
             Vector2 newPos = new(0, GameParameters.Instance.InitialBubbleSize / -2);
             GameObject newBubble = Instantiate(BubblePrefab, newPos, Quaternion.identity);
             newBubble.transform.SetParent(transform, false);
-            newBubble.GetComponent<Rigidbody2D>().simulated = false;
+            newBubble.GetComponent<Rigidbody2D>().simulated = true;
             newBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             newBubble.transform.localScale = new Vector2(GameParameters.Instance.InitialBubbleSize, GameParameters.Instance.InitialBubbleSize);
 
             Bubble bubbleComponent = newBubble.GetComponent<Bubble>();
             bubbleComponent.SetColor(color);
 
+            bubbleComponent.OnBoundaryCollision += (boundary) =>
+            {
+                // ignore bottom border
+                if (boundary.transform.position.y < -0.5f) return;
+
+                DropBubble();
+            };
+
             return newBubble;
+        }
+
+        private void DropBubble()
+        {
+            // simulate gravity
+            Debug.Log("Drop !");
+            bubble.transform.parent = BubbleContainer.transform;
+            bubble.layer = LayerMask.NameToLayer("Bubble");
+
+            Rigidbody2D rb = bubble.GetComponent<Rigidbody2D>();
+            rb.simulated = true;
+            rb.constraints = RigidbodyConstraints2D.None;
+
+            float baseSpeed = GameParameters.Instance.BubbleFlowSpeed;
+            baseSpeed *= (float)Math.Sqrt(rb.mass);
+            float appliedSpeed = Mathf.Min(baseSpeed, GameParameters.Instance.GunLatSpeed);
+            rb.AddForce(new Vector2(appliedSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
         }
 
         private Color GetNextColor()
