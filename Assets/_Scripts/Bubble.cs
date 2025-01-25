@@ -5,6 +5,8 @@ namespace Assets._Scripts
 {
     internal class Bubble : MonoBehaviour
     {
+        public GameObject burstEffect;
+
         internal bool alreadyCollided = false;
         internal event Action<GameObject> OnBoundaryCollision;
 
@@ -15,6 +17,19 @@ namespace Assets._Scripts
         {
             Debug.Log("Popped!");
             Destroy(gameObject);
+            burstEffect = Instantiate(burstEffect, transform.position, Quaternion.identity);
+            // burstEffect.transform.localScale = transform.localScale / 4;
+
+            ParticleSystem particleSystem = burstEffect.GetComponent<ParticleSystem>();
+            ParticleSystem.MainModule main = particleSystem.main;
+            main.startColor = color;
+            main.startSize = Math.Min(transform.localScale.x / 8, 0.2f);
+
+            ParticleSystem.ShapeModule shape = particleSystem.shape;
+            shape.radius = transform.localScale.x / 4;
+
+            ParticleSystem.MinMaxCurve count = particleSystem.emission.GetBurst(0).count;
+            count.constant = (int)(transform.localScale.x * 100);
         }
 
         internal void SetColor(Color color)
