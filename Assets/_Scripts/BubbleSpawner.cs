@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,76 +8,62 @@ namespace Assets._Scripts
     {
         public GameObject BubblePrefab;
         public GameObject BubbleContainer;
+        public KeyCode keyToDetect = KeyCode.Space;
 
         private GameObject bubble;
-        private float bubbleInflationRate => GameParameters.Instance.BubbleInflationRate;
-        private float soapFlowRate => GameParameters.Instance.SoapFlowRate;
-        private float initialBubbleSize => GameParameters.Instance.InitialBubbleSize;
-        private float inflatedBubbleSize;
-
-        List<Color> bubbleColors;
 
         private float remainingSoap;
 
-        public KeyCode keyToDetect = KeyCode.Space;
-
-        private bool isKeyPressed = false;
-        private int colorCount => GameParameters.Instance.BubbleColorsCount;
+        private static List<Color> colors = new List<Color>(){
+            Color.red,
+            Color.green,
+            Color.blue,
+            Color.yellow,
+            Color.cyan,
+            Color.magenta,
+            Color.grey,
+            Color.black
+        };
 
         void Start()
         {
             remainingSoap = 100f;
 
-            bubbleColors = new List<Color>()
-            {
-                Color.red,
-                Color.green,
-                Color.blue,
-                Color.yellow,
-                Color.cyan,
-                Color.magenta,
-                Color.grey,
-                Color.black
-            };
-            inflatedBubbleSize = initialBubbleSize;
-            bubble = CreateBubble(GetNextColor(), inflatedBubbleSize);
+            bubble = CreateBubble(GetNextColor());
+            bubble.layer = LayerMask.NameToLayer("ShooterBubble");
         }
 
         void Update()
         {
-            if (Input.GetKey(keyToDetect) && remainingSoap > 0)
+            if ((bubble == null || transform.childCount < 1) && remainingSoap > 0)
             {
-                if (!isKeyPressed)
-                {
-                    isKeyPressed = true;
-                }
-                InflateBubble();
+                bubble = CreateBubble(GetNextColor());
+                bubble.layer = LayerMask.NameToLayer("ShooterBubble");
             }
 
-            if (isKeyPressed && Input.GetKeyUp(keyToDetect))
+            if (Input.GetKey(keyToDetect) && remainingSoap > 0)
+            {
+                InflateBubble();
+            }
+            else if (Input.GetKeyUp(keyToDetect))
             {
                 // simulate gravity
                 Debug.Log("Drop !");
-                bubble.transform.SetParent(BubbleContainer.transform);
+                bubble.transform.parent = BubbleContainer.transform;
                 bubble.GetComponent<Rigidbody2D>().simulated = true;
-                
-                // create new bubble
-                if (remainingSoap > 0)
-                {
-                    Color color = GetNextColor();
-                    inflatedBubbleSize = initialBubbleSize;
-                    bubble = CreateBubble(color, inflatedBubbleSize);
-                    bubble.transform.parent = transform;
-                }
+                bubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+                bubble.layer = LayerMask.NameToLayer("Bubble");
             }
         }
 
         private void InflateBubble()
         {
             Debug.Log("Inflate !");
-            remainingSoap -= soapFlowRate * Time.deltaTime;
-            inflatedBubbleSize += bubbleInflationRate * Time.deltaTime;
-            bubble.transform.localScale = new Vector3(inflatedBubbleSize, inflatedBubbleSize, 1);
+            remainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
+            if (bubble.transform.localScale.x < GameParameters.Instance.MaximalBubbleSize)
+            {
+                bubble.transform.localScale += GameParameters.Instance.BubbleInflationRate * Time.deltaTime * Vector3.one;
+            }
 
             int newSoapValue = (int)remainingSoap;
             UIManager.Instance.SetTankValue(newSoapValue);
@@ -85,28 +72,22 @@ namespace Assets._Scripts
         private GameObject CreateBubble(Color color)
         {
             Debug.Log("Creating bubble with color " + color.ToString());
-            GameObject bubble = Instantiate(BubblePrefab, transform.position, Quaternion.identity);
-            bubble.transform.parent = transform;
-            bubble.GetComponent<Rigidbody2D>().simulated = false;
-            Bubble bubbleComponent = bubble.GetComponent<Bubble>();
-            bubbleComponent.SetColor(color);
-            return bubble;
-        }
+            GameObject newBubble = Instantiate(BubblePrefab, transform.position, Quaternion.identity);
+            newBubble.transform.parent = transform;
+            newBubble.GetComponent<Rigidbody2D>().simulated = true;
+            newBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            newBubble.transform.localScale = new Vector2(GameParameters.Instance.InitialBubbleSize, GameParameters.Instance.InitialBubbleSize);
 
-        private GameObject CreateBubble(Color color, float size)
-        {
-            GameObject bubble = CreateBubble(color);
-            bubble.transform.localScale = new Vector3(size, size, 1);
-            return bubble;
+            Bubble bubbleComponent = newBubble.GetComponent<Bubble>();
+            bubbleComponent.SetColor(color);
+
+            return newBubble;
         }
 
         private Color GetNextColor()
         {
-            int colorIndex = Random.Range(0, colorCount);
-
-            Color color = bubbleColors[colorIndex];
-
-            return color;
+            int colorIndex = UnityEngine.Random.Range(0, Math.Min(GameParameters.Instance.BubbleColorsCount, colors.Count));
+            return colors[colorIndex];
         }
     }
 }

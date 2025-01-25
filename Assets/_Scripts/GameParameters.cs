@@ -9,18 +9,19 @@ namespace Assets._Scripts
 {
     internal class GameParameters : MonoBehaviour
     {
-        // Bubble Canon
+        [Header("Bubbles")]
         public float BubbleSpawnerSpeed = 1.0f;
         public float InitialBubbleSize = 1.0f;
+        public float MaximalBubbleSize = 8.0f;
+        public float SoapFlowRate = 0.1f;
+        public int BubbleColorsCount = 5;
+        public float BubbleInflationRate = 0.1f;
 
-        //Spikes
+        [Header("Spikes")]
         public int SpikeCount = 6;
         public float MinSpikeLength = 0.3f;
         public float MaxSpikeLength = 0.6f;
         public int MinSpikeCountOnEachSide = 2;
-        public float SoapFlowRate = 0.1f;
-        public int BubbleColorsCount = 5;
-        public float BubbleInflationRate = 0.1f;
 
         public static GameParameters Instance { get; private set; }
 
