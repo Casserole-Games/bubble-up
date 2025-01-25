@@ -1,10 +1,13 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets._Scripts
 {
     internal class SetupBoundaries : MonoBehaviour
     {
+        public GameObject boundaryPrefab;
+
         void Start()
         {
             GameObject boundaries = new("Boundaries");
@@ -12,10 +15,10 @@ namespace Assets._Scripts
             Vector3 bottomLeft = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
             Vector3 topRight = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
             {
-                GameObject left = new("Left");
+                GameObject left = Instantiate(boundaryPrefab);
                 left.transform.parent = boundaries.transform;
                 left.layer = LayerMask.NameToLayer("Boundaries");
-                BoxCollider2D collider = left.AddComponent<BoxCollider2D>();
+                BoxCollider2D collider = left.GetOrAddComponent<BoxCollider2D>();
 
                 // set height to match the size of the screen
                 collider.size = new Vector2(1f, Math.Abs(topRight.y - bottomLeft.y) + 1);
@@ -24,10 +27,10 @@ namespace Assets._Scripts
             }
 
             {
-                GameObject right = new("Right");
+                GameObject right = Instantiate(boundaryPrefab);
                 right.transform.parent = boundaries.transform;
                 right.layer = LayerMask.NameToLayer("Boundaries");
-                BoxCollider2D collider = right.AddComponent<BoxCollider2D>();
+                BoxCollider2D collider = right.GetOrAddComponent<BoxCollider2D>();
 
                 // set height to match the size of the screen
                 collider.size = new Vector2(1f, Math.Abs(topRight.y - bottomLeft.y) + 1);
@@ -36,10 +39,14 @@ namespace Assets._Scripts
             }
 
             {
-                GameObject bottom = new("Bottom");
+                GameObject bottom = Instantiate(boundaryPrefab);
                 bottom.transform.parent = boundaries.transform;
                 bottom.layer = LayerMask.NameToLayer("Boundaries");
-                BoxCollider2D collider = bottom.AddComponent<BoxCollider2D>();
+                BoxCollider2D collider = bottom.GetOrAddComponent<BoxCollider2D>();
+                collider.sharedMaterial = new PhysicsMaterial2D(collider.sharedMaterial.name)
+                {
+                    bounciness = 0.2f
+                };
 
                 // set width to match the size of the screen
                 collider.size = new Vector2(Math.Abs(bottomLeft.x) * 2 + 1, 1f);

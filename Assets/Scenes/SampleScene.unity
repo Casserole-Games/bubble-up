@@ -911,7 +911,7 @@ MonoBehaviour:
   SoapFlowRate: 5
   BubbleColorsCount: 3
   BubbleInflationRate: 1.25
-  BubbleFlowSpeed: 1
+  BubbleFlowSpeed: 1.5
   SpikeCount: 6
   MinSpikeLength: 0.3
   MaxSpikeLength: 0.6
@@ -1081,6 +1081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd7affd87944fdaab471fc5c3d5c8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boundaryPrefab: {fileID: 4741304432432765696, guid: 6ac11ec5682d8f66cbfbdbd529c3a88c, type: 3}
 --- !u!1 &522892876
 GameObject:
   m_ObjectHideFlags: 0
