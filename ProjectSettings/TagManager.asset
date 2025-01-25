@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Spike
   - Bubble
+  - Boundary
   layers:
   - Default
   - TransparentFX
@@ -42,6 +43,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: background
+    uniqueID: 2139680109
+    locked: 0
+  - name: foreground
+    uniqueID: 536301299
     locked: 0
   m_RenderingLayers:
   - Default
