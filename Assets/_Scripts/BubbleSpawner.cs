@@ -33,7 +33,6 @@ namespace Assets._Scripts
             bubble.layer = LayerMask.NameToLayer("ShooterBubble");
         }
 
-
         void Update()
         {
             if ((bubble == null || transform.childCount < 1) && remainingSoap > 0)
@@ -67,7 +66,7 @@ namespace Assets._Scripts
             }
 
             int newSoapValue = (int)remainingSoap;
-            GameManager.Instance.SetTankValue(newSoapValue);
+            UIManager.Instance.SetTankValue(newSoapValue);
         }
 
         private GameObject CreateBubble(Color color)

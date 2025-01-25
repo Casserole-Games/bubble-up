@@ -17,16 +17,6 @@ namespace Assets._Scripts
             }
             else
                 Destroy(gameObject);
-
-        }
-
-        public Slider soapTankSlider;
-        public TMP_Text soapTankText;
-
-        public void SetTankValue(int value)
-        {
-            soapTankSlider.value = value;
-            soapTankText.text = value.ToString();
         }
     }
 }
