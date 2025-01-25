@@ -51,7 +51,7 @@ namespace Assets._Scripts
 
         void Update()
         {
-            if (Input.GetKey(keyToDetect) )
+            if (Input.GetKey(keyToDetect) && remainingSoap > 0)
             {
                 if (!isKeyPressed)
                 {
@@ -68,10 +68,13 @@ namespace Assets._Scripts
                 bubble.GetComponent<Rigidbody2D>().simulated = true;
                 
                 // create new bubble
-                Color color = GetNextColor();
-                inflatedBubbleSize = initialBubbleSize;
-                bubble = CreateBubble(color, inflatedBubbleSize);
-                bubble.transform.parent = transform;
+                if (remainingSoap > 0)
+                {
+                    Color color = GetNextColor();
+                    inflatedBubbleSize = initialBubbleSize;
+                    bubble = CreateBubble(color, inflatedBubbleSize);
+                    bubble.transform.parent = transform;
+                }
             }
         }
 

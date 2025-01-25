@@ -685,7 +685,8 @@ MonoBehaviour:
   MinSpikeLength: 0.3
   MaxSpikeLength: 0.6
   MinSpikeCountOnEachSide: 2
-  SoapFlowRate: 0.5
+  SoapFlowRate: 5
+  BubbleColorsCount: 3
   BubbleInflationRate: 1.25
 --- !u!4 &403856389
 Transform:
