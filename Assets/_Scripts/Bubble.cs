@@ -26,7 +26,11 @@ namespace Assets._Scripts
             Bubble newBubble = Instantiate(this, pos, Quaternion.identity);
             newBubble.SetColor(color);
             newBubble.alreadyCollided = true;
-            newBubble.transform.localScale = transform.localScale + otherBubble.transform.localScale;
+
+            float newScale = Mathf.Sqrt(transform.localScale.x * transform.localScale.x 
+                + otherBubble.transform.localScale.x * otherBubble.transform.localScale.x);
+
+            newBubble.transform.localScale = new Vector3(newScale, newScale, 1);
             newBubble.transform.parent = transform.parent;
 
             Destroy(otherBubble.gameObject);
