@@ -55,7 +55,10 @@ namespace Assets._Scripts
                 Rigidbody2D rb = bubble.GetComponent<Rigidbody2D>();
                 rb.simulated = true;
                 rb.constraints = RigidbodyConstraints2D.None;
-                rb.AddForce(new Vector2(GameParameters.Instance.BubbleFlowSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
+
+                float speed = GameParameters.Instance.BubbleFlowSpeed;
+                speed *= (float)Math.Sqrt(rb.mass);
+                rb.AddForce(new Vector2(speed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
             }
         }
 
