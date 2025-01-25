@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets._Scripts
 {
     internal class Bubble : MonoBehaviour
     {
+        internal bool alreadyCollided = false;
+
         private Color color = Color.white;
 
         public void Pop()
         {
             Debug.Log("Popped!");
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
         internal void SetColor(Color color)
@@ -26,10 +22,23 @@ namespace Assets._Scripts
         
         private void Merge(Bubble otherBubble)
         {
-            Debug.Log("Merged!");
-
             transform.localScale += otherBubble.transform.localScale; 
             Destroy(otherBubble.gameObject);
+        }
+
+        void OnCollisionEnter2D(Collision2D col)
+        {
+            if (Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.globalHighestY) {
+                alreadyCollided = true;
+            }
+
+            Bubble bubble = col.gameObject.GetComponent<Bubble>();
+            if (bubble == null) return;
+
+            if (bubble.color == color)
+            {
+                Merge(bubble);
+            }
         }
     }
 }
