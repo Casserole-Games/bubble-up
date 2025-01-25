@@ -8,15 +8,18 @@ namespace Assets._Scripts
     {
         public GameObject BubblePrefab;
         public GameObject BubbleContainer;
-        public KeyCode keyToDetect = KeyCode.Space;
+
+        private KeyCode keyToDetect = KeyCode.Space;
 
         private const float localScaleBase = 0.25f;
 
+        private float minimumSoapConsumption => GameParameters.Instance.BubbleMinimumSoapConsumption;
+        
         private GameObject bubble;
-
         private float remainingSoap;
+        private float lastRemainingSoap;
 
-        private static List<Color> colors = new List<Color>(){
+        private static List<Color> colors = new(){
             Color.red,
             Color.green,
             Color.blue,
@@ -42,11 +45,16 @@ namespace Assets._Scripts
 
             if (Input.GetKey(keyToDetect) && remainingSoap > 0)
             {
+                lastRemainingSoap = remainingSoap;
                 InflateBubble();
             }
             if (Input.GetKeyUp(keyToDetect) || bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize)
             {
                 DropBubble();
+                if (lastRemainingSoap - remainingSoap < 0.5f)
+                {
+                    remainingSoap = lastRemainingSoap - 0.5f;
+                }
             }
         }
 
@@ -58,8 +66,7 @@ namespace Assets._Scripts
             if (localScale < GameParameters.Instance.MaximalBubbleSize)
             {
                 var increasedScaleRation = localScale / localScaleBase;
-                var multiplier = (1 / (increasedScaleRation * increasedScaleRation));
-                Debug.Log("Multiplier : " + multiplier + ", localScale: " + localScale);
+                var multiplier = 1 / (increasedScaleRation * increasedScaleRation);
                 var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime * multiplier;
 
                 bubble.transform.position += (diff * Vector3.down) / 2;
@@ -87,7 +94,7 @@ namespace Assets._Scripts
             bubbleComponent.OnBoundaryCollision += (boundary) =>
             {
                 // ignore bottom border
-                if (boundary.transform.position.y < -0.5f) return;
+                if (boundary.transform.position.y < minimumSoapConsumption) return;
 
                 DropBubble();
             };
