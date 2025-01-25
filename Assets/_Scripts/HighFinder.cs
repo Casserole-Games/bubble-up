@@ -5,11 +5,21 @@ namespace Assets._Scripts
 {
     public class HighFinder : MonoBehaviour
     {
+        public static HighFinder Instance { get; private set; }
+
         public GameObject BubbleContainer;
         public GameObject GlobalHighLine;
         public GameObject LocalHighLine;
 
-        private float globalHighestY = 0;
+        internal float globalHighestY = 0;
+
+        public void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+        }
 
         void FixedUpdate()
         {
@@ -22,7 +32,7 @@ namespace Assets._Scripts
                 if (!bubble.alreadyCollided) continue;
 
                 // add half of the scale to the position to get the top of the bubble -> to get the top of the bubble
-                float screenPos = Camera.main.WorldToScreenPoint(child.position + child.localScale / 2).y ;
+                float screenPos = Camera.main.WorldToScreenPoint(child.position + child.localScale / 2).y;
                 if (screenPos > globalHighestY)
                 {
                     globalHighestY = screenPos;

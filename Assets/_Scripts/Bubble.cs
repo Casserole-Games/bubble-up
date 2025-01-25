@@ -22,7 +22,9 @@ namespace Assets._Scripts
 
         void OnCollisionEnter2D(Collision2D col)
         {
-            alreadyCollided = true;
+            if (Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.globalHighestY) {
+                alreadyCollided = true;
+            }
 
             Bubble bubble = col.gameObject.GetComponent<Bubble>();
             if (bubble == null) return;

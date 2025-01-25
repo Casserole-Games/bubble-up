@@ -11,9 +11,9 @@ namespace Assets._Scripts
         void Update()
         {
             transform.Translate(speed * Time.deltaTime * Vector3.right);
-            if (transform.position.x >= rightLimit)
+            if (transform.position.x >= rightLimit && speed > 0)
                 speed *= -1;
-            else if (transform.position.x <= leftLimit)
+            else if (transform.position.x <= leftLimit && speed < 0)
                 speed *= -1;
         }
 
