@@ -4,8 +4,9 @@ namespace Assets._Scripts
 {
     internal class BubbleSpawnerMouvements : MonoBehaviour
     {
+        internal static float direction = 1;
+
         private float speed => GameParameters.Instance.BubbleSpawnerSpeed * direction;
-        private int direction = 1;
         public float leftLimit = -5f;
         public float rightLimit = 5f;
 

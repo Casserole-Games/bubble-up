@@ -32,6 +32,7 @@ namespace Assets._Scripts
                 + otherBubble.transform.localScale.x * otherBubble.transform.localScale.x);
 
             newBubble.transform.localScale = new Vector3(newScale, newScale, 1);
+            newBubble.GetComponent<Rigidbody2D>().mass = newScale;
             newBubble.transform.parent = transform.parent;
 
             Destroy(otherBubble.gameObject);

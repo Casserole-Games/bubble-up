@@ -16,6 +16,7 @@ namespace Assets._Scripts
         public float SoapFlowRate = 0.1f;
         public int BubbleColorsCount = 5;
         public float BubbleInflationRate = 0.1f;
+        public float BubbleFlowSpeed = 5.0f;
 
         [Header("Spikes")]
         public int SpikeCount = 6;

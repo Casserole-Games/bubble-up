@@ -50,9 +50,12 @@ namespace Assets._Scripts
                 // simulate gravity
                 Debug.Log("Drop !");
                 bubble.transform.parent = BubbleContainer.transform;
-                bubble.GetComponent<Rigidbody2D>().simulated = true;
-                bubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
                 bubble.layer = LayerMask.NameToLayer("Bubble");
+
+                Rigidbody2D rb = bubble.GetComponent<Rigidbody2D>();
+                rb.simulated = true;
+                rb.constraints = RigidbodyConstraints2D.None;
+                rb.AddForce(new Vector2(GameParameters.Instance.BubbleFlowSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
             }
         }
 
@@ -63,6 +66,7 @@ namespace Assets._Scripts
             if (bubble.transform.localScale.x < GameParameters.Instance.MaximalBubbleSize)
             {
                 bubble.transform.localScale += GameParameters.Instance.BubbleInflationRate * Time.deltaTime * Vector3.one;
+                bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
             }
 
             int newSoapValue = (int)remainingSoap;
@@ -74,7 +78,7 @@ namespace Assets._Scripts
             Debug.Log("Creating bubble with color " + color.ToString());
             GameObject newBubble = Instantiate(BubblePrefab, transform.position, Quaternion.identity);
             newBubble.transform.parent = transform;
-            newBubble.GetComponent<Rigidbody2D>().simulated = true;
+            newBubble.GetComponent<Rigidbody2D>().simulated = false;
             newBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             newBubble.transform.localScale = new Vector2(GameParameters.Instance.InitialBubbleSize, GameParameters.Instance.InitialBubbleSize);
 

@@ -907,13 +907,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BubbleSpawnerSpeed: 5
   InitialBubbleSize: 0.25
+  MaximalBubbleSize: 8
+  SoapFlowRate: 5
+  BubbleColorsCount: 3
+  BubbleInflationRate: 1.25
+  BubbleFlowSpeed: 1
   SpikeCount: 6
   MinSpikeLength: 0.3
   MaxSpikeLength: 0.6
   MinSpikeCountOnEachSide: 2
-  SoapFlowRate: 5
-  BubbleColorsCount: 3
-  BubbleInflationRate: 1.25
 --- !u!4 &403856389
 Transform:
   m_ObjectHideFlags: 0
@@ -1826,7 +1828,7 @@ Transform:
   m_GameObject: {fileID: 1571682580}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.79, y: -2.89, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
