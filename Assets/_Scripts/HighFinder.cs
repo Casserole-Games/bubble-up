@@ -56,7 +56,7 @@ namespace Assets._Scripts
             LocalHighLine.transform.position = localLinePos;
             LocalHighLine.transform.localScale = new Vector3(Math.Abs(bottomLeft.x) * 2 + 1, 0.05f, 1);
 
-            UIManager.Instance.SetBestScore((int)globalHighestY);
+            //UIManager.Instance.SetBestScore((int)globalHighestY);
             UIManager.Instance.SetCurrentScore((int)localHighestY);
         }
     }

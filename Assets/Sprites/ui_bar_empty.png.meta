@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b2dbe7bc8b4010927bc9054f7e2c5ba7
+guid: 6c53b3a824efdce40a502937c5a4d1ea
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1551569125964091491
-    second: spike_clean_0
+      213: -8660286170906523811
+    second: ui_bar_empty_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spike_clean_0
+      name: ui_bar_empty_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 29
-        width: 44
-        height: 9
+        y: 0
+        width: 162
+        height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d9f627ab918b77ae0800000000000000
-      internalID: -1551569125964091491
+      spriteID: d5783e99c9b70d780800000000000000
+      internalID: -8660286170906523811
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      spike_clean_0: -1551569125964091491
+      ui_bar_empty_0: -8660286170906523811
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
