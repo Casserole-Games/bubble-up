@@ -15,8 +15,11 @@ namespace Assets._Scripts
 
         public void Pop()
         {
-            Debug.Log("Popped!");
-            Destroy(gameObject);
+            Debug.Log("Starting popping!");
+            if (this == null)
+            {
+                return;
+            }
             burstEffect = Instantiate(burstEffect, transform.position, Quaternion.identity);
             // burstEffect.transform.localScale = transform.localScale / 4;
 
@@ -30,6 +33,12 @@ namespace Assets._Scripts
 
             ParticleSystem.MinMaxCurve count = particleSystem.emission.GetBurst(0).count;
             count.constant = (int)(transform.localScale.x * 100);
+
+            Debug.Log("Destroying the bubble");
+
+            Destroy(gameObject);
+
+            Debug.Log("Bubble destroyed");
         }
 
         internal void SetColor(Color color)
