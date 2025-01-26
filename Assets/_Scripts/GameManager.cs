@@ -101,7 +101,7 @@ namespace Assets._Scripts
                 Destroy(gameObject);
         }
 
-        internal void RestartGame()
+        public void RestartGame()
         {
             SceneManager.LoadScene("SampleScene");
         }
