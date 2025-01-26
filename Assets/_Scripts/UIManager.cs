@@ -27,6 +27,8 @@ public class UIManager : MonoBehaviour
     private bool readyToSkipText = false;
     private bool isGameOverText = false;
     private bool isCreditText = false;
+    public string TutorialText = "";
+    public string Phase2Text = "";
     public string GameOverText = "";
     public string CreditText = "";
 
@@ -54,9 +56,12 @@ public class UIManager : MonoBehaviour
     {
         CharacterElementsCanvas.sortingLayerID = shouldHighlight ? SortingLayer.NameToID("foreground") : SortingLayer.NameToID("background");
     }
-    internal void DisplayTextBubble(bool shouldDisplay)
+    internal void DisplayTextBubble(bool shouldDisplay, string text = "")
     {
         TextBubble.gameObject.SetActive(shouldDisplay);
+
+        if (text == "") return;
+        TextBubbleContent.text = text;
     }
 
     internal void SwitchDuckSprite()

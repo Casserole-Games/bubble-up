@@ -26,6 +26,14 @@ namespace Assets._Scripts
         public int CurrentScore { get; private set; }
         private int phase1Score;
 
+        void Update()
+        {
+            if (Input.anyKey && isPhase1)
+            {
+                DisplayTextBubble(false);
+            }
+        }
+
         internal void TriggerEmptyTank()
         {
             if (isPhase1)
@@ -62,7 +70,7 @@ namespace Assets._Scripts
             yield return new WaitForSeconds(durationBeforeShowingTextBubble);
 
             //display text bubble
-            DisplayTextBubble(true);
+            DisplayTextBubble(true, UIManager.Instance.Phase2Text);
 
             //wait for textDisplayDuration
             yield return new WaitForSeconds(textDisplayDuration);
@@ -85,9 +93,9 @@ namespace Assets._Scripts
             //register actual green line ??
         }
 
-        private void DisplayTextBubble(bool shouldDisplay)
+        private void DisplayTextBubble(bool shouldDisplay, string text = "")
         {
-            UIManager.Instance.DisplayTextBubble(shouldDisplay);
+            UIManager.Instance.DisplayTextBubble(shouldDisplay, text);
         }
 
         private void HighlightCharacterElements(bool shouldHighlight)

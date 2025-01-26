@@ -33,6 +33,7 @@ namespace Assets._Scripts
         public float Phase2StartSoap = 10;
         public float MaxSoapAmount = 100;
         public float StartSoapAmount = 100;
+        public float TutorialTime = 3f;
         
         public static GameParameters Instance { get; private set; }
 
