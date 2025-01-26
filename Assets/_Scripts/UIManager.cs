@@ -18,7 +18,8 @@ public class UIManager : MonoBehaviour
 
     public Image TextBubble;
     public TMP_Text TextBubbleContent;
-    public Image Duck;
+    public Image DuckBack;
+    public Image DuckFront;
 
     public Sprite DuckFirstSprite;
     public Sprite DuckSecondSprite;
@@ -60,7 +61,8 @@ public class UIManager : MonoBehaviour
 
     internal void SwitchDuckSprite()
     {
-        Duck.sprite = DuckSecondSprite;
+        DuckBack.gameObject.SetActive(!DuckBack.gameObject.activeSelf);
+        DuckFront.gameObject.SetActive(!DuckFront.gameObject.activeSelf);
     }
 
     internal void GameOver()
