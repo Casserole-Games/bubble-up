@@ -69,8 +69,8 @@ namespace Assets._Scripts
                 var multiplier = 1 / (increasedScaleRation * increasedScaleRation);
                 var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime * multiplier;
 
-                bubble.transform.position += (diff * Vector3.down) / 2;
                 bubble.transform.localScale += diff * Vector3.one;
+                bubble.transform.position += (diff * Vector3.down) / 4;
                 bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
             }
 
