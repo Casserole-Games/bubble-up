@@ -14,7 +14,7 @@ namespace Assets._Scripts
         private const float localScaleBase = 0.25f;
 
         private float minimumSoapConsumption => GameParameters.Instance.BubbleMinimumSoapConsumption;
-        
+
         private GameObject bubble;
         private float lastRemainingSoap;
         private bool isInflating = false;
@@ -63,19 +63,19 @@ namespace Assets._Scripts
                 return;
             }
 
-            if ((bubble == null || transform.childCount < 2) && RemainingSoap > 0 && !IsPaused)
+            if ((bubble == null || transform.childCount < 2) && RemainingSoap > 0)
             {
                 bubble = CreateBubble(GetNextColor());
                 bubble.layer = LayerMask.NameToLayer("ShooterBubble");
             }
 
-            if (Input.GetKey(keyToDetect) && RemainingSoap > 0 && !IsPaused)
+            if (Input.GetKey(keyToDetect) && RemainingSoap > 0)
             {
                 isInflating = true;
                 lastRemainingSoap = RemainingSoap;
                 InflateBubble();
             }
-            if (!IsPaused && (Input.GetKeyUp(keyToDetect) || bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize))
+            if (Input.GetKeyUp(keyToDetect) || (bubble != null && bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize))
             {
                 isInflating = false;
                 DropBubble();
@@ -84,7 +84,7 @@ namespace Assets._Scripts
                     RemainingSoap = lastRemainingSoap - minimumSoapConsumption;
                 }
             }
-            if (RemainingSoap <= 0 && !emptyTankTriggered && !isInflating &&!IsPaused)
+            if (RemainingSoap <= 0 && !emptyTankTriggered && !isInflating)
             {
                 Debug.Log("Empty tank !");
                 emptyTankTriggered = true;
@@ -106,11 +106,12 @@ namespace Assets._Scripts
             if (localScale < GameParameters.Instance.MaximalBubbleSize)
             {
                 var increasedScaleRation = localScale / localScaleBase;
-                var multiplier = 1 / (increasedScaleRation * increasedScaleRation);
+                var multiplier = 0.75f / Mathf.Sqrt(increasedScaleRation);
                 var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime * multiplier;
 
                 bubble.transform.localScale += diff * Vector3.one;
-                bubble.transform.position += (diff * Vector3.down) / 4;
+                var divider = localScale + diff > 1.5 && localScale + diff < 2.5 ? 2 : 4;
+                bubble.transform.position += (diff * Vector3.down) / divider;
                 bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
             }
 
@@ -121,9 +122,9 @@ namespace Assets._Scripts
         private GameObject CreateBubble(Color color)
         {
             Debug.Log("Creating bubble with color " + color.ToString());
-            Vector2 newPos = new(0, GameParameters.Instance.InitialBubbleSize / -2);
-            GameObject newBubble = Instantiate(BubblePrefab, newPos, Quaternion.identity);
-            newBubble.transform.SetParent(transform, false);
+            // Vector2 newPos = new(0, GameParameters.Instance.InitialBubbleSize / -2);
+            GameObject newBubble = Instantiate(BubblePrefab, transform.position, Quaternion.identity);
+            newBubble.transform.parent = transform;
             newBubble.GetComponent<Rigidbody2D>().simulated = true;
             newBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             newBubble.transform.localScale = new Vector2(GameParameters.Instance.InitialBubbleSize, GameParameters.Instance.InitialBubbleSize);
@@ -135,7 +136,9 @@ namespace Assets._Scripts
             {
                 // ignore bottom border
                 if (boundary.transform.position.y < -0.5f) return;
+                if (newBubble.layer != LayerMask.NameToLayer("ShooterBubble")) return;
 
+                Debug.Log("Drop on boundary !" + boundary + boundary.transform.position);
                 DropBubble();
             };
 

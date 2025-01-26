@@ -66,17 +66,23 @@ namespace Assets._Scripts
             Destroy(gameObject);
         }
 
+        public void RemoveEvents()
+        {
+            OnBoundaryCollision = null;
+        }
+
         void OnCollisionEnter2D(Collision2D col)
         {
             if (col.gameObject.CompareTag("Boundary"))
             {
                 OnBoundaryCollision?.Invoke(col.gameObject);
+                RemoveEvents();
             }
 
             if (Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.globalHighestY)
             {
                 alreadyCollided = true;
-                OnBoundaryCollision = null;
+                RemoveEvents();
             }
 
             if (col.contacts.Length > 0 && col.gameObject.CompareTag("Bubble") && alreadyCollided)
