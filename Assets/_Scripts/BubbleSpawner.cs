@@ -8,15 +8,18 @@ namespace Assets._Scripts
     {
         public GameObject BubblePrefab;
         public GameObject BubbleContainer;
-        public KeyCode keyToDetect = KeyCode.Space;
 
-        internal static float remainingSoap;
+        private KeyCode keyToDetect = KeyCode.Space;
 
         private const float localScaleBase = 0.25f;
 
+        private float minimumSoapConsumption => GameParameters.Instance.BubbleMinimumSoapConsumption;
+        
         private GameObject bubble;
+        public static float RemainingSoap;
+        private float lastRemainingSoap;
 
-        private static List<Color> colors = new List<Color>(){
+        private static List<Color> colors = new(){
             Color.red,
             Color.green,
             Color.blue,
@@ -29,37 +32,41 @@ namespace Assets._Scripts
 
         void Start()
         {
-            remainingSoap = 100f;
+            RemainingSoap = 100f;
         }
 
         void Update()
         {
-            if ((bubble == null || transform.childCount < 2) && remainingSoap > 0)
+            if ((bubble == null || transform.childCount < 2) && RemainingSoap > 0)
             {
                 bubble = CreateBubble(GetNextColor());
                 bubble.layer = LayerMask.NameToLayer("ShooterBubble");
             }
 
-            if (Input.GetKey(keyToDetect) && remainingSoap > 0)
+            if (Input.GetKey(keyToDetect) && RemainingSoap > 0)
             {
+                lastRemainingSoap = RemainingSoap;
                 InflateBubble();
             }
             if (Input.GetKeyUp(keyToDetect) || bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize)
             {
                 DropBubble();
+                if (lastRemainingSoap - RemainingSoap < 0.5f)
+                {
+                    RemainingSoap = lastRemainingSoap - 0.5f;
+                }
             }
         }
 
         private void InflateBubble()
         {
             // Debug.Log("Inflate !");
-            remainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
+            RemainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
             var localScale = bubble.transform.localScale.x;
             if (localScale < GameParameters.Instance.MaximalBubbleSize)
             {
                 var increasedScaleRation = localScale / localScaleBase;
-                var multiplier = (1 / (increasedScaleRation * increasedScaleRation));
-                Debug.Log("Multiplier : " + multiplier + ", localScale: " + localScale);
+                var multiplier = 1 / (increasedScaleRation * increasedScaleRation);
                 var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime * multiplier;
 
                 bubble.transform.position += (diff * Vector3.down) / 2;
@@ -67,7 +74,7 @@ namespace Assets._Scripts
                 bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
             }
 
-            int newSoapValue = (int)remainingSoap;
+            int newSoapValue = (int)RemainingSoap;
             UIManager.Instance.SetTankValue(newSoapValue);
         }
 
@@ -87,7 +94,7 @@ namespace Assets._Scripts
             bubbleComponent.OnBoundaryCollision += (boundary) =>
             {
                 // ignore bottom border
-                if (boundary.transform.position.y < -0.5f) return;
+                if (boundary.transform.position.y < minimumSoapConsumption) return;
 
                 DropBubble();
             };
