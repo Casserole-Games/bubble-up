@@ -17,6 +17,7 @@ namespace Assets._Scripts
         public static GameManager Instance { get; private set; }
         private bool isPhase1 = true;
         private bool isPhase2 = false;
+        public bool IsGameOver = false;
 
         private float durationBeforeShowingTextBubble => GameParameters.Instance.DurationBeforeShowingTextBubble;
         private float durationBeforeDuckTurnsAround => GameParameters.Instance.DurationBeforeDuckTurnsAround;
@@ -35,13 +36,14 @@ namespace Assets._Scripts
             }
             else if (isPhase2)
             {
+                IsGameOver = true;
                 GameOver();
             }
         }
 
         private void SetupPhase2()
         {
-            HighFinder.Instance.Phase1 = false;
+            HighFinder.Instance.SetToPhase2();
             phase1Score = CurrentScore;
             Debug.Log("SetupPhase2");
             BubbleSpawner.Instance.PauseGame();

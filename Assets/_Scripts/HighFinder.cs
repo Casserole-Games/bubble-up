@@ -7,10 +7,9 @@ namespace Assets._Scripts
     {
         public static HighFinder Instance { get; private set; }
 
-        public bool Phase1 = true;
+        private bool phase1 = true;
 
         public GameObject BubbleContainer;
-        public GameObject GlobalHighLine;
         public GameObject LocalHighGreenLine;
         public GameObject LocalHighPinkLine;
 
@@ -27,6 +26,10 @@ namespace Assets._Scripts
 
         void FixedUpdate()
         {
+            if (GameManager.Instance.IsGameOver)
+            {
+                return;
+            }
             var lastLocalHighestY = localHighestY;
             localHighestY = 0;
             foreach (Transform child in BubbleContainer.transform)
@@ -55,7 +58,7 @@ namespace Assets._Scripts
             Vector3 localLinePos = Camera.main.ScreenToWorldPoint(new Vector3(0, localHighestY, 0));
             localLinePos.x = 0;
             localLinePos.z = 0;
-            if (Phase1)
+            if (phase1)
             {
                 LocalHighGreenLine.transform.position = localLinePos;
 
@@ -68,6 +71,12 @@ namespace Assets._Scripts
             {
                 LocalHighPinkLine.transform.position = localLinePos;
             }
+        }
+
+        public void SetToPhase2()
+        {
+            LocalHighPinkLine.SetActive(true);
+            phase1 = false;
         }
     }
 }
