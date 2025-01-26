@@ -48,7 +48,6 @@ namespace Assets._Scripts
 
         void Start()
         {
-            Color color = new Color32(0, 0, 0, 0);
             RemainingSoap = GameParameters.Instance.StartSoapAmount;
         }
 
@@ -100,6 +99,7 @@ namespace Assets._Scripts
 
         private void InflateBubble()
         {
+            MusicManager.Instance.StartMusic(MusicManager.Instance.bubbleInflatingSound, 0.5f);
             // Debug.Log("Inflate !");
             RemainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
             var localScale = bubble.transform.localScale.x;
@@ -147,6 +147,8 @@ namespace Assets._Scripts
 
         private void DropBubble()
         {
+            MusicManager.Instance.StopMusic();
+            MusicManager.Instance.PlaySound(MusicManager.Instance.bubbleDropSound, 0.75f, 1.25f);
             // simulate gravity
             Debug.Log("Drop !");
             bubble.transform.parent = BubbleContainer.transform;
