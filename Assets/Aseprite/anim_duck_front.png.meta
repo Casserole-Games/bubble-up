@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cbaf5b1a12a25e44389b2d2ebf93869c
+guid: 897a37e9ace17be44a5c8549f48515a7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8340780807118179393
-    second: ui_bar_separator_0
+      213: 682517782606873256
+    second: anim_duck_front_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ui_bar_separator_0
+      name: anim_duck_front_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 10
-        height: 21
+        width: 308
+        height: 77
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fb3335a1c089f3c80800000000000000
-      internalID: -8340780807118179393
+      spriteID: 8a28b21ae4ac87900800000000000000
+      internalID: 682517782606873256
       vertices: []
       indices: 
       edges: []

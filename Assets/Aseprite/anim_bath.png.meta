@@ -1,16 +1,25 @@
 fileFormatVersion: 2
-guid: bb1db92f6a9412946964e6e22187e6fb
+guid: 7583dadf7abc0fa46a1df63e3eb8bba2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5857455915513087510
-    second: ui_pink_arrows_0
+      213: 896409690717658855
+    second: anim_bath_0
   - first:
-      213: -5216839993897186483
-    second: ui_pink_arrows_1
+      213: 6339682971182688665
+    second: anim_bath_1
   - first:
-      213: -6354225630974853449
-    second: ui_pink_arrows_2
+      213: 8954653568316410296
+    second: anim_bath_2
+  - first:
+      213: -6081037366811167509
+    second: anim_bath_3
+  - first:
+      213: -7332742061129024357
+    second: anim_bath_4
+  - first:
+      213: -5083336608195473527
+    second: anim_bath_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -106,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ui_pink_arrows_0
+      name: anim_bath_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 12
         y: 0
-        width: 10
-        height: 17
+        width: 29
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,20 +130,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6160babfe1dd94150800000000000000
-      internalID: 5857455915513087510
+      spriteID: 7ee91744ddfa07c00800000000000000
+      internalID: 896409690717658855
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ui_pink_arrows_1
+      name: anim_bath_1
       rect:
         serializedVersion: 2
-        x: 35
+        x: 15
         y: 0
-        width: 11
-        height: 17
+        width: 154
+        height: 39
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +152,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d4b05b16aaf0a97b0800000000000000
-      internalID: -5216839993897186483
+      spriteID: 999efedb2141bf750800000000000000
+      internalID: 6339682971182688665
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ui_pink_arrows_2
+      name: anim_bath_2
       rect:
         serializedVersion: 2
-        x: 70
+        x: 147
         y: 0
-        width: 10
-        height: 17
+        width: 25
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,8 +174,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7bebf0b647141d7a0800000000000000
-      internalID: -6354225630974853449
+      spriteID: 8b90f220af1554c70800000000000000
+      internalID: 8954653568316410296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_bath_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 29
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be4f75dcbb0db9ba0800000000000000
+      internalID: -6081037366811167509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_bath_4
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 0
+        width: 154
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9cb6d822fddc3a90800000000000000
+      internalID: -7332742061129024357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_bath_5
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 0
+        width: 25
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98f05ca994c5479b0800000000000000
+      internalID: -5083336608195473527
       vertices: []
       indices: 
       edges: []
