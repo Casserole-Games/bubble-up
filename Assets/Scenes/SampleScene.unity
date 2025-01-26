@@ -862,6 +862,7 @@ MonoBehaviour:
   DurationBeforeDuckTurnsAround: 1
   Phase1MaxHeight: 1600
   Phase2TextDisplayDuration: 3
+  Phase2StartSoap: 10
   MaxSoapAmount: 100
   StartSoapAmount: 75
 --- !u!4 &403856389
@@ -2329,8 +2330,8 @@ Transform:
   m_GameObject: {fileID: 1344852309}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.5494633, y: 8.963025, z: 1}
+  m_LocalPosition: {x: 0.0428, y: -0.1606, z: 0}
+  m_LocalScale: {x: 5.6349254, y: 9.670021, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
