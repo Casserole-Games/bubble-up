@@ -188,7 +188,7 @@ SpriteRenderer:
   m_Size: {x: 1.8, y: 0.02}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1395439
@@ -536,6 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f8dc944b2d400479dae62e7811ed95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGameOver: 0
 --- !u!114 &192794644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,9 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916e5dba6b225f934a757fe9873aecbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Phase1: 1
   BubbleContainer: {fileID: 1571682580}
-  GlobalHighLine: {fileID: 1632260452}
   LocalHighGreenLine: {fileID: 1395437}
   LocalHighPinkLine: {fileID: 1369324276}
 --- !u!4 &192794645
@@ -852,7 +851,7 @@ MonoBehaviour:
   MaximalBubbleSize: 3
   SoapFlowRate: 0.8
   BubbleColorsCount: 4
-  BubbleInflationRate: 3
+  BubbleInflationRate: 10
   BubbleFlowSpeed: 3
   BubbleMinimumSoapConsumption: 0.25
   SpikeCount: 6
@@ -2213,7 +2212,7 @@ SpriteRenderer:
   m_Size: {x: 1.8, y: 0.02}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1369324278
