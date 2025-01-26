@@ -24,6 +24,7 @@ namespace Assets._Scripts
 
         void FixedUpdate()
         {
+            localHighestY = 0;
             foreach (Transform child in BubbleContainer.transform)
             {
                 Bubble bubble = child.GetComponent<Bubble>();
