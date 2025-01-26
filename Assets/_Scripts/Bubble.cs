@@ -16,10 +16,7 @@ namespace Assets._Scripts
         public void Pop()
         {
             Debug.Log("Starting popping!");
-            if (this == null)
-            {
-                return;
-            }
+            if (this == null) return;
             burstEffect = Instantiate(burstEffect, transform.position, Quaternion.identity);
             // burstEffect.transform.localScale = transform.localScale / 4;
 
@@ -34,11 +31,9 @@ namespace Assets._Scripts
             ParticleSystem.MinMaxCurve count = particleSystem.emission.GetBurst(0).count;
             count.constant = (int)(transform.localScale.x * 100);
 
-            Debug.Log("Destroying the bubble");
-
             Destroy(gameObject);
 
-            Debug.Log("Bubble destroyed");
+            MusicManager.Instance.PlaySound(MusicManager.Instance.bubblePopSound, 0.75f, 1.25f);
         }
 
         internal void SetColor(Color color)
@@ -64,6 +59,7 @@ namespace Assets._Scripts
 
             Destroy(otherBubble.gameObject);
             Destroy(gameObject);
+            MusicManager.Instance.PlaySound(MusicManager.Instance.bubbleMergeSound, 0.75f, 1.25f);
         }
 
         public void RemoveEvents()
