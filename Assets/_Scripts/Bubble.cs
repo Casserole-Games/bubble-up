@@ -45,6 +45,7 @@ namespace Assets._Scripts
         private void Merge(Bubble otherBubble, Vector3 pos)
         {
             Debug.Log("Merged!");
+            MusicManager.Instance.PlaySound(MusicManager.Instance.bubbleMergeSound, 0.75f, 1.25f);
             // make an instance of itself
             Bubble newBubble = Instantiate(this, pos, Quaternion.identity);
             newBubble.SetColor(color);
@@ -59,7 +60,6 @@ namespace Assets._Scripts
 
             Destroy(otherBubble.gameObject);
             Destroy(gameObject);
-            MusicManager.Instance.PlaySound(MusicManager.Instance.bubbleMergeSound, 0.75f, 1.25f);
         }
 
         public void RemoveEvents()
