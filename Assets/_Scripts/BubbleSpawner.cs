@@ -49,6 +49,7 @@ namespace Assets._Scripts
         void Start()
         {
             RemainingSoap = GameParameters.Instance.StartSoapAmount;
+            UIManager.Instance.SetTankValue((int)RemainingSoap);
         }
 
         void Update()

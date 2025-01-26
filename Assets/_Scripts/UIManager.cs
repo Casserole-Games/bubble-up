@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
 
     public void SetTankValue(int value)
     {
-        soapTankSlider.value = value;
+        soapTankSlider.value = value / GameParameters.Instance.MaxSoapAmount;
     }
 
     public void SetCurrentScore(int value)

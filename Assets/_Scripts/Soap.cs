@@ -11,8 +11,8 @@ namespace Assets._Scripts
             if (!col.gameObject.CompareTag("Bubble")) return;
             if (HighFinder.Instance.localHighestY < 850) return;
 
-            BubbleSpawner.RemainingSoap = 100f;
-            UIManager.Instance.SetTankValue(100);
+            BubbleSpawner.RemainingSoap = GameParameters.Instance.MaxSoapAmount;
+            UIManager.Instance.SetTankValue((int)GameParameters.Instance.MaxSoapAmount);
 
             Destroy(gameObject);
             Destroy(particleEffect);
