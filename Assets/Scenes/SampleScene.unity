@@ -849,7 +849,7 @@ MonoBehaviour:
   GunLatSpeed: 1.75
   InitialBubbleSize: 0.25
   MaximalBubbleSize: 3
-  SoapFlowRate: 0.8
+  SoapFlowRate: 6
   BubbleColorsCount: 4
   BubbleInflationRate: 10
   BubbleFlowSpeed: 3
@@ -2159,7 +2159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1369324277
 SpriteRenderer:
   m_ObjectHideFlags: 0
