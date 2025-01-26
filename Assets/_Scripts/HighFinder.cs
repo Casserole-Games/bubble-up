@@ -27,6 +27,7 @@ namespace Assets._Scripts
 
         void FixedUpdate()
         {
+            var lastLocalHighestY = localHighestY;
             localHighestY = 0;
             foreach (Transform child in BubbleContainer.transform)
             {
@@ -47,6 +48,9 @@ namespace Assets._Scripts
                 }
             }
 
+            //UIManager.Instance.SetBestScore((int)globalHighestY);
+            GameManager.Instance.SetCurrentScore((int)localHighestY);
+
             Vector3 bottomLeft = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
             Vector3 localLinePos = Camera.main.ScreenToWorldPoint(new Vector3(0, localHighestY, 0));
             localLinePos.x = 0;
@@ -54,14 +58,16 @@ namespace Assets._Scripts
             if (Phase1)
             {
                 LocalHighGreenLine.transform.position = localLinePos;
+
+                if (lastLocalHighestY != localHighestY && localHighestY > GameParameters.Instance.Phase1MaxHeight)
+                {
+                    GameManager.Instance.TriggerEmptyTank();
+                }
             }
             else
             {
                 LocalHighPinkLine.transform.position = localLinePos;
             }
-
-            //UIManager.Instance.SetBestScore((int)globalHighestY);
-            GameManager.Instance.SetCurrentScore((int)localHighestY);
         }
     }
 }
