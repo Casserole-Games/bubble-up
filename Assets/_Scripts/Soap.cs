@@ -8,7 +8,7 @@ namespace Assets._Scripts
 
         void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.gameObject.tag != "Bubble") return;
+            if (!col.gameObject.CompareTag("Bubble")) return;
             if (HighFinder.Instance.localHighestY < 850) return;
 
             BubbleSpawner.RemainingSoap = 100f;

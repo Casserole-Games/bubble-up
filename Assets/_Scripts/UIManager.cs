@@ -1,14 +1,34 @@
+using Assets._Scripts;
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public Canvas CharacterElementsCanvas;
+
     public Slider soapTankSlider;
-    public TMP_Text soapTankText;
+    //public TMP_Text soapTankText;
 
     public TMP_Text CurrentScoreText;
-    public TMP_Text BestScoreText;
+    //public TMP_Text BestScoreText;
+
+    public Image TextBubble;
+    public TMP_Text TextBubbleContent;
+    public Image Duck;
+
+    public Sprite DuckFirstSprite;
+    public Sprite DuckSecondSprite;
+
+    private bool readyToSkipText = false;
+    private bool isGameOverText = false;
+    private bool isCreditText = false;
+    public string GameOverText = "";
+    public string CreditText = "";
+
     public static UIManager Instance { get; private set; }
 
     private void Awake()
@@ -22,7 +42,6 @@ public class UIManager : MonoBehaviour
     public void SetTankValue(int value)
     {
         soapTankSlider.value = value;
-        soapTankText.text = value.ToString();
     }
 
     public void SetCurrentScore(int value)
@@ -30,8 +49,67 @@ public class UIManager : MonoBehaviour
         CurrentScoreText.text = value.ToString();
     }
 
-    public void SetBestScore(int value)
+    internal void HighlightCharacterElements(bool shouldHighlight)
     {
-        BestScoreText.text = value.ToString();
+        CharacterElementsCanvas.sortingLayerID = shouldHighlight ? SortingLayer.NameToID("foreground") : SortingLayer.NameToID("background");
+    }
+    internal void DisplayTextBubble(bool shouldDisplay)
+    {
+        TextBubble.gameObject.SetActive(shouldDisplay);
+    }
+
+    internal void SwitchDuckSprite()
+    {
+        Duck.sprite = DuckSecondSprite;
+    }
+
+    internal void GameOver()
+    {
+        DisplayGameOverText();
+    }
+
+
+    internal void ButtonPressed()
+    {
+        if (BubbleSpawner.Instance.IsGameOver && readyToSkipText)
+        {
+            SkipText();
+        }
+    }
+
+    private void SkipText()
+    {
+        if (isGameOverText)
+        {
+            isGameOverText = false;
+            DisplayCredits();
+        }
+        else if (isCreditText)
+        {
+            GameManager.Instance.RestartGame();
+        }
+    }
+
+    private void DisplayGameOverText()
+    {
+        TextBubble.gameObject.SetActive(true);
+        TextBubbleContent.text = GameOverText;
+        isGameOverText = true;
+        StartCoroutine(WaitFor1SecondBeforeSkipping());
+    }
+
+    private void DisplayCredits()
+    {
+        TextBubble.gameObject.SetActive(true);
+        TextBubbleContent.text = CreditText;
+        isCreditText = true;
+        StartCoroutine(WaitFor1SecondBeforeSkipping());
+    }
+
+    private IEnumerator WaitFor1SecondBeforeSkipping()
+    {
+        readyToSkipText = false;
+        yield return new WaitForSeconds(1.0f);
+        readyToSkipText = true;
     }
 }

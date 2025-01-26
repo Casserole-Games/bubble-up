@@ -13,11 +13,14 @@ namespace Assets._Scripts
 
         void Update()
         {
-            transform.Translate(speed * Time.deltaTime * Vector3.right);
-            if (transform.position.x >= rightLimit && speed > 0)
-                direction *= -1;
-            else if (transform.position.x <= leftLimit && speed < 0)
-                direction *= -1;
+            if (!BubbleSpawner.Instance.IsPaused)
+            {
+                transform.Translate(speed * Time.deltaTime * Vector3.right);
+                if (transform.position.x >= rightLimit && speed > 0)
+                    direction *= -1;
+                else if (transform.position.x <= leftLimit && speed < 0)
+                    direction *= -1;
+            }
         }
 
     }

@@ -16,8 +16,12 @@ namespace Assets._Scripts
         private float minimumSoapConsumption => GameParameters.Instance.BubbleMinimumSoapConsumption;
         
         private GameObject bubble;
-        public static float RemainingSoap;
         private float lastRemainingSoap;
+        private bool isInflating = false;
+
+        public static float RemainingSoap;
+        public bool IsPaused = false;
+        public bool IsGameOver = false;
 
         private static List<Color> colors = new(){
             new Color32(0x4C, 0xBF, 0xFF, 0xFF), // Cyan
@@ -30,34 +34,68 @@ namespace Assets._Scripts
             // new Color32(0xFF, 0xC4, 0x82, 0xFF), // Yellow
             // new Color32(0xFF, 0xB0, 0xD3, 0xFF), // Pink
         };
+        private bool emptyTankTriggered;
+
+        public static BubbleSpawner Instance { get; private set; }
+
+        private void Awake()
+        {
+            if (Instance == null)
+                Instance = this;
+            else
+                Destroy(gameObject);
+        }
 
         void Start()
         {
             Color color = new Color32(0, 0, 0, 0);
-            RemainingSoap = 100f;
+            RemainingSoap = 8f;
         }
 
         void Update()
         {
-            if ((bubble == null || transform.childCount < 2) && RemainingSoap > 0)
+            if (IsPaused || IsGameOver)
+            {
+                if (Input.GetKeyUp(keyToDetect))
+                {
+                    UIManager.Instance.ButtonPressed();
+                }
+                return;
+            }
+
+            if ((bubble == null || transform.childCount < 2) && RemainingSoap > 0 && !IsPaused)
             {
                 bubble = CreateBubble(GetNextColor());
                 bubble.layer = LayerMask.NameToLayer("ShooterBubble");
             }
 
-            if (Input.GetKey(keyToDetect) && RemainingSoap > 0)
+            if (Input.GetKey(keyToDetect) && RemainingSoap > 0 && !IsPaused)
             {
+                isInflating = true;
                 lastRemainingSoap = RemainingSoap;
                 InflateBubble();
             }
-            if (Input.GetKeyUp(keyToDetect) || bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize)
+            if (!IsPaused && (Input.GetKeyUp(keyToDetect) || bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize))
             {
+                isInflating = false;
                 DropBubble();
-                if (lastRemainingSoap - RemainingSoap < 0.5f)
+                if (lastRemainingSoap - RemainingSoap < minimumSoapConsumption)
                 {
-                    RemainingSoap = lastRemainingSoap - 0.5f;
+                    RemainingSoap = lastRemainingSoap - minimumSoapConsumption;
                 }
             }
+            if (RemainingSoap <= 0 && !emptyTankTriggered && !isInflating &&!IsPaused)
+            {
+                Debug.Log("Empty tank !");
+                emptyTankTriggered = true;
+                GameManager.Instance.TriggerEmptyTank();
+            }
+        }
+
+        public void ResumeGame()
+        {
+            emptyTankTriggered = false;
+            IsPaused = false;
         }
 
         private void InflateBubble()
@@ -96,7 +134,7 @@ namespace Assets._Scripts
             bubbleComponent.OnBoundaryCollision += (boundary) =>
             {
                 // ignore bottom border
-                if (boundary.transform.position.y < minimumSoapConsumption) return;
+                if (boundary.transform.position.y < -0.5f) return;
 
                 DropBubble();
             };
@@ -125,6 +163,11 @@ namespace Assets._Scripts
         {
             int colorIndex = UnityEngine.Random.Range(0, Math.Min(GameParameters.Instance.BubbleColorsCount, colors.Count));
             return colors[colorIndex];
+        }
+
+        internal void PauseGame()
+        {
+            IsPaused = true;
         }
     }
 }
