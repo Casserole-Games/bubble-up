@@ -20,18 +20,20 @@ namespace Assets._Scripts
         private float lastRemainingSoap;
 
         private static List<Color> colors = new(){
-            Color.red,
-            Color.green,
-            Color.blue,
-            Color.yellow,
-            Color.cyan,
-            Color.magenta,
-            Color.grey,
-            Color.black
+            new Color32(0x4C, 0xBF, 0xFF, 0xFF), // Cyan
+            new Color32(0xFD, 0xFE, 0xFF, 0xFF), // White
+            new Color32(0xB0, 0xFF, 0xDC, 0xFF), // Green
+            new Color32(0xFF, 0x42, 0x45, 0xFF), // Red
+            new Color32(0xFF, 0x97, 0x8B, 0xFF), // Orange
+
+            // new Color32(0x00, 0x6D, 0xD2, 0xFF), // Blue
+            // new Color32(0xFF, 0xC4, 0x82, 0xFF), // Yellow
+            // new Color32(0xFF, 0xB0, 0xD3, 0xFF), // Pink
         };
 
         void Start()
         {
+            Color color = new Color32(0, 0, 0, 0);
             RemainingSoap = 100f;
         }
 
