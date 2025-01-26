@@ -177,8 +177,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 536301299
-  m_SortingLayer: 2
+  m_SortingLayerID: 2139680109
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 8674852860167194411, guid: 8cb7a40cad15ef0408bb8c1f0da41dc4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -590,7 +590,7 @@ MonoBehaviour:
   DuckSecondSprite: {fileID: 21300000, guid: 9a89f4f0eb24a6a459227cfaede3c319, type: 3}
   TutorialText: 'I''M A DIRTY DUCK, SOAP ME UP. [SPACE]'
   Phase2Text: TIME TO POP THE BUBBLES
-  GameOverText: 'SHOWER TIME IS OVER YOUR SCORE IS '
+  GameOverText: 'SHOWER TIME IS OVER! \n YOUR SCORE IS '
   CreditText: "GGJ BERLIN 2025:\\nAntoine Bodin\\nDmitrii Tarbaev\\nTim-Niclas Oelschl\xE4ger\\nRussell
     Stephen Thomas"
 --- !u!1 &201010790
@@ -2398,8 +2398,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 536301299
-  m_SortingLayer: 2
+  m_SortingLayerID: 2139680109
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -1063678576263414441, guid: ef3ab0febffbc7b4f92b34854e94e388, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
