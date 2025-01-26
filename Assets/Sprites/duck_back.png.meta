@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 8fba7625fcd4b0549a34af193cb44c5a
+guid: 33645d87db79fbd4f94c74e3d4ce5f9e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5608819318807225731
-    second: background 1_0
+      213: 2685303116516117338
+    second: duck_back_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: background 1_0
+      name: duck_back_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 180
-        height: 320
+        width: 77
+        height: 77
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d7a952ddb887922b0800000000000000
-      internalID: -5608819318807225731
+      spriteID: a5b413605fc144520800000000000000
+      internalID: 2685303116516117338
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      background 1_0: -5608819318807225731
+      duck_back_0: 2685303116516117338
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 8fba7625fcd4b0549a34af193cb44c5a
+guid: e179fb7fc48c6e14483f5f6fb0c6eab0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5608819318807225731
-    second: background 1_0
+      213: -557185414492787049
+    second: bath_0
+  - first:
+      213: -7683879464460085638
+    second: bath_1
+  - first:
+      213: -7961657987988085112
+    second: bath_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +119,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: background 1_0
+      name: bath_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 180
-        height: 320
+        width: 28
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +134,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d7a952ddb887922b0800000000000000
-      internalID: -5608819318807225731
+      spriteID: 79ee02f41da7448f0800000000000000
+      internalID: -557185414492787049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bath_1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 0
+        width: 154
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7610f786506d5590800000000000000
+      internalID: -7683879464460085638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bath_2
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 24
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 886a1da1e32828190800000000000000
+      internalID: -7961657987988085112
       vertices: []
       indices: 
       edges: []
@@ -148,7 +198,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      background 1_0: -5608819318807225731
+      bath_0: -557185414492787049
+      bath_1: -7683879464460085638
+      bath_2: -7961657987988085112
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -25,6 +25,11 @@ namespace Assets._Scripts
         public float MaxSpikeLength = 0.6f;
         public int MinSpikeCountOnEachSide = 2;
 
+        [Header("Segues")]
+        public float DurationBeforeShowingTextBubble = 1.0f;
+        public float DurationBeforeDuckTurnsAround = 1.0f;
+        public float Phase2TextDisplayDuration = 3.0f;
+        
         public static GameParameters Instance { get; private set; }
 
         private void Awake()
