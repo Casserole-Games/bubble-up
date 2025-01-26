@@ -30,21 +30,23 @@ namespace Assets._Scripts
                 Destroy(gameObject);
         }
 
-        public void PlaySound(AudioClip sound, float minPitch, float maxPitch)
+        public void PlaySound(AudioClip sound, float minPitch, float maxPitch, float volume = 1f)
         {
             if (sound == null) return;
 
             audioSource.pitch = Random.Range(minPitch, maxPitch);
+            audioSource.volume = volume;
             audioSource.PlayOneShot(sound);
         }
 
-        public void StartMusic(AudioClip music, float pitch)
+        public void StartMusic(AudioClip music, float pitch, float volume = 1f)
         {
             if (audioSource.clip == music && audioSource.isPlaying) return;
 
             audioSource.clip = music;
             audioSource.loop = false;
             audioSource.pitch = pitch;
+            audioSource.volume = volume;
             audioSource.Play();
         }
 
