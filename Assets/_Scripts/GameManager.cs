@@ -23,6 +23,7 @@ namespace Assets._Scripts
         private float textDisplayDuration => GameParameters.Instance.Phase2TextDisplayDuration;
 
         public int CurrentScore { get; private set; }
+        private int phase1Score;
 
         internal void TriggerEmptyTank()
         {
@@ -40,6 +41,8 @@ namespace Assets._Scripts
 
         private void SetupPhase2()
         {
+            HighFinder.Instance.Phase1 = false;
+            phase1Score = CurrentScore;
             Debug.Log("SetupPhase2");
             BubbleSpawner.Instance.PauseGame();
             StartCoroutine(DisplayTextBubbleCoroutine());
@@ -130,7 +133,15 @@ namespace Assets._Scripts
 
         internal void SetCurrentScore(int localHighestY)
         {
-            CurrentScore = localHighestY;
+            if (isPhase1)
+            {
+                CurrentScore = localHighestY;
+            }
+            else  if (isPhase2)
+            {
+                var phase2Score = Math.Max(phase1Score - localHighestY, 0);
+                CurrentScore = phase1Score  + phase2Score;
+            }
             UIManager.Instance.SetCurrentScore(CurrentScore);
         }
     }

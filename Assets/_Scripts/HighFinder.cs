@@ -7,9 +7,12 @@ namespace Assets._Scripts
     {
         public static HighFinder Instance { get; private set; }
 
+        public bool Phase1 = true;
+
         public GameObject BubbleContainer;
         public GameObject GlobalHighLine;
-        public GameObject LocalHighLine;
+        public GameObject LocalHighGreenLine;
+        public GameObject LocalHighPinkLine;
 
         internal float globalHighestY = 0;
         internal float localHighestY = 0;
@@ -33,7 +36,7 @@ namespace Assets._Scripts
                 if (!bubble.alreadyCollided) continue;
 
                 // add half of the scale to the position to get the top of the bubble -> to get the top of the bubble
-                float screenPos = Camera.main.WorldToScreenPoint(child.position + child.localScale / 2).y;
+                float screenPos = Camera.main.WorldToScreenPoint(child.position + child.localScale * 0.7f / 2).y;
                 if (screenPos > globalHighestY)
                 {
                     globalHighestY = Math.Min(screenPos, Screen.height);
@@ -45,16 +48,17 @@ namespace Assets._Scripts
             }
 
             Vector3 bottomLeft = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
-            Vector3 globalLinePos = Camera.main.ScreenToWorldPoint(new Vector3(0, globalHighestY, 0));
-            globalLinePos.x = 0;
-            globalLinePos.z = 0;
-            GlobalHighLine.transform.position = globalLinePos;
-            GlobalHighLine.transform.localScale = new Vector3(Math.Abs(bottomLeft.x) * 2 + 1, 0.05f, 1);
             Vector3 localLinePos = Camera.main.ScreenToWorldPoint(new Vector3(0, localHighestY, 0));
             localLinePos.x = 0;
             localLinePos.z = 0;
-            LocalHighLine.transform.position = localLinePos;
-            LocalHighLine.transform.localScale = new Vector3(Math.Abs(bottomLeft.x) * 2 + 1, 0.05f, 1);
+            if (Phase1)
+            {
+                LocalHighGreenLine.transform.position = localLinePos;
+            }
+            else
+            {
+                LocalHighPinkLine.transform.position = localLinePos;
+            }
 
             //UIManager.Instance.SetBestScore((int)globalHighestY);
             GameManager.Instance.SetCurrentScore((int)localHighestY);
