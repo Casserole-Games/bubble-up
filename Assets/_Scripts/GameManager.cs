@@ -81,7 +81,7 @@ namespace Assets._Scripts
         {
             Debug.Log("Resume Game");
             BubbleSpawner.Instance.ResumeGame();
-            BubbleSpawner.RemainingSoap = 8;
+            BubbleSpawner.RemainingSoap = GameParameters.Instance.Phase2StartSoap;
             //register actual green line ??
         }
 

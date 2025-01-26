@@ -30,6 +30,7 @@ namespace Assets._Scripts
         public float DurationBeforeDuckTurnsAround = 1.0f;
         public int Phase1MaxHeight = 1600;
         public float Phase2TextDisplayDuration = 3.0f;
+        public float Phase2StartSoap = 10;
         public float MaxSoapAmount = 100;
         public float StartSoapAmount = 100;
         

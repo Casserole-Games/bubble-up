@@ -19,7 +19,15 @@ namespace Assets._Scripts
         private float lastRemainingSoap;
         private bool isInflating = false;
 
-        public static float RemainingSoap;
+        private static float _RemainingSoap = 1;
+        public static float RemainingSoap
+        {
+            get { return _RemainingSoap; }
+            set { 
+                UIManager.Instance.SetTankValue((int)value);
+                _RemainingSoap = value;
+             }
+        }
         public bool IsPaused = false;
         public bool IsGameOver = false;
 
@@ -49,7 +57,6 @@ namespace Assets._Scripts
         void Start()
         {
             RemainingSoap = GameParameters.Instance.StartSoapAmount;
-            UIManager.Instance.SetTankValue((int)RemainingSoap);
         }
 
         void Update()
@@ -115,9 +122,6 @@ namespace Assets._Scripts
                 bubble.transform.position += (diff * Vector3.down) / divider;
                 bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
             }
-
-            int newSoapValue = (int)RemainingSoap;
-            UIManager.Instance.SetTankValue(newSoapValue);
         }
 
         private GameObject CreateBubble(Color color)

@@ -863,7 +863,7 @@ MonoBehaviour:
   Phase1MaxHeight: 1600
   Phase2TextDisplayDuration: 3
   MaxSoapAmount: 100
-  StartSoapAmount: 100
+  StartSoapAmount: 75
 --- !u!4 &403856389
 Transform:
   m_ObjectHideFlags: 0
