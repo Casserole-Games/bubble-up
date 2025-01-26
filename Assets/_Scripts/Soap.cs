@@ -4,6 +4,8 @@ namespace Assets._Scripts
 {
     public class Soap : MonoBehaviour
     {
+        public GameObject particleEffect;
+
         void OnTriggerEnter2D(Collider2D col)
         {
             if (col.gameObject.tag != "Bubble") return;
@@ -13,6 +15,7 @@ namespace Assets._Scripts
             UIManager.Instance.SetTankValue(100);
 
             Destroy(gameObject);
+            Destroy(particleEffect);
         }
     }
 }
