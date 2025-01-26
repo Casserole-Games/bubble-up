@@ -49,7 +49,7 @@ namespace Assets._Scripts
         void Start()
         {
             Color color = new Color32(0, 0, 0, 0);
-            RemainingSoap = 8f;
+            RemainingSoap = GameParameters.Instance.StartSoapAmount;
         }
 
         void Update()
