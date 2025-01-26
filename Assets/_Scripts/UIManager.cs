@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
     private void DisplayGameOverText()
     {
         TextBubble.gameObject.SetActive(true);
-        TextBubbleContent.text = GameOverText;
+        TextBubbleContent.text = GameOverText + " " + GameManager.Instance.CurrentScore;
         isGameOverText = true;
         StartCoroutine(WaitFor1SecondBeforeSkipping());
     }

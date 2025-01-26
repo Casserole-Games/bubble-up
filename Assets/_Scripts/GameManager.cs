@@ -1,5 +1,9 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -17,6 +21,8 @@ namespace Assets._Scripts
         private float durationBeforeShowingTextBubble => GameParameters.Instance.DurationBeforeShowingTextBubble;
         private float durationBeforeDuckTurnsAround => GameParameters.Instance.DurationBeforeDuckTurnsAround;
         private float textDisplayDuration => GameParameters.Instance.Phase2TextDisplayDuration;
+
+        public int CurrentScore { get; private set; }
 
         internal void TriggerEmptyTank()
         {
@@ -88,7 +94,7 @@ namespace Assets._Scripts
         {
             BubbleSpawner.Instance.IsPaused = true;
             BubbleSpawner.Instance.IsGameOver = true;
-            UIManager.Instance.GameOver();
+            StartCoroutine(PopAllBubbles());
         }
 
         private void Awake()
@@ -101,9 +107,31 @@ namespace Assets._Scripts
                 Destroy(gameObject);
         }
 
+        public IEnumerator PopAllBubbles()
+        {
+            yield return new WaitForSeconds(2.0f);
+
+            List<Bubble> bubbles = GameObject.FindGameObjectsWithTag("Bubble").Select(t => t.GetComponent<Bubble>()).ToList();
+            bubbles.ForEach(b => b.GetComponent<Rigidbody2D>().simulated = false);
+            foreach (var bubble in bubbles)
+            {
+                float waitTime = UnityEngine.Random.Range(0.05f, 0.2f);
+                bubble.Pop();
+                yield return new WaitForSeconds(waitTime);
+            };
+
+            UIManager.Instance.GameOver();
+        }
+
         public void RestartGame()
         {
             SceneManager.LoadScene("SampleScene");
+        }
+
+        internal void SetCurrentScore(int localHighestY)
+        {
+            CurrentScore = localHighestY;
+            UIManager.Instance.SetCurrentScore(CurrentScore);
         }
     }
 }
