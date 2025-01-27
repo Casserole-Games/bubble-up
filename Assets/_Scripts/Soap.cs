@@ -9,8 +9,8 @@ namespace Assets._Scripts
 
         void OnTriggerEnter2D(Collider2D col)
         {
-            if (!col.gameObject.CompareTag("Bubble")) return;
-            if (HighFinder.Instance.localHighestY < 850) return;
+            if (!GameManager.Instance.CanRefillSoap || !col.gameObject.CompareTag("Bubble")) return;
+            //if (HighFinder.Instance.localHighestY < 850) return;
 
             if (BubbleSpawner.RemainingSoap > GameParameters.Instance.MaxSoapAmount / 2)
             {
