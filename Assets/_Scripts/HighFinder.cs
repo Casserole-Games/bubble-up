@@ -41,6 +41,7 @@ namespace Assets._Scripts
 
                 // add half of the scale to the position to get the top of the bubble -> to get the top of the bubble
                 float screenPos = Camera.main.WorldToScreenPoint(child.position + child.localScale * 0.7f / 2).y;
+
                 if (screenPos > globalHighestY)
                 {
                     globalHighestY = Math.Min(screenPos, Screen.height);
@@ -51,7 +52,6 @@ namespace Assets._Scripts
                 }
             }
 
-            //UIManager.Instance.SetBestScore((int)globalHighestY);
             GameManager.Instance.SetCurrentScore((int)localHighestY);
 
             Vector3 bottomLeft = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
@@ -61,7 +61,10 @@ namespace Assets._Scripts
             if (phase1)
             {
                 LocalHighGreenLine.transform.position = localLinePos;
-
+                if (localHighestY > GameParameters.Instance.MinScoreBeforeRefill)
+                {
+                    GameManager.Instance.SetSoapRefill(true);
+                }
                 if (lastLocalHighestY != localHighestY && localHighestY > GameParameters.Instance.Phase1MaxHeight)
                 {
                     GameManager.Instance.TriggerEmptyTank();

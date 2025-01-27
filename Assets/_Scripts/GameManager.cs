@@ -24,7 +24,14 @@ namespace Assets._Scripts
         private float textDisplayDuration => GameParameters.Instance.Phase2TextDisplayDuration;
 
         public int CurrentScore { get; private set; }
+        public bool CanRefillSoap = false;
+
         private int phase1Score;
+
+        private void Start()
+        {
+            
+        }
 
         void Update()
         {
@@ -90,7 +97,6 @@ namespace Assets._Scripts
             Debug.Log("Resume Game");
             BubbleSpawner.Instance.ResumeGame();
             BubbleSpawner.RemainingSoap = GameParameters.Instance.Phase2StartSoap;
-            //register actual green line ??
         }
 
         private void DisplayTextBubble(bool shouldDisplay, string text = "")
@@ -153,6 +159,12 @@ namespace Assets._Scripts
                 CurrentScore = phase1Score  + phase2Score;
             }
             UIManager.Instance.SetCurrentScore(CurrentScore);
+        }
+
+        internal void SetSoapRefill(bool canRefillSoap)
+        {
+            Debug.Log("SetSoapRefill " + canRefillSoap);
+            CanRefillSoap = canRefillSoap;
         }
     }
 }

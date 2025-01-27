@@ -13,11 +13,17 @@ namespace Assets._Scripts
         public float GunLatSpeed = 1.0f;
         public float InitialBubbleSize = 1.0f;
         public float MaximalBubbleSize = 8.0f;
-        public float SoapFlowRate = 0.1f;
         public int BubbleColorsCount = 5;
         public float BubbleInflationRate = 0.1f;
         public float BubbleFlowSpeed = 5.0f;
         public float BubbleMinimumSoapConsumption = 0.25f;
+
+        [Header("Soap")]
+        public float SoapFlowRate = 0.1f;
+        public float MaxSoapAmount = 100;
+        public float StartSoapAmount = 100;
+        public float Phase2StartSoap = 10;
+
 
         [Header("Spikes")]
         public int SpikeCount = 6;
@@ -30,11 +36,14 @@ namespace Assets._Scripts
         public float DurationBeforeDuckTurnsAround = 1.0f;
         public int Phase1MaxHeight = 1600;
         public float Phase2TextDisplayDuration = 3.0f;
-        public float Phase2StartSoap = 10;
-        public float MaxSoapAmount = 100;
-        public float StartSoapAmount = 100;
         public float TutorialTime = 3f;
-        
+
+        [Header("Score")]
+        public int MaxScoreInScreen = 1000;
+        public int MinScoreBeforeRefill = 500;
+
+
+
         public static GameParameters Instance { get; private set; }
 
         private void Awake()
