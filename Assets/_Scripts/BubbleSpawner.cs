@@ -1,15 +1,17 @@
+using DG.Tweening;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets._Scripts
 {
-    internal class BubbleSpawner : MonoBehaviour
+    internal class BubbleSpawner : SingletonBehaviour<BubbleSpawner>
     {
+        static public event Action OnEmptyTank;
+
         public GameObject BubblePrefab;
         public GameObject BubbleContainer;
-
-        private KeyCode keyToDetect = KeyCode.Space;
 
         private const float localScaleBase = 0.25f;
 
@@ -18,6 +20,8 @@ namespace Assets._Scripts
         private GameObject bubble;
         private float lastRemainingSoap;
         private bool isInflating = false;
+        private bool canInflate = true;
+        private bool isUnpausingOnKeyRelease = false;
 
         private static float _RemainingSoap = 1;
         public static float RemainingSoap
@@ -28,31 +32,23 @@ namespace Assets._Scripts
                 _RemainingSoap = value;
              }
         }
-        public bool IsPaused = false;
+        public bool IsSpawnerPaused = false;
         public bool IsGameOver = false;
+        public bool CanFinishPhase = true;
 
         private static List<Color> colors = new(){
             new Color32(0x4C, 0xBF, 0xFF, 0xFF), // Cyan
-            new Color32(0xFD, 0xFE, 0xFF, 0xFF), // White
+            //new Color32(0xFD, 0xFE, 0xFF, 0xFF), // White
             new Color32(0xB0, 0xFF, 0xDC, 0xFF), // Green
             new Color32(0xFF, 0x42, 0x45, 0xFF), // Red
-            new Color32(0xFF, 0x97, 0x8B, 0xFF), // Orange
+            //new Color32(0xFF, 0x97, 0x8B, 0xFF), // Orange
+            new Color32(0xC8, 0xA2, 0xFF, 0xFF),  // Soft Lavender
 
             // new Color32(0x00, 0x6D, 0xD2, 0xFF), // Blue
             // new Color32(0xFF, 0xC4, 0x82, 0xFF), // Yellow
             // new Color32(0xFF, 0xB0, 0xD3, 0xFF), // Pink
         };
         private bool emptyTankTriggered;
-
-        public static BubbleSpawner Instance { get; private set; }
-
-        private void Awake()
-        {
-            if (Instance == null)
-                Instance = this;
-            else
-                Destroy(gameObject);
-        }
 
         void Start()
         {
@@ -61,54 +57,76 @@ namespace Assets._Scripts
 
         void Update()
         {
-            if (IsPaused || IsGameOver)
+            if (GameManager.Instance.GameState != GameState.Phase1 && GameManager.Instance.GameState != GameState.Phase2) return;
+
+            if (IsSpawnerPaused && isUnpausingOnKeyRelease && InputManager.InputUp())
             {
-                if (Input.GetKeyUp(keyToDetect))
+                IsSpawnerPaused = false;
+                isUnpausingOnKeyRelease = false;
+            }
+
+            if (IsSpawnerPaused || IsGameOver)
+            {
+                if (InputManager.InputUp())
                 {
                     UIManager.Instance.ButtonPressed();
                 }
                 return;
             }
 
-            if ((bubble == null || transform.childCount < 2) && RemainingSoap > 0)
+            if ((bubble == null && transform.childCount < 2) && RemainingSoap > 0)
             {
                 bubble = CreateBubble(GetNextColor());
                 bubble.layer = LayerMask.NameToLayer("ShooterBubble");
             }
 
-            if (Input.GetKey(keyToDetect) && RemainingSoap > 0)
+            if (canInflate && InputManager.InputHeld() && RemainingSoap > 0)
             {
                 isInflating = true;
                 lastRemainingSoap = RemainingSoap;
                 InflateBubble();
             }
-            if (Input.GetKeyUp(keyToDetect) || (bubble != null && bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize))
+
+            bool hasBubbleReachedMaxSize = bubble != null && bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize;
+            bool isKeyReleased = InputManager.InputUp();
+            if (isInflating && (isKeyReleased || hasBubbleReachedMaxSize))
             {
-                isInflating = false;
+                if (hasBubbleReachedMaxSize) canInflate = false;
                 DropBubble();
                 if (lastRemainingSoap - RemainingSoap < minimumSoapConsumption)
                 {
                     RemainingSoap = lastRemainingSoap - minimumSoapConsumption;
                 }
             }
-            if (RemainingSoap <= 0 && !emptyTankTriggered && !isInflating)
+            if (RemainingSoap <= 0 && !emptyTankTriggered)
             {
                 Debug.Log("Empty tank !");
                 emptyTankTriggered = true;
-                GameManager.Instance.TriggerEmptyTank();
+                DropBubble();
             }
+            if (CanFinishPhase && emptyTankTriggered && HighFinder.Instance.AreBubblesSettled()) 
+            {
+                if (RemainingSoap <= 0) // case with getting additional soap with last bubble
+                {
+                    StartCoroutine("InvokeEmptyTank"); 
+                } else
+                {
+                    emptyTankTriggered = false;
+                }
+            }
+            if (isKeyReleased) canInflate = true;
         }
 
-        public void ResumeGame()
+        private IEnumerator InvokeEmptyTank()
         {
-            emptyTankTriggered = false;
-            IsPaused = false;
+            yield return new WaitForSeconds(0.5f);
+            HighFinder.Instance.Calculate();
+            OnEmptyTank?.Invoke();
         }
 
         private void InflateBubble()
         {
-            MusicManager.Instance.StartMusic(MusicManager.Instance.bubbleInflatingSound, 0.5f);
-            // Debug.Log("Inflate !");
+            SFXManager.Instance.StartSound(SFXManager.Instance.bubbleInflatingSound, 0.5f, GameParameters.Instance.InflatingVolume);
             RemainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
             var localScale = bubble.transform.localScale.x;
             if (localScale < GameParameters.Instance.MaximalBubbleSize)
@@ -146,16 +164,28 @@ namespace Assets._Scripts
                 Debug.Log("Drop on boundary !" + boundary + boundary.transform.position);
                 DropBubble();
             };
+            newBubble.GetComponent<Bubble>().OnBubblePopped += HandleBubblePopped;
 
             return newBubble;
         }
 
+        private void HandleBubblePopped()
+        {
+            canInflate = false;
+            isInflating = false;
+        }
+
         private void DropBubble()
         {
-            MusicManager.Instance.StopMusic();
-            MusicManager.Instance.PlaySound(MusicManager.Instance.bubbleDropSound, 0.75f, 1.25f);
+            if (bubble != null) {
+                bubble.GetComponent<Bubble>().OnBubblePopped -= HandleBubblePopped;
+            }
+            isInflating = false;
+            SFXManager.Instance.StopSound();
+
             // simulate gravity
             Debug.Log("Drop !");
+            if (!bubble) return; // bugfix
             bubble.transform.parent = BubbleContainer.transform;
             bubble.layer = LayerMask.NameToLayer("Bubble");
 
@@ -167,6 +197,8 @@ namespace Assets._Scripts
             baseSpeed *= (float)Math.Sqrt(rb.mass);
             float appliedSpeed = Mathf.Min(baseSpeed, GameParameters.Instance.GunLatSpeed);
             rb.AddForce(new Vector2(appliedSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
+            bubble.GetComponent<Bubble>().alreadyDropped = true;
+            bubble = null;
         }
 
         private Color GetNextColor()
@@ -175,9 +207,36 @@ namespace Assets._Scripts
             return colors[colorIndex];
         }
 
-        internal void PauseGame()
+        internal void PauseSpawner()
         {
-            IsPaused = true;
+            IsSpawnerPaused = true;
+        }
+        public void ResumeSpawner()
+        {
+            emptyTankTriggered = false;
+            isUnpausingOnKeyRelease = true;
+        }
+
+        public void AddSoap(float amountToAdd, Action onComplete = null)
+        {
+            float oldValue = 0f;
+
+            float maxSoapAmount = GameParameters.Instance.MaxSoapAmount;
+            float targetAmount = Mathf.Min(RemainingSoap + amountToAdd, maxSoapAmount);
+            float amountToAddLimited = targetAmount - RemainingSoap;
+
+            DOTween.To(
+                () => 0f,
+                currentValue =>
+                {
+                    float delta = currentValue - oldValue;
+                    oldValue = currentValue;
+                    RemainingSoap += delta;
+                },
+                amountToAddLimited,
+                GameParameters.Instance.DurationOfSoapRefill
+            )
+            .OnComplete(() => onComplete?.Invoke());
         }
     }
 }

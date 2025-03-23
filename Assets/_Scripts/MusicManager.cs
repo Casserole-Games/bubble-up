@@ -1,58 +1,49 @@
 using UnityEngine;
-using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
-namespace Assets._Scripts
+public class MusicManager : SingletonPersistent<MusicManager>
 {
-    [RequireComponent(typeof(AudioSource))]
-    public class MusicManager : MonoBehaviour
+    private AudioSource audioSource;
+
+    override protected void Awake()
     {
-        public static MusicManager Instance { get; private set; }
+        base.Awake();
+        audioSource = GetComponent<AudioSource>();
+        if (!audioSource.isPlaying) audioSource.Play();
+    }
 
-        [Header("Music")]
-        public AudioClip backgroundMusic;
+    private void Update()
+    {
+        if (!InputManager.ControlMusic()) return;
+        Toggle();
+        
+    }
 
-        [Header("Sounds")]
-        public AudioClip bubblePopSound;
-        public AudioClip bubbleInflatingSound;
-        public AudioClip bubbleDropSound;
-        public AudioClip bubbleMergeSound;
-
-        private AudioSource audioSource;
-
-        private void Awake()
+    public void Toggle()
+    {
+        if (!audioSource.mute)
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                audioSource = GetComponent<AudioSource>();
-            }
-            else
-                Destroy(gameObject);
+            Mute();
         }
-
-        public void PlaySound(AudioClip sound, float minPitch, float maxPitch, float volume = 1f)
+        else
         {
-            if (sound == null) return;
-
-            audioSource.pitch = Random.Range(minPitch, maxPitch);
-            audioSource.volume = volume;
-            audioSource.PlayOneShot(sound);
+            Unmute();
         }
+    }
 
-        public void StartMusic(AudioClip music, float pitch, float volume = 1f)
-        {
-            if (audioSource.clip == music && audioSource.isPlaying) return;
+    public void Mute()
+    {
+        audioSource.mute = true;
+        AnimationManager.Instance.PauseRadio();
+        UIManager.Instance.ShowMuteMusicButton(true);
+        EventSystem.current.SetSelectedGameObject(null);
+    }
 
-            audioSource.clip = music;
-            audioSource.loop = false;
-            audioSource.pitch = pitch;
-            audioSource.volume = volume;
-            audioSource.Play();
-        }
-
-        public void StopMusic()
-        {
-            audioSource.Stop();
-        }
+    public void Unmute()
+    {
+        audioSource.mute = false;
+        AnimationManager.Instance.PlayRadio();
+        UIManager.Instance.ShowMuteMusicButton(false);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

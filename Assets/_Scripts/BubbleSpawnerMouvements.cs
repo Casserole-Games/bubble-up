@@ -13,7 +13,7 @@ namespace Assets._Scripts
 
         void Update()
         {
-            if (!BubbleSpawner.Instance.IsPaused)
+            if (!BubbleSpawner.Instance.IsSpawnerPaused)
             {
                 transform.Translate(speed * Time.deltaTime * Vector3.right);
                 if (transform.position.x >= rightLimit && speed > 0)

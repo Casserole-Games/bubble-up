@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets._Scripts
 {
-    internal class GameParameters : MonoBehaviour
+    internal class GameParameters : SingletonBehaviour<GameParameters>
     {
         [Header("Bubbles")]
         public float GunLatSpeed = 1.0f;
@@ -22,41 +17,24 @@ namespace Assets._Scripts
         public float SoapFlowRate = 0.1f;
         public float MaxSoapAmount = 100;
         public float StartSoapAmount = 100;
-        public float Phase2StartSoap = 10;
-
-
-        [Header("Spikes")]
-        public int SpikeCount = 6;
-        public float MinSpikeLength = 0.3f;
-        public float MaxSpikeLength = 0.6f;
-        public int MinSpikeCountOnEachSide = 2;
+        public float Phase2AdditionalSoap = 10;
+        public float BonusSoap = 15;
 
         [Header("Segues")]
         public float DurationBeforeShowingTextBubble = 1.0f;
         public float DurationBeforeDuckTurnsAround = 1.0f;
+        public float DurationBeforeSkipping = 1.0f;
         public int Phase1MaxHeight = 1600;
-        public float Phase2TextDisplayDuration = 3.0f;
         public float TutorialTime = 3f;
+        public float DurationOfSoapRefill = 1f;
 
         [Header("Score")]
         public int MaxScoreInScreen = 1000;
         public int MinScoreBeforeRefill = 500;
 
-
-
-        public static GameParameters Instance { get; private set; }
-
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-
+        [Header("Volume")]
+        public float InflatingVolume = 1f;
+        public float MergeVolume = 1f;
+        public float PopVolume = 1f;
     }
 }

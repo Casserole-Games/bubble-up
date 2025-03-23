@@ -5,13 +5,26 @@ namespace Assets._Scripts
 {
     internal class Bubble : MonoBehaviour
     {
+        public event Action OnBubblePopped;
+
         public GameObject burstEffect;
 
-        internal bool alreadyCollided = false;
-        internal event Action<GameObject> OnBoundaryCollision;
+        public bool alreadyCollided;
+        public bool alreadyDropped;
+        public event Action<GameObject> OnBoundaryCollision;
 
+        private Color color;
+        private Rigidbody2D rb;
 
-        private Color color = Color.white;
+        private void Start()
+        {
+            rb = GetComponent<Rigidbody2D>();
+        }
+
+        public bool IsSettled() {
+            if (rb == null) return false;
+            return Math.Abs(rb.linearVelocityY) < 0.1f; 
+        }
 
         public void Pop()
         {
@@ -31,9 +44,10 @@ namespace Assets._Scripts
             ParticleSystem.MinMaxCurve count = particleSystem.emission.GetBurst(0).count;
             count.constant = (int)(transform.localScale.x * 100);
 
+            OnBubblePopped?.Invoke();
             Destroy(gameObject);
 
-            MusicManager.Instance.PlaySound(MusicManager.Instance.bubblePopSound, 0.75f, 1.25f);
+            SFXManager.Instance.PlaySound(SFXManager.Instance.bubblePopSound, 0.75f, 1.25f, GameParameters.Instance.PopVolume);
         }
 
         internal void SetColor(Color color)
@@ -45,7 +59,7 @@ namespace Assets._Scripts
         private void Merge(Bubble otherBubble, Vector3 pos)
         {
             Debug.Log("Merged!");
-            MusicManager.Instance.PlaySound(MusicManager.Instance.bubbleMergeSound, 0.75f, 1.25f, 0.2f);
+            SFXManager.Instance.PlaySound(SFXManager.Instance.bubbleMergeSound, 0.90f, 1.10f, GameParameters.Instance.MergeVolume);
             // make an instance of itself
             Bubble newBubble = Instantiate(this, pos, Quaternion.identity);
             newBubble.SetColor(color);
@@ -67,7 +81,7 @@ namespace Assets._Scripts
             OnBoundaryCollision = null;
         }
 
-        void OnCollisionEnter2D(Collision2D col)
+        void OnCollisionStay2D(Collision2D col)
         {
             if (col.gameObject.CompareTag("Boundary"))
             {
@@ -75,24 +89,27 @@ namespace Assets._Scripts
                 RemoveEvents();
             }
 
-            if (Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.globalHighestY)
+            if ((Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.localHighestY) && !alreadyCollided)
             {
                 alreadyCollided = true;
                 RemoveEvents();
             }
 
-            if (col.contacts.Length > 0 && col.gameObject.CompareTag("Bubble") && alreadyCollided)
+            if (col.contacts.Length > 0 && col.gameObject.CompareTag("Bubble"))
             {
                 Bubble bubble = col.gameObject.GetComponent<Bubble>();
                 if (bubble == null) return;
 
-                var newPos = (transform.position + col.gameObject.transform.position) / 2;
-
-                // don't call it on both bubbles
-                if (bubble.color == color && col.transform.position.y >= transform.position.y)
+                if (alreadyCollided && alreadyDropped && bubble.alreadyDropped)
                 {
-                    Merge(bubble, newPos);
+                    // don't call it on both bubbles
+                    if (bubble.color == color && col.transform.position.y >= transform.position.y)
+                    {
+                        var newPos = new Vector2((transform.position.x + col.gameObject.transform.position.x) / 2, Math.Min(transform.position.y, col.gameObject.transform.position.y));
+                        Merge(bubble, newPos);
+                    }
                 }
+                
             }
         }
     }

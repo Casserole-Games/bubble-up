@@ -1,28 +1,50 @@
-using System;
+﻿using DG.Tweening;
 using UnityEngine;
 
 namespace Assets._Scripts
 {
     public class Soap : MonoBehaviour
     {
-        public GameObject particleEffect;
+        public GameObject idleParticleEffect;
+        public GameObject collectionParticles;
+        
+        private void OnEnable()
+        {
+            collectionParticles.GetComponent<MoveParticlesToTarget>().OnParticlesMovementStart += HandleBlockPhase;
+            collectionParticles.GetComponent<MoveParticlesToTarget>().OnFirstParticleReachedTarget += HandleRefillSoap;
+        }
+
+        private void OnDisable()
+        {
+            collectionParticles.GetComponent<MoveParticlesToTarget>().OnParticlesMovementStart -= HandleBlockPhase;
+            collectionParticles.GetComponent<MoveParticlesToTarget>().OnFirstParticleReachedTarget -= HandleRefillSoap;
+        }
 
         void OnTriggerEnter2D(Collider2D col)
         {
-            if (!GameManager.Instance.CanRefillSoap || !col.gameObject.CompareTag("Bubble")) return;
-            //if (HighFinder.Instance.localHighestY < 850) return;
+            if (!col.gameObject.CompareTag("Bubble")) return;
+            GetComponent<SpriteRenderer>().enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
+            Destroy(idleParticleEffect);
+            collectionParticles.GetComponent<ParticleSystem>().Play();
+            collectionParticles.GetComponent<MoveParticlesToTarget>().StartMovement();
+        }
 
-            if (BubbleSpawner.RemainingSoap > GameParameters.Instance.MaxSoapAmount / 2)
-            {
-                BubbleSpawner.RemainingSoap = Math.Min(BubbleSpawner.RemainingSoap + (GameParameters.Instance.MaxSoapAmount / 8), GameParameters.Instance.MaxSoapAmount);
-            }
-            else
-            {
-                BubbleSpawner.RemainingSoap = GameParameters.Instance.MaxSoapAmount / 2;
-            }
+        private void HandleBlockPhase()
+        {
+            BubbleSpawner.Instance.CanFinishPhase = false;
+        }
 
+        private void HandleRefillSoap()
+        {
+            BubbleSpawner.Instance.AddSoap(GameParameters.Instance.BonusSoap, HandleSoapAmountChanged);
+        }
+
+        private void HandleSoapAmountChanged()
+        {
+            BubbleSpawner.Instance.CanFinishPhase = true;
+            Destroy(collectionParticles);
             Destroy(gameObject);
-            Destroy(particleEffect);
         }
     }
 }

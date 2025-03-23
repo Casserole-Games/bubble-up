@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8622708666643079689}
   - component: {fileID: 6587979840834685065}
   - component: {fileID: 353322839621719300}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Bubble
   m_TagString: Bubble
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 1
   m_SpriteSortPoint: 0
 --- !u!58 &8622708666643079689
 CircleCollider2D:
@@ -166,3 +166,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   burstEffect: {fileID: 8739111431910360721, guid: cb05b3194daeec2f7a214f84b18c5526, type: 3}
+  alreadyCollided: 0
+  alreadyDropped: 0

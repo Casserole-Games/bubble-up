@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class SpikePoint : MonoBehaviour
 {
-    private Collider2D pointyCollider;
-    
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("Spike pointy end: Collision");
