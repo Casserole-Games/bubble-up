@@ -76,7 +76,7 @@ namespace Assets._Scripts
                 }
                 LocalHighGreenLine.transform.position = localLinePos;
 
-                if (!_maxHeightAchieved && lastLocalHighestY == localHighestY && GameManager.Instance.CurrentScore >= GameParameters.Instance.Phase1MaxHeight && AreBubblesSettled())
+                if (!_maxHeightAchieved && GameManager.Instance.CurrentScore >= GameParameters.Instance.Phase1MaxHeight && AreBubblesSettled())
                 {
                     OnMaxHeightAchieved?.Invoke();
                     _maxHeightAchieved = true;

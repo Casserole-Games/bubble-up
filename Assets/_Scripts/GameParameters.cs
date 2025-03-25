@@ -36,5 +36,9 @@ namespace Assets._Scripts
         public float InflatingVolume = 1f;
         public float MergeVolume = 1f;
         public float PopVolume = 1f;
+        public float ScoreVolume = 1f;
+        public float WinVolume = 1f;
+        public float PickupVolume = 1f;
+        public float DuckVolume = 1f;
     }
 }

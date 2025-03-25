@@ -13,17 +13,23 @@ namespace Assets._Scripts
         public bool alreadyDropped;
         public event Action<GameObject> OnBoundaryCollision;
 
-        private Color color;
-        private Rigidbody2D rb;
+        private Color _color;
+        public Color Color
+        {
+            get { return _color; }
+            set { SetColor(value); }
+        }
+
+        private Rigidbody2D _rb;
 
         private void Start()
         {
-            rb = GetComponent<Rigidbody2D>();
+            _rb = GetComponent<Rigidbody2D>();
         }
 
         public bool IsSettled() {
-            if (rb == null) return false;
-            return Math.Abs(rb.linearVelocityY) < 0.1f; 
+            if (_rb == null) return false;
+            return Math.Abs(_rb.linearVelocityY) < 0.1f; 
         }
 
         public void Pop()
@@ -35,7 +41,7 @@ namespace Assets._Scripts
 
             ParticleSystem particleSystem = burstEffect.GetComponent<ParticleSystem>();
             ParticleSystem.MainModule main = particleSystem.main;
-            main.startColor = color;
+            main.startColor = _color;
             main.startSize = Math.Min(transform.localScale.x / 8, 0.2f);
 
             ParticleSystem.ShapeModule shape = particleSystem.shape;
@@ -52,7 +58,7 @@ namespace Assets._Scripts
 
         internal void SetColor(Color color)
         {
-            this.color = color;
+            this._color = color;
             GetComponent<SpriteRenderer>().color = color;
         }
 
@@ -62,7 +68,7 @@ namespace Assets._Scripts
             SFXManager.Instance.PlaySound(SFXManager.Instance.bubbleMergeSound, 0.90f, 1.10f, GameParameters.Instance.MergeVolume);
             // make an instance of itself
             Bubble newBubble = Instantiate(this, pos, Quaternion.identity);
-            newBubble.SetColor(color);
+            newBubble.SetColor(Color);
             newBubble.alreadyCollided = true;
 
             float newScale = Mathf.Sqrt(transform.localScale.x * transform.localScale.x
@@ -103,7 +109,7 @@ namespace Assets._Scripts
                 if (alreadyCollided && alreadyDropped && bubble.alreadyDropped)
                 {
                     // don't call it on both bubbles
-                    if (bubble.color == color && col.transform.position.y >= transform.position.y)
+                    if (bubble.Color == Color && col.transform.position.y >= transform.position.y)
                     {
                         var newPos = new Vector2((transform.position.x + col.gameObject.transform.position.x) / 2, Math.Min(transform.position.y, col.gameObject.transform.position.y));
                         Merge(bubble, newPos);

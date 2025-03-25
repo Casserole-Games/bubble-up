@@ -148,8 +148,8 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         // Final display of the account
         Confetti.Play();
-        SFXManager.Instance.PlaySound(SFXManager.Instance.winSound, 1f, 1f, GameParameters.Instance.PopVolume);
-        DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%>" + finalScore + "</size></link>", false, SkipParameter.CanSkipAfterWait);
+        SFXManager.Instance.PlaySound(SFXManager.Instance.winSound, 1f, 1f, GameParameters.Instance.WinVolume);
+        DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%><color=#ff669a>" + finalScore + "</size></link></color>", false, SkipParameter.CanSkipAfterWait, false);
     }
 
     internal IEnumerator ShowAnimatedScore(string textBeforeScore, int score)
@@ -162,9 +162,9 @@ public class UIManager : SingletonBehaviour<UIManager>
         {
             if (currentScore % 3 == 0)
             {
-                SFXManager.Instance.PlaySound(SFXManager.Instance.scoreSound, 1f, 1f, 0.8f);
+                SFXManager.Instance.PlaySound(SFXManager.Instance.scoreSound, 1f, 1f, GameParameters.Instance.ScoreVolume);
             }
-            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%>" + currentScore + "</size></link>", false, SkipParameter.NonSkippable);
+            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#ff669a>" + currentScore + "</size></link></color>", false, SkipParameter.NonSkippable, false);
             yield return new WaitForSecondsRealtime(delay);
         }
 
@@ -172,7 +172,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         for (int currentScore = score - 10; currentScore <= score; currentScore++)
         {
             SFXManager.Instance.PlaySound(SFXManager.Instance.scoreSound, 1f, 1f, 0.8f);
-            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%>" + currentScore + "</size></link>", false, SkipParameter.NonSkippable);
+            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#ff669a>" + currentScore + "</size></link></color>", false, SkipParameter.NonSkippable, false);
             yield return new WaitForSecondsRealtime(delay);
             delay += deltaDelay; // Gradually increase the delay
         }
@@ -222,14 +222,23 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     private IEnumerator CutsceneBetweenPhases()
     {
+        // finish line accent
+        if (GameManager.Instance.CurrentScore >= GameParameters.Instance.Phase1MaxHeight)
+        {
+            FinishLineTop.GetComponentInParent<Canvas>().sortingLayerID = SortingLayer.NameToID("foreground");
+            FinishLineTop.GetComponent<Animator>().Play("finish_line_accent");
+            yield return new WaitForSeconds(1.5f);
+            FinishLineTop.GetComponentInParent<Canvas>().sortingLayerID = SortingLayer.NameToID("background");
+        }
+
         AnimationManager.Instance.PlayGreenLineFade();
         FinishLineTop.GetComponent<Animator>().Play("finish_line_hide");
 
-        //put text bubble, duck and bathtub in front of everything
+        // put text bubble, duck and bathtub in front of everything
         HighlightCharacterElements(true);
 
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeDuckTurnsAround);
-        //switch duck sprite
+        // switch duck sprite
         SwitchDuckSprite();
 
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeShowingTextBubble);
@@ -251,7 +260,6 @@ public class UIManager : SingletonBehaviour<UIManager>
         BubbleSpawner.Instance.IsGameOver = true;
         StartCoroutine(GameManager.Instance.PopAllBubbles());
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeShowingTextBubble);
-        DisplayTextBubble(GameOverText, false, SkipParameter.NonSkippable);
         nextCutscene = PlayCutsceneGameOverPt2;
     }
 
@@ -261,7 +269,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         nextCutscene = () => GameManager.Instance.RestartGame();
     }
 
-    public void DisplayTextBubble(string text, bool bigBubble = false, SkipParameter waitBeforeSkipping = SkipParameter.CanSkipImmediately)
+    public void DisplayTextBubble(string text, bool bigBubble = false, SkipParameter waitBeforeSkipping = SkipParameter.CanSkipImmediately, bool duckSound = true)
     {
         if (text == "") return;
         if (bigBubble)
@@ -288,6 +296,11 @@ public class UIManager : SingletonBehaviour<UIManager>
                 break;
             case SkipParameter.NonSkippable:
                 break;
+        }
+
+        if (duckSound)
+        {
+            SFXManager.Instance.PlayDuckSound();
         }
     }
 

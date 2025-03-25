@@ -203,7 +203,30 @@ namespace Assets._Scripts
 
         private Color GetNextColor()
         {
-            int colorIndex = UnityEngine.Random.Range(0, Math.Min(GameParameters.Instance.BubbleColorsCount, colors.Count));
+            int colorIndex = 0;
+
+            if (GameManager.Instance.GameState == GameState.Phase2)
+            {
+                // collect used colors
+                HashSet<Color> usedColorsHash = new HashSet<Color>();
+                foreach (Transform bubbleTransform in BubbleContainer.transform)
+                {
+                    Bubble bubble = bubbleTransform.GetComponent<Bubble>();
+                    if (bubble == null) continue;
+                    usedColorsHash.Add(bubble.Color);
+                }
+                
+                if (usedColorsHash.Count > 0)
+                {
+                    List<Color> usedColors = new List<Color>(usedColorsHash);
+                    colorIndex = UnityEngine.Random.Range(0, usedColors.Count);
+                }
+
+            } else
+            {
+                colorIndex = UnityEngine.Random.Range(0, Math.Min(GameParameters.Instance.BubbleColorsCount, colors.Count));
+            }
+                
             return colors[colorIndex];
         }
 
