@@ -223,7 +223,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     private IEnumerator CutsceneBetweenPhases()
     {
         // finish line accent
-        if (GameManager.Instance.CurrentScore >= GameParameters.Instance.Phase1MaxHeight)
+        if (HighFinder.Instance.MaxHeightAchieved)
         {
             FinishLineTop.GetComponentInParent<Canvas>().sortingLayerID = SortingLayer.NameToID("foreground");
             FinishLineTop.GetComponent<Animator>().Play("finish_line_accent");
@@ -249,12 +249,23 @@ public class UIManager : SingletonBehaviour<UIManager>
     public void PlayCutsceneGameOver()
     {
         GameManager.Instance.GameState = GameState.UICutscene;
+        AnimationManager.Instance.PlayDimIn(3);
+        HighFinder.Instance.LocalHighGreenLine.GetComponent<Animator>().Play("green_line_hide");
+        HighFinder.Instance.LocalHighPinkLine.GetComponent<Animator>().Play("pink_line_hide");
         StartCoroutine(CutsceneGameOver());
     }
 
     private IEnumerator CutsceneGameOver()
     {
-        AnimationManager.Instance.PlayDimIn(3);
+        // finish line accent
+        if (HighFinder.Instance.MinHeightAchieved)
+        {
+            FinishLineBottom.GetComponent<Canvas>().sortingOrder = 4;
+            FinishLineBottom.GetComponent<Animator>().Play("finish_line_accent");
+            yield return new WaitForSeconds(1.5f);
+            FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;
+        }
+
         HighlightCharacterElements(true);
         BubbleSpawner.Instance.PauseSpawner();
         BubbleSpawner.Instance.IsGameOver = true;

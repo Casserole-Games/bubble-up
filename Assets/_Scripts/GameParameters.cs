@@ -24,7 +24,6 @@ namespace Assets._Scripts
         public float DurationBeforeShowingTextBubble = 1.0f;
         public float DurationBeforeDuckTurnsAround = 1.0f;
         public float DurationBeforeSkipping = 1.0f;
-        public int Phase1MaxHeight = 1600;
         public float TutorialTime = 3f;
         public float DurationOfSoapRefill = 1f;
 
@@ -42,5 +41,10 @@ namespace Assets._Scripts
         public float DuckVolume = 1f;
         public float FuseVolume = 1f;
         public float BombVolume = 1f;
+
+        [Header("Heights")]
+        public float Phase1MaxHeight = 1000f;
+        public float Phase2MinHeight = -4.3f;
+        public float MinHeightBeforeBomb = -3.5f;
     }
 }

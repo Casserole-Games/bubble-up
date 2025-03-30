@@ -183,7 +183,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 8cb7a40cad15ef0408bb8c1f0da41dc4, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -708,6 +708,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916e5dba6b225f934a757fe9873aecbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxHeightAchieved: 0
+  MinHeightAchieved: 0
   BubbleContainer: {fileID: 1571682580}
   LocalHighGreenLine: {fileID: 1395437}
   LocalHighPinkLine: {fileID: 1369324276}
@@ -1442,7 +1444,6 @@ MonoBehaviour:
   DurationBeforeShowingTextBubble: 0.5
   DurationBeforeDuckTurnsAround: 0.5
   DurationBeforeSkipping: 0.5
-  Phase1MaxHeight: 1000
   TutorialTime: 3
   DurationOfSoapRefill: 0.35
   MaxScoreInScreen: 1200
@@ -1456,6 +1457,9 @@ MonoBehaviour:
   DuckVolume: 1.25
   FuseVolume: 1
   BombVolume: 0.5
+  Phase1MaxHeight: 1000
+  Phase2MinHeight: -4.3
+  MinHeightBeforeBomb: -3
 --- !u!4 &403856389
 Transform:
   m_ObjectHideFlags: 0
@@ -2944,8 +2948,7 @@ MonoBehaviour:
   IsSpawnerPaused: 0
   IsGameOver: 0
   CanFinishPhase: 1
-  ReadyToSpawnBomb: 0
-  WasBombDropped: 0
+  SpawnBomb: 0
 --- !u!4 &884624954
 Transform:
   m_ObjectHideFlags: 0
@@ -4035,8 +4038,8 @@ Transform:
   m_GameObject: {fileID: 1344852309}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.000821, y: -0.65362, z: 0}
-  m_LocalScale: {x: 5.613841, y: 8.692742, z: 1.01305}
+  m_LocalPosition: {x: 0.0047588, y: -0.65362, z: 0}
+  m_LocalScale: {x: 5.6249833, y: 8.692742, z: 1.01305}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -4460,11 +4463,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.063
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.41
+      value: 2.559
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4551,7 +4554,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.003540039, y: -412.49985}
+  m_AnchoredPosition: {x: 0.003540039, y: -412.49988}
   m_SizeDelta: {x: 1079.4868, y: 1919.995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1389791485
@@ -4631,7 +4634,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 536301299
-  m_SortingOrder: -1
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &1398770701
 GameObject:

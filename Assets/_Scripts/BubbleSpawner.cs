@@ -37,7 +37,6 @@ namespace Assets._Scripts
         public bool IsGameOver = false;
         public bool CanFinishPhase = true;
         public bool SpawnBomb = false;
-        public bool WasBombDropped = false;
 
         private static List<Color> colors = new(){
             new Color32(0x4C, 0xBF, 0xFF, 0xFF), // Cyan
@@ -111,7 +110,7 @@ namespace Assets._Scripts
             {
                 Debug.Log("Empty tank !");
                 emptyTankTriggered = true;
-                if (!bubble.CompareTag("Bomb")) DropBubble(); else DropBomb();
+                if (bubble != null && !bubble.CompareTag("Bomb")) DropBubble(); else DropBomb();
             }
             if (CanFinishPhase && emptyTankTriggered && HighFinder.Instance.AreBubblesSettled()) 
             {
@@ -154,7 +153,6 @@ namespace Assets._Scripts
         private GameObject CreateBubble(Color color)
         {
             Debug.Log("Creating bubble with color " + color.ToString());
-            // Vector2 newPos = new(0, GameParameters.Instance.InitialBubbleSize / -2);
             GameObject newBubble = Instantiate(BubblePrefab, transform.position, Quaternion.identity);
             newBubble.transform.parent = transform;
             newBubble.GetComponent<Rigidbody2D>().simulated = true;
@@ -164,31 +162,11 @@ namespace Assets._Scripts
             Bubble bubbleComponent = newBubble.GetComponent<Bubble>();
             bubbleComponent.SetColor(color);
 
-            /*bubbleComponent.OnBoundaryCollision += (boundary) =>
-            {
-                // ignore bottom border
-                if (boundary.transform.position.y < -0.5f) return;
-                if (newBubble.layer != LayerMask.NameToLayer("ShooterBubble")) return;
-
-                Debug.Log("Drop on boundary !" + boundary + boundary.transform.position);
-                DropBubble();
-            };*/
-            newBubble.GetComponent<Bubble>().OnBubblePopped += HandleBubblePopped;
-
             return newBubble;
-        }
-
-        private void HandleBubblePopped()
-        {
-            canInflate = false;
-            isInflating = false;
         }
 
         private void DropBubble()
         {
-            if (bubble != null) {
-                bubble.GetComponent<Bubble>().OnBubblePopped -= HandleBubblePopped;
-            }
             isInflating = false;
             SFXManager.Instance.StopSound();
 
@@ -228,15 +206,17 @@ namespace Assets._Scripts
                 if (usedColorsHash.Count > 0)
                 {
                     List<Color> usedColors = new List<Color>(usedColorsHash);
-                    colorIndex = UnityEngine.Random.Range(0, usedColors.Count);
+                    return usedColors[UnityEngine.Random.Range(0, usedColors.Count)];
+                } else
+                {
+                    return Color.white;
                 }
 
             } else
             {
                 colorIndex = UnityEngine.Random.Range(0, Math.Min(GameParameters.Instance.BubbleColorsCount, colors.Count));
+                return colors[colorIndex];
             }
-                
-            return colors[colorIndex];
         }
 
         internal void PauseSpawner()
@@ -302,6 +282,7 @@ namespace Assets._Scripts
             rb.AddForce(new Vector2(appliedSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
             StartCoroutine(ExplodeBomb(bubble));
             bubble = null;
+            PauseSpawner();
         }
 
         private IEnumerator ExplodeBomb(GameObject bomb)
@@ -313,9 +294,12 @@ namespace Assets._Scripts
             bomb.GetComponent<Animator>().Play("bomb_exploding");
             yield return new WaitForSeconds(0.15f);
             bomb.GetComponent<SpriteRenderer>().enabled = false;
-            bomb.GetComponentInChildren<ParticleSystem>().Play();
-            yield return new WaitForSeconds(0.05f);
-            StartCoroutine(GameManager.Instance.PopAllBubbles(0f, 0.0f));
+
+            ParticleSystem ps = bomb.GetComponentInChildren<ParticleSystem>();
+            ps.Play();
+            yield return new WaitWhile(() => ps.isPlaying);
+
+            Destroy(bomb);
         }
     }
 }

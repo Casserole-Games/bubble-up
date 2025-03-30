@@ -33,12 +33,14 @@ namespace Assets._Scripts
         {
             BubbleSpawner.OnEmptyTank += HandlePhaseEnd;
             HighFinder.OnMaxHeightAchieved += HandleOnMaxHeightAchieved;
+            HighFinder.OnMinHeightAchieved += HandleOnMinHeightAchieved;
         }
 
         private void OnDisable()
         {
             BubbleSpawner.OnEmptyTank -= HandlePhaseEnd;
             HighFinder.OnMaxHeightAchieved -= HandleOnMaxHeightAchieved;
+            HighFinder.OnMinHeightAchieved -= HandleOnMinHeightAchieved;
         }
 
         // game entrance point
@@ -50,17 +52,20 @@ namespace Assets._Scripts
 
         public IEnumerator PopAllBubbles(float minWait = 0.05f, float maxWait = 0.2f)
         {
-            List<Bubble> bubbles = GameObject.FindGameObjectsWithTag("Bubble").Select(t => t.GetComponent<Bubble>()).ToList();
-            bubbles.ForEach(b => b.GetComponent<Rigidbody2D>().simulated = false);
-            bubbles.Reverse();
-            foreach (var bubble in bubbles)
+            if (BubbleSpawner.Instance.BubbleContainer.transform.childCount != 0)
             {
-                float waitTime = UnityEngine.Random.Range(0.05f, maxWait);
-                bubble.Pop();
-                yield return new WaitForSeconds(waitTime);
-            };
+                List<Bubble> bubbles = GameObject.FindGameObjectsWithTag("Bubble").Select(t => t.GetComponent<Bubble>()).ToList();
+                bubbles.ForEach(b => b.GetComponent<Rigidbody2D>().simulated = false);
+                bubbles.Reverse();
+                foreach (var bubble in bubbles)
+                {
+                    float waitTime = UnityEngine.Random.Range(minWait, maxWait);
+                    bubble.Pop();
+                    yield return new WaitForSeconds(waitTime);
+                };
+            }
 
-            //UIManager.Instance.GameOver();
+            UIManager.Instance.GameOver();
         }
 
         public void RestartGame()
@@ -117,6 +122,11 @@ namespace Assets._Scripts
         private void HandleOnMaxHeightAchieved()
         {
             SetupPhase2();
+        }
+
+        private void HandleOnMinHeightAchieved()
+        {
+            UIManager.Instance.PlayCutsceneGameOver();
         }
 
         private void SetupPhase2()

@@ -6,9 +6,12 @@ namespace Assets._Scripts
     public class HighFinder : SingletonBehaviour<HighFinder>
     {
         public static event Action OnMaxHeightAchieved;
+        public static event Action OnMinHeightAchieved;
+
+        public bool MaxHeightAchieved = false;
+        public bool MinHeightAchieved = false;
 
         private bool _wereGreenArrowsShown = false;
-        private bool _maxHeightAchieved = false;
 
         public GameObject BubbleContainer;
         public GameObject LocalHighGreenLine;
@@ -76,15 +79,26 @@ namespace Assets._Scripts
                 }
                 LocalHighGreenLine.transform.position = localLinePos;
 
-                if (!_maxHeightAchieved && GameManager.Instance.CurrentScore >= GameParameters.Instance.Phase1MaxHeight && AreBubblesSettled())
+                if (!MaxHeightAchieved && GameManager.Instance.CurrentScore >= GameParameters.Instance.Phase1MaxHeight && AreBubblesSettled())
                 {
+                    MaxHeightAchieved = true;
                     OnMaxHeightAchieved?.Invoke();
-                    _maxHeightAchieved = true;
                 }
             }
             else if (GameManager.Instance.GameState == GameState.Phase2)
             {
                 LocalHighPinkLine.transform.position = localLinePos;
+
+                if (LocalHighPinkLine.transform.position.y < GameParameters.Instance.MinHeightBeforeBomb && AreBubblesSettled() && !BubbleSpawner.Instance.SpawnBomb)
+                {
+                    BubbleSpawner.Instance.SpawnBomb = true;
+                }
+
+                if (!MinHeightAchieved && LocalHighPinkLine.transform.position.y <= GameParameters.Instance.Phase2MinHeight && AreBubblesSettled())
+                {
+                    MinHeightAchieved = true;
+                    OnMinHeightAchieved?.Invoke();
+                }
             }
         }
 
