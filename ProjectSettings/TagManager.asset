@@ -9,6 +9,7 @@ TagManager:
   - Boundary
   - SoapRefillZone
   - GreenLine
+  - Bomb
   layers:
   - Default
   - TransparentFX

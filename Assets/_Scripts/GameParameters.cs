@@ -40,5 +40,7 @@ namespace Assets._Scripts
         public float WinVolume = 1f;
         public float PickupVolume = 1f;
         public float DuckVolume = 1f;
+        public float FuseVolume = 1f;
+        public float BombVolume = 1f;
     }
 }

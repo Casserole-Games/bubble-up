@@ -44,22 +44,23 @@ namespace Assets._Scripts
         // game entrance point
         private void Start()
         {
+            Application.targetFrameRate = 60;
             UIManager.Instance.PlayCutsceneStart();
         }
 
-        public IEnumerator PopAllBubbles()
+        public IEnumerator PopAllBubbles(float minWait = 0.05f, float maxWait = 0.2f)
         {
             List<Bubble> bubbles = GameObject.FindGameObjectsWithTag("Bubble").Select(t => t.GetComponent<Bubble>()).ToList();
             bubbles.ForEach(b => b.GetComponent<Rigidbody2D>().simulated = false);
             bubbles.Reverse();
             foreach (var bubble in bubbles)
             {
-                float waitTime = UnityEngine.Random.Range(0.05f, 0.2f);
+                float waitTime = UnityEngine.Random.Range(0.05f, maxWait);
                 bubble.Pop();
                 yield return new WaitForSeconds(waitTime);
             };
 
-            UIManager.Instance.GameOver();
+            //UIManager.Instance.GameOver();
         }
 
         public void RestartGame()

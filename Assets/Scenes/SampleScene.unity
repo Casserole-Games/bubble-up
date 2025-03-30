@@ -1454,6 +1454,8 @@ MonoBehaviour:
   WinVolume: 1
   PickupVolume: 0.2
   DuckVolume: 1.25
+  FuseVolume: 1
+  BombVolume: 0.5
 --- !u!4 &403856389
 Transform:
   m_ObjectHideFlags: 0
@@ -2937,10 +2939,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BubblePrefab: {fileID: 1998547009245890355, guid: 4476d2eb07f7a9740ac5c14b3ecd9fcf, type: 3}
+  BombPrefab: {fileID: 5738606598023467441, guid: fc5f4cd3dcbcb3b4498c34d0351b3e4f, type: 3}
   BubbleContainer: {fileID: 1571682580}
   IsSpawnerPaused: 0
   IsGameOver: 0
   CanFinishPhase: 1
+  ReadyToSpawnBomb: 0
+  WasBombDropped: 0
 --- !u!4 &884624954
 Transform:
   m_ObjectHideFlags: 0
@@ -4546,7 +4551,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.003540039, y: -412.4999}
+  m_AnchoredPosition: {x: 0.003540039, y: -412.49985}
   m_SizeDelta: {x: 1079.4868, y: 1919.995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1389791485
@@ -15214,13 +15219,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d37c88f50f2a03b882256f5de4ffb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubblePopSound: {fileID: 8300000, guid: b5e8b9236e99127488490600ca217655, type: 3}
-  bubbleInflatingSound: {fileID: 8300000, guid: 54204bb3fb554934c829fe5ebc12be5c, type: 3}
-  bubbleMergeSound: {fileID: 8300000, guid: e1087761bc36db6419d49f8cd4f922d8, type: 3}
-  scoreSound: {fileID: 8300000, guid: e28da12846fb8904d98e1696a0165970, type: 3}
-  winSound: {fileID: 8300000, guid: 39d93321ad4d58a4da39725401f71b6c, type: 3}
-  pickupSound: {fileID: 8300000, guid: d1c10f50187ac354a8cc9426e1e0f3ab, type: 3}
-  duckSounds:
+  BubblePopSound: {fileID: 8300000, guid: b5e8b9236e99127488490600ca217655, type: 3}
+  BubbleInflatingSound: {fileID: 8300000, guid: 54204bb3fb554934c829fe5ebc12be5c, type: 3}
+  BubbleMergeSound: {fileID: 8300000, guid: e1087761bc36db6419d49f8cd4f922d8, type: 3}
+  ScoreSound: {fileID: 8300000, guid: e28da12846fb8904d98e1696a0165970, type: 3}
+  WinSound: {fileID: 8300000, guid: 39d93321ad4d58a4da39725401f71b6c, type: 3}
+  PickupSound: {fileID: 8300000, guid: d1c10f50187ac354a8cc9426e1e0f3ab, type: 3}
+  FuseSound: {fileID: 8300000, guid: 000d13821a66a3b4faa7b92013921704, type: 3}
+  BombSound: {fileID: 8300000, guid: ad4c5da970134f44597f8f10c42c5239, type: 3}
+  DuckSounds:
   - {fileID: 8300000, guid: cb7c27d9baea29c4d9825d8515b49c31, type: 3}
   - {fileID: 8300000, guid: 6a6264bbdf9c43e418b0a79d5b3a47f5, type: 3}
   - {fileID: 8300000, guid: f1768397a5259914c9eec79d1399ebcb, type: 3}

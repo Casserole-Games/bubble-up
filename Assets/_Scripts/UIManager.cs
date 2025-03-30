@@ -148,7 +148,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         // Final display of the account
         Confetti.Play();
-        SFXManager.Instance.PlaySound(SFXManager.Instance.winSound, 1f, 1f, GameParameters.Instance.WinVolume);
+        SFXManager.Instance.PlaySound(SFXManager.Instance.WinSound, 1f, 1f, GameParameters.Instance.WinVolume);
         DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%><color=#ff669a>" + finalScore + "</size></link></color>", false, SkipParameter.CanSkipAfterWait, false);
     }
 
@@ -162,7 +162,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         {
             if (currentScore % 3 == 0)
             {
-                SFXManager.Instance.PlaySound(SFXManager.Instance.scoreSound, 1f, 1f, GameParameters.Instance.ScoreVolume);
+                SFXManager.Instance.PlaySound(SFXManager.Instance.ScoreSound, 1f, 1f, GameParameters.Instance.ScoreVolume);
             }
             DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#ff669a>" + currentScore + "</size></link></color>", false, SkipParameter.NonSkippable, false);
             yield return new WaitForSecondsRealtime(delay);
@@ -171,7 +171,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         // Slow part of the animation (last 10 values)
         for (int currentScore = score - 10; currentScore <= score; currentScore++)
         {
-            SFXManager.Instance.PlaySound(SFXManager.Instance.scoreSound, 1f, 1f, 0.8f);
+            SFXManager.Instance.PlaySound(SFXManager.Instance.ScoreSound, 1f, 1f, 0.8f);
             DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#ff669a>" + currentScore + "</size></link></color>", false, SkipParameter.NonSkippable, false);
             yield return new WaitForSecondsRealtime(delay);
             delay += deltaDelay; // Gradually increase the delay

@@ -11,6 +11,7 @@ namespace Assets._Scripts
         static public event Action OnEmptyTank;
 
         public GameObject BubblePrefab;
+        public GameObject BombPrefab;
         public GameObject BubbleContainer;
 
         private const float localScaleBase = 0.25f;
@@ -35,6 +36,8 @@ namespace Assets._Scripts
         public bool IsSpawnerPaused = false;
         public bool IsGameOver = false;
         public bool CanFinishPhase = true;
+        public bool SpawnBomb = false;
+        public bool WasBombDropped = false;
 
         private static List<Color> colors = new(){
             new Color32(0x4C, 0xBF, 0xFF, 0xFF), // Cyan
@@ -76,7 +79,13 @@ namespace Assets._Scripts
 
             if ((bubble == null && transform.childCount < 2) && RemainingSoap > 0)
             {
-                bubble = CreateBubble(GetNextColor());
+                if (!SpawnBomb)
+                {
+                    bubble = CreateBubble(GetNextColor());
+                } else
+                {
+                    bubble = CreateBomb();
+                }
                 bubble.layer = LayerMask.NameToLayer("ShooterBubble");
             }
 
@@ -92,7 +101,7 @@ namespace Assets._Scripts
             if (isInflating && (isKeyReleased || hasBubbleReachedMaxSize))
             {
                 if (hasBubbleReachedMaxSize) canInflate = false;
-                DropBubble();
+                if (!bubble.CompareTag("Bomb")) DropBubble(); else DropBomb();
                 if (lastRemainingSoap - RemainingSoap < minimumSoapConsumption)
                 {
                     RemainingSoap = lastRemainingSoap - minimumSoapConsumption;
@@ -102,7 +111,7 @@ namespace Assets._Scripts
             {
                 Debug.Log("Empty tank !");
                 emptyTankTriggered = true;
-                DropBubble();
+                if (!bubble.CompareTag("Bomb")) DropBubble(); else DropBomb();
             }
             if (CanFinishPhase && emptyTankTriggered && HighFinder.Instance.AreBubblesSettled()) 
             {
@@ -126,7 +135,7 @@ namespace Assets._Scripts
 
         private void InflateBubble()
         {
-            SFXManager.Instance.StartSound(SFXManager.Instance.bubbleInflatingSound, 0.5f, GameParameters.Instance.InflatingVolume);
+            SFXManager.Instance.StartSound(SFXManager.Instance.BubbleInflatingSound, 0.5f, GameParameters.Instance.InflatingVolume);
             RemainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
             var localScale = bubble.transform.localScale.x;
             if (localScale < GameParameters.Instance.MaximalBubbleSize)
@@ -155,7 +164,7 @@ namespace Assets._Scripts
             Bubble bubbleComponent = newBubble.GetComponent<Bubble>();
             bubbleComponent.SetColor(color);
 
-            bubbleComponent.OnBoundaryCollision += (boundary) =>
+            /*bubbleComponent.OnBoundaryCollision += (boundary) =>
             {
                 // ignore bottom border
                 if (boundary.transform.position.y < -0.5f) return;
@@ -163,7 +172,7 @@ namespace Assets._Scripts
 
                 Debug.Log("Drop on boundary !" + boundary + boundary.transform.position);
                 DropBubble();
-            };
+            };*/
             newBubble.GetComponent<Bubble>().OnBubblePopped += HandleBubblePopped;
 
             return newBubble;
@@ -260,6 +269,53 @@ namespace Assets._Scripts
                 GameParameters.Instance.DurationOfSoapRefill
             )
             .OnComplete(() => onComplete?.Invoke());
+        }
+
+        private GameObject CreateBomb()
+        {
+            GameObject bomb = Instantiate(BombPrefab, transform.position + new Vector3(-0.23f, -0.09f, 0f), Quaternion.Euler(0f, 0f, -90f));
+            bomb.transform.parent = transform;
+            bomb.GetComponent<Rigidbody2D>().simulated = true;
+            bomb.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+
+            return bomb;
+        }
+
+        private void DropBomb()
+        {
+            isInflating = false;
+            SFXManager.Instance.StopSound();
+
+            // simulate gravity
+            Debug.Log("Drop !");
+            if (!bubble) return; // bugfix
+            bubble.transform.parent = BubbleContainer.transform;
+            bubble.layer = LayerMask.NameToLayer("Bubble");
+
+            Rigidbody2D rb = bubble.GetComponent<Rigidbody2D>();
+            rb.simulated = true;
+            rb.constraints = RigidbodyConstraints2D.None;
+
+            float baseSpeed = GameParameters.Instance.BubbleFlowSpeed;
+            baseSpeed *= (float)Math.Sqrt(rb.mass);
+            float appliedSpeed = Mathf.Min(baseSpeed, GameParameters.Instance.GunLatSpeed);
+            rb.AddForce(new Vector2(appliedSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
+            StartCoroutine(ExplodeBomb(bubble));
+            bubble = null;
+        }
+
+        private IEnumerator ExplodeBomb(GameObject bomb)
+        {
+            bomb.GetComponent<Rigidbody2D>().AddTorque(-100f);
+            SFXManager.Instance.PlaySound(SFXManager.Instance.FuseSound, 1f, 1f, GameParameters.Instance.FuseVolume);
+            yield return new WaitForSeconds(0.65f);
+            SFXManager.Instance.PlaySound(SFXManager.Instance.BombSound, 1f, 1f, GameParameters.Instance.BombVolume);
+            bomb.GetComponent<Animator>().Play("bomb_exploding");
+            yield return new WaitForSeconds(0.15f);
+            bomb.GetComponent<SpriteRenderer>().enabled = false;
+            bomb.GetComponentInChildren<ParticleSystem>().Play();
+            yield return new WaitForSeconds(0.05f);
+            StartCoroutine(GameManager.Instance.PopAllBubbles(0f, 0.0f));
         }
     }
 }

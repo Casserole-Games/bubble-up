@@ -10,13 +10,15 @@ namespace Assets._Scripts
     public class SFXManager : SingletonPersistent<SFXManager>
     {
         [Header("Sounds")]
-        public AudioClip bubblePopSound;
-        public AudioClip bubbleInflatingSound;
-        public AudioClip bubbleMergeSound;
-        public AudioClip scoreSound;
-        public AudioClip winSound;
-        public AudioClip pickupSound;
-        public AudioClip[] duckSounds;
+        public AudioClip BubblePopSound;
+        public AudioClip BubbleInflatingSound;
+        public AudioClip BubbleMergeSound;
+        public AudioClip ScoreSound;
+        public AudioClip WinSound;
+        public AudioClip PickupSound;
+        public AudioClip FuseSound;
+        public AudioClip BombSound;
+        public AudioClip[] DuckSounds;
 
         private AudioSource _audioSource;
         private AudioClip _lastPlayedDuckSound;
@@ -56,11 +58,11 @@ namespace Assets._Scripts
 
         public void PlayDuckSound()
         {
-            if (duckSounds.Length == 0) return;
+            if (DuckSounds.Length == 0) return;
 
-            var availableSounds = duckSounds.Where(s => s != _lastPlayedDuckSound).ToArray();
+            var availableSounds = DuckSounds.Where(s => s != _lastPlayedDuckSound).ToArray();
             if (availableSounds.Length == 0)
-                availableSounds = duckSounds;
+                availableSounds = DuckSounds;
 
             AudioClip duckSound = availableSounds[Random.Range(0, availableSounds.Length)];
             _lastPlayedDuckSound = duckSound;
