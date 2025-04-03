@@ -53,7 +53,7 @@ namespace Assets._Scripts
             OnBubblePopped?.Invoke();
             Destroy(gameObject);
 
-            SFXManager.Instance.PlaySound(SFXManager.Instance.BubblePopSound, 0.75f, 1.25f, GameParameters.Instance.PopVolume);
+            SFXManager.Instance.PlayOneShot("pop", GameParameters.Instance.PopVolume, 0.75f, 1.25f);
         }
 
         internal void SetColor(Color color)
@@ -65,7 +65,7 @@ namespace Assets._Scripts
         private void Merge(Bubble otherBubble, Vector3 pos)
         {
             Debug.Log("Merged!");
-            SFXManager.Instance.PlaySound(SFXManager.Instance.BubbleMergeSound, 0.90f, 1.10f, GameParameters.Instance.MergeVolume);
+            SFXManager.Instance.PlayOneShot("merge", GameParameters.Instance.MergeVolume, 0.90f, 1.10f);
             // make an instance of itself
             Bubble newBubble = Instantiate(this, pos, Quaternion.identity);
             newBubble.SetColor(Color);

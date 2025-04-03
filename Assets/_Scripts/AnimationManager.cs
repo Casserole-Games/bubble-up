@@ -7,6 +7,7 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
     [SerializeField] private Animator PinkLineAnimator;
     [SerializeField] private Animator ScoreAnimator;
     [SerializeField] private Animator RadioAnimator;
+    [SerializeField] private Animator Sunglasses;
     [SerializeField] private GameObject Dimmer;
 
     public void PlayGreenArrows()
@@ -40,7 +41,7 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
         UIManager.Instance.FinishLineBottom.GetComponent<Animator>().Play("finish_line_show");
         yield return new WaitForSeconds(1.5f);
         PlayDimOut();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         UIManager.Instance.FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;
     }
 
@@ -69,5 +70,10 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
     public void PauseRadio() 
     {
         RadioAnimator.speed = 0;
+    }
+
+    public void PlaySunglasses()
+    {
+        Sunglasses.GetComponent<Animator>().Play("sunglasses");
     }
 }

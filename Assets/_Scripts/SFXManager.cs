@@ -1,72 +1,164 @@
+using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Assets._Scripts
 {
-    [RequireComponent(typeof(AudioSource))]
     public class SFXManager : SingletonPersistent<SFXManager>
     {
-        [Header("Sounds")]
-        public AudioClip BubblePopSound;
-        public AudioClip BubbleInflatingSound;
-        public AudioClip BubbleMergeSound;
-        public AudioClip ScoreSound;
-        public AudioClip WinSound;
-        public AudioClip PickupSound;
-        public AudioClip FuseSound;
-        public AudioClip BombSound;
-        public AudioClip[] DuckSounds;
+        [Header("Folder Settings")]
+        [SerializeField] private string _sfxResourcesPath = "SFX";
 
-        private AudioSource _audioSource;
-        private AudioClip _lastPlayedDuckSound;
+        [Header("Pool Settings")]
+        [SerializeField] private int _poolSize = 5;
+        [SerializeField] private AudioMixerGroup _outputMixer;
 
-        override protected void Awake()
+        private Dictionary<string, AudioClip> _sfxDictionary;
+        private List<AudioSource> _audioPool;
+        private AudioSource _mainSource;
+        private string _lastPlayedKey;
+
+        protected override void Awake()
         {
             base.Awake();
-            _audioSource = GetComponent<AudioSource>();
+            InitializeAudioSources();
+            LoadSFXClips();
         }
 
-        public void PlaySound(AudioClip sound, float minPitch, float maxPitch, float volume = 1f)
+        private void InitializeAudioSources()
         {
-            if (sound == null) return;
+            _mainSource = CreateAudioSource();
 
-            _audioSource.Stop();
-            _audioSource.pitch = Random.Range(minPitch, maxPitch);
-            _audioSource.volume = volume;
-            _audioSource.PlayOneShot(sound);
+            _audioPool = new List<AudioSource>();
+            for (int i = 0; i < _poolSize; i++)
+            {
+                _audioPool.Add(CreateAudioSource());
+            }
         }
 
-        public void StartSound(AudioClip music, float pitch, float volume = 1f)
+        private AudioSource CreateAudioSource()
         {
-            if (_audioSource.clip == music && _audioSource.isPlaying) return;
-
-            //audioSource.Stop();
-            _audioSource.clip = music;
-            _audioSource.loop = false;
-            _audioSource.pitch = pitch;
-            _audioSource.volume = volume;
-            _audioSource.Play();
+            var source = gameObject.AddComponent<AudioSource>();
+            source.loop = false;
+            source.outputAudioMixerGroup = _outputMixer;
+            source.playOnAwake = false;
+            return source;
         }
 
-        public void StopSound()
+        private void LoadSFXClips()
         {
-            _audioSource.Stop();
+            _sfxDictionary = new Dictionary<string, AudioClip>();
+            var clips = Resources.LoadAll<AudioClip>(_sfxResourcesPath);
+
+            foreach (var clip in clips)
+            {
+                if (_sfxDictionary.ContainsKey(clip.name))
+                {
+                    Debug.LogWarning($"Duplicate SFX name detected: {clip.name}");
+                }
+                _sfxDictionary[clip.name] = clip;
+            }
         }
 
-        public void PlayDuckSound()
+        /// <summary>
+        /// Play one-shot sound effect (automatically pools sources)
+        /// </summary>
+        public void PlayOneShot(string sfxKey, float volume = 1f, float minPitch = 1f, float maxPitch = 1f)
         {
-            if (DuckSounds.Length == 0) return;
+            if (!_sfxDictionary.TryGetValue(sfxKey, out AudioClip clip))
+            {
+                Debug.LogWarning($"SFX clip not found: {sfxKey}");
+                return;
+            }
 
-            var availableSounds = DuckSounds.Where(s => s != _lastPlayedDuckSound).ToArray();
-            if (availableSounds.Length == 0)
-                availableSounds = DuckSounds;
+            var existingSource = FindPlayingSource(clip);
+            if (existingSource != null)
+            {
+                RestartAudioSource(existingSource, volume, minPitch, maxPitch);
+                return;
+            }
 
-            AudioClip duckSound = availableSounds[Random.Range(0, availableSounds.Length)];
-            _lastPlayedDuckSound = duckSound;
-            PlaySound(duckSound, 1f, 1f, GameParameters.Instance.DuckVolume);
+            var availableSource = GetAvailableSource() ?? GetLongestPlayingSource();
+            if (availableSource == null) return;
+
+            ConfigureAudioSource(availableSource, clip, volume, minPitch, maxPitch);
+            availableSource.Play();
+        }
+
+        /// <summary>
+        /// Play persistent sound with dedicated channel
+        /// </summary>
+        public void PlayMain(string sfxKey, float volume = 1f, float minPitch = 1f, float maxPitch = 1f)
+        {
+            if (!_sfxDictionary.TryGetValue(sfxKey, out AudioClip clip))
+            {
+                Debug.LogWarning($"SFX clip not found: {sfxKey}");
+            }
+
+            if (_mainSource.clip == clip && _mainSource.isPlaying) return;
+
+            ConfigureAudioSource(_mainSource, clip, volume, minPitch, maxPitch);
+            _mainSource.Play();
+        }
+
+        /// <summary>
+        /// Stop persistent sound played via PlayMain()
+        /// </summary>
+        public void StopMain() => _mainSource.Stop();
+
+        /// <summary>
+        /// Play random sound from list (avoids immediate repetition)
+        /// </summary>
+        public void PlayRandom(List<string> keys, float volume = 1f, float minPitch = 1f, float maxPitch = 1f)
+        {
+            if (keys.Count == 0) return;
+
+            var filteredKeys = keys.Where(k => k != _lastPlayedKey).ToList();
+            var availableKeys = filteredKeys.Count > 0 ? filteredKeys : keys;
+
+            var randomIndex = Random.Range(0, availableKeys.Count);
+            var selectedKey = availableKeys[randomIndex];
+
+            _lastPlayedKey = selectedKey;
+            PlayOneShot(selectedKey, volume, minPitch, maxPitch);
+        }
+
+        private AudioSource FindPlayingSource(AudioClip clip)
+        {
+            return _audioPool.FirstOrDefault(s => s.isPlaying && s.clip == clip);
+        }
+
+        private void RestartAudioSource(AudioSource source, float volume, float minPitch, float maxPitch)
+        {
+            source.Stop();
+            SetPitchAndVolume(source, volume, minPitch, maxPitch);
+            source.Play();
+        }
+
+        private void ConfigureAudioSource(AudioSource source, AudioClip clip, float volume, float minPitch, float maxPitch)
+        {
+            source.Stop();
+            source.clip = clip;
+            SetPitchAndVolume(source, volume, minPitch, maxPitch);
+        }
+
+        private void SetPitchAndVolume(AudioSource source, float volume, float minPitch, float maxPitch)
+        {
+            source.pitch = Random.Range(minPitch, maxPitch);
+            source.volume = volume;
+        }
+
+        private AudioSource GetAvailableSource()
+        {
+            return _audioPool.FirstOrDefault(s => !s.isPlaying);
+        }
+
+        private AudioSource GetLongestPlayingSource()
+        {
+            return _audioPool
+                .OrderByDescending(s => s.time)
+                .First();
         }
     }
 }

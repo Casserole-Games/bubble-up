@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using EasyTextEffects;
 using DG.Tweening;
 using System.Security;
+using System.Drawing;
+using System.Collections.Generic;
 
 public enum SkipParameter
 {
@@ -148,8 +150,8 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         // Final display of the account
         Confetti.Play();
-        SFXManager.Instance.PlaySound(SFXManager.Instance.WinSound, 1f, 1f, GameParameters.Instance.WinVolume);
-        DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%><color=#ff669a>" + finalScore + "</size></link></color>", false, SkipParameter.CanSkipAfterWait, false);
+        SFXManager.Instance.PlayOneShot("win", GameParameters.Instance.WinVolume);
+        DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%><color=#fc699a>" + finalScore + "</color></size></link>", false, SkipParameter.CanSkipAfterWait, false);
     }
 
     internal IEnumerator ShowAnimatedScore(string textBeforeScore, int score)
@@ -162,17 +164,17 @@ public class UIManager : SingletonBehaviour<UIManager>
         {
             if (currentScore % 3 == 0)
             {
-                SFXManager.Instance.PlaySound(SFXManager.Instance.ScoreSound, 1f, 1f, GameParameters.Instance.ScoreVolume);
+                SFXManager.Instance.PlayOneShot("score", GameParameters.Instance.ScoreVolume);
             }
-            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#ff669a>" + currentScore + "</size></link></color>", false, SkipParameter.NonSkippable, false);
+            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#fc699a>" + currentScore + "</color></size></link>", false, SkipParameter.NonSkippable, false);
             yield return new WaitForSecondsRealtime(delay);
         }
 
         // Slow part of the animation (last 10 values)
         for (int currentScore = score - 10; currentScore <= score; currentScore++)
         {
-            SFXManager.Instance.PlaySound(SFXManager.Instance.ScoreSound, 1f, 1f, 0.8f);
-            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#ff669a>" + currentScore + "</size></link></color>", false, SkipParameter.NonSkippable, false);
+            SFXManager.Instance.PlayOneShot("score", GameParameters.Instance.ScoreVolume);
+            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#fc699a>" + currentScore + "</color></size></link>", false, SkipParameter.NonSkippable, false);
             yield return new WaitForSecondsRealtime(delay);
             delay += deltaDelay; // Gradually increase the delay
         }
@@ -266,6 +268,11 @@ public class UIManager : SingletonBehaviour<UIManager>
             FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;
         }
 
+        if (HighFinder.Instance.MaxHeightAchieved && HighFinder.Instance.MinHeightAchieved)
+        {
+            AnimationManager.Instance.PlaySunglasses();
+        }
+
         HighlightCharacterElements(true);
         BubbleSpawner.Instance.PauseSpawner();
         BubbleSpawner.Instance.IsGameOver = true;
@@ -311,7 +318,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         if (duckSound)
         {
-            SFXManager.Instance.PlayDuckSound();
+            SFXManager.Instance.PlayRandom(new List<string> { "duck1", "duck2", "duck3" });
         }
     }
 

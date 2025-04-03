@@ -134,7 +134,7 @@ namespace Assets._Scripts
 
         private void InflateBubble()
         {
-            SFXManager.Instance.StartSound(SFXManager.Instance.BubbleInflatingSound, 0.5f, GameParameters.Instance.InflatingVolume);
+            SFXManager.Instance.PlayMain("inflating", GameParameters.Instance.InflatingVolume, 0.5f, 0.5f);
             RemainingSoap -= GameParameters.Instance.SoapFlowRate * Time.deltaTime;
             var localScale = bubble.transform.localScale.x;
             if (localScale < GameParameters.Instance.MaximalBubbleSize)
@@ -168,7 +168,7 @@ namespace Assets._Scripts
         private void DropBubble()
         {
             isInflating = false;
-            SFXManager.Instance.StopSound();
+            SFXManager.Instance.StopMain();
 
             // simulate gravity
             Debug.Log("Drop !");
@@ -264,7 +264,7 @@ namespace Assets._Scripts
         private void DropBomb()
         {
             isInflating = false;
-            SFXManager.Instance.StopSound();
+            SFXManager.Instance.StopMain();
 
             // simulate gravity
             Debug.Log("Drop !");
@@ -288,9 +288,9 @@ namespace Assets._Scripts
         private IEnumerator ExplodeBomb(GameObject bomb)
         {
             bomb.GetComponent<Rigidbody2D>().AddTorque(-100f);
-            SFXManager.Instance.PlaySound(SFXManager.Instance.FuseSound, 1f, 1f, GameParameters.Instance.FuseVolume);
+            SFXManager.Instance.PlayOneShot("fuse", GameParameters.Instance.FuseVolume);
             yield return new WaitForSeconds(0.65f);
-            SFXManager.Instance.PlaySound(SFXManager.Instance.BombSound, 1f, 1f, GameParameters.Instance.BombVolume);
+            SFXManager.Instance.PlayOneShot("bomb", GameParameters.Instance.BombVolume);
             bomb.GetComponent<Animator>().Play("bomb_exploding");
             yield return new WaitForSeconds(0.15f);
             bomb.GetComponent<SpriteRenderer>().enabled = false;

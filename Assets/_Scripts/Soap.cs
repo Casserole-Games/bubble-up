@@ -26,7 +26,7 @@ namespace Assets._Scripts
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
             Destroy(idleParticleEffect);
-            SFXManager.Instance.PlaySound(SFXManager.Instance.PickupSound, 1.25f, 1.25f, GameParameters.Instance.PickupVolume);
+            SFXManager.Instance.PlayOneShot("pickup", GameParameters.Instance.PickupVolume, 1.25f, 1.25f);
             collectionParticles.GetComponent<ParticleSystem>().Play();
             collectionParticles.GetComponent<MoveParticlesToTarget>().StartMovement();
         }
