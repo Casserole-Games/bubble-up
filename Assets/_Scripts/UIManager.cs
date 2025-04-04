@@ -47,6 +47,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     // UI Effects
     public ParticleSystem Confetti;
+    public GameObject SoapBarParticles;
 
     // UI Finish Lines
     public GameObject FinishLineTop;
@@ -271,6 +272,13 @@ public class UIManager : SingletonBehaviour<UIManager>
         if (HighFinder.Instance.MaxHeightAchieved && HighFinder.Instance.MinHeightAchieved)
         {
             AnimationManager.Instance.PlaySunglasses();
+        }
+
+        if (BubbleSpawner.RemainingSoap > 0)
+        {
+            BubbleSpawner.Instance.AddSoap(-BubbleSpawner.RemainingSoap, 2f);
+            SoapBarParticles.GetComponent<ParticleSystem>().Play();
+            SoapBarParticles.GetComponent<MoveParticlesToTarget>().StartMovement();
         }
 
         HighlightCharacterElements(true);

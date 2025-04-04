@@ -76,7 +76,7 @@ namespace Assets._Scripts
                 return;
             }
 
-            if ((bubble == null && transform.childCount < 2) && RemainingSoap > 0)
+            if (!IsSpawnerPaused && (bubble == null && transform.childCount < 2 && canInflate) && RemainingSoap > 0)
             {
                 if (!SpawnBomb)
                 {
@@ -97,7 +97,7 @@ namespace Assets._Scripts
 
             bool hasBubbleReachedMaxSize = bubble != null && bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize;
             bool isKeyReleased = InputManager.InputUp();
-            if (isInflating && (isKeyReleased || hasBubbleReachedMaxSize))
+            if (isInflating && bubble != null && (isKeyReleased || hasBubbleReachedMaxSize))
             {
                 if (hasBubbleReachedMaxSize) canInflate = false;
                 if (!bubble.CompareTag("Bomb")) DropBubble(); else DropBomb();
@@ -161,8 +161,14 @@ namespace Assets._Scripts
 
             Bubble bubbleComponent = newBubble.GetComponent<Bubble>();
             bubbleComponent.SetColor(color);
+            bubbleComponent.OnBubblePopped += HandleBubblePop;
 
             return newBubble;
+        }
+
+        private void HandleBubblePop()
+        {
+            canInflate = false;
         }
 
         private void DropBubble()
@@ -185,6 +191,7 @@ namespace Assets._Scripts
             float appliedSpeed = Mathf.Min(baseSpeed, GameParameters.Instance.GunLatSpeed);
             rb.AddForce(new Vector2(appliedSpeed * BubbleSpawnerMouvements.direction, -0.5f), ForceMode2D.Impulse);
             bubble.GetComponent<Bubble>().alreadyDropped = true;
+            bubble.GetComponent<Bubble>().OnBubblePopped -= HandleBubblePop;
             bubble = null;
         }
 
@@ -229,7 +236,7 @@ namespace Assets._Scripts
             isUnpausingOnKeyRelease = true;
         }
 
-        public void AddSoap(float amountToAdd, Action onComplete = null)
+        public void AddSoap(float amountToAdd, float duration, Action onComplete = null)
         {
             float oldValue = 0f;
 
@@ -246,7 +253,7 @@ namespace Assets._Scripts
                     RemainingSoap += delta;
                 },
                 amountToAddLimited,
-                GameParameters.Instance.DurationOfSoapRefill
+                duration
             )
             .OnComplete(() => onComplete?.Invoke());
         }

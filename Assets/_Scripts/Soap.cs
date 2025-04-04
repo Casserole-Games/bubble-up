@@ -38,7 +38,7 @@ namespace Assets._Scripts
 
         private void HandleRefillSoap()
         {
-            BubbleSpawner.Instance.AddSoap(GameParameters.Instance.BonusSoap, HandleSoapAmountChanged);
+            BubbleSpawner.Instance.AddSoap(GameParameters.Instance.BonusSoap, GameParameters.Instance.DurationOfSoapRefill, HandleSoapAmountChanged);
         }
 
         private void HandleSoapAmountChanged()

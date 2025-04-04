@@ -32,15 +32,15 @@ namespace Assets._Scripts
         private void OnEnable()
         {
             BubbleSpawner.OnEmptyTank += HandlePhaseEnd;
-            HighFinder.OnMaxHeightAchieved += HandleOnMaxHeightAchieved;
-            HighFinder.OnMinHeightAchieved += HandleOnMinHeightAchieved;
+            HighFinder.OnMaxHeightAchieved += HandlePhaseEnd;
+            HighFinder.OnMinHeightAchieved += HandlePhaseEnd;
         }
 
         private void OnDisable()
         {
             BubbleSpawner.OnEmptyTank -= HandlePhaseEnd;
-            HighFinder.OnMaxHeightAchieved -= HandleOnMaxHeightAchieved;
-            HighFinder.OnMinHeightAchieved -= HandleOnMinHeightAchieved;
+            HighFinder.OnMaxHeightAchieved -= HandlePhaseEnd;
+            HighFinder.OnMinHeightAchieved -= HandlePhaseEnd;
         }
 
         // game entrance point
@@ -115,18 +115,12 @@ namespace Assets._Scripts
             }
             else if (GameState == GameState.Phase2)
             {
+                if (BubbleSpawner.RemainingSoap > 0)
+                {
+                    _currentScore += (int)BubbleSpawner.RemainingSoap * 10;
+                }
                 UIManager.Instance.PlayCutsceneGameOver();
             }
-        }
-
-        private void HandleOnMaxHeightAchieved()
-        {
-            SetupPhase2();
-        }
-
-        private void HandleOnMinHeightAchieved()
-        {
-            UIManager.Instance.PlayCutsceneGameOver();
         }
 
         private void SetupPhase2()
@@ -144,7 +138,7 @@ namespace Assets._Scripts
             BubbleSpawner.Instance.ResumeSpawner();
             AnimationManager.Instance.PlayScore();
             AnimationManager.Instance.PlayPinkArrows();
-            BubbleSpawner.Instance.AddSoap(GameParameters.Instance.Phase2AdditionalSoap);
+            BubbleSpawner.Instance.AddSoap(GameParameters.Instance.Phase2AdditionalSoap, GameParameters.Instance.DurationOfSoapRefill);
         }
     }
 }
