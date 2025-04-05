@@ -16,63 +16,57 @@ namespace Assets._Scripts
         public GameObject BubbleContainer;
         public GameObject LocalHighGreenLine;
         public GameObject LocalHighPinkLine;
+        public GameObject MaxHeight;
 
         internal float localHighestY = 0;
         private float _startGreenLinePosition;
         private float _maxHeight;
-        private int _maxScore; // Maximum score when reaching 89% of the screen height
+        private int _maxScore;
 
         void Start()
         {
             _startGreenLinePosition = LocalHighGreenLine.transform.position.y;
             _maxScore = GameParameters.Instance.MaxScoreInScreen;
+            _maxHeight = MaxHeight.transform.position.y;
         }
 
         void FixedUpdate()
         {
-            if ((GameManager.Instance.GameState != GameState.Phase1) && (GameManager.Instance.GameState != GameState.Phase2)) return;
+            if ((GameManager.Instance.GameState != GameState.Phase1) && (GameManager.Instance.GameState != GameState.Phase2))
+                return;
 
             Calculate();
         }
 
         public void Calculate()
         {
-            var lastLocalHighestY = localHighestY;
-            localHighestY = 0;
-            _maxHeight = Screen.height * 0.89f;
+            localHighestY = _startGreenLinePosition;
 
             foreach (Transform child in BubbleContainer.transform)
             {
                 Bubble bubble = child.GetComponent<Bubble>();
-                if (bubble == null) continue;
-                if (!bubble.alreadyCollided) continue;
+                if (bubble == null || !bubble.alreadyCollided)
+                    continue;
 
-                // Get the top position of the bubble in screen coordinates
-                float screenPos = Camera.main.WorldToScreenPoint(child.position + child.localScale * 0.7f / 2).y;
+                // Get the top position of the bubble in world coordinates
+                float bubbleTopY = child.position.y + (child.localScale.y * 0.7f / 2);
 
-                if (screenPos > localHighestY)
+                if (bubbleTopY > localHighestY)
                 {
-                    localHighestY = Mathf.Min(screenPos, _maxHeight); // Limit to max height
+                    localHighestY = bubbleTopY;
                 }
             }
 
-            // Log warning if height remains zero
-            if (localHighestY == 0)
-            {
-                Debug.LogWarning("localHighestY = 0, check if bubbles exist and are measured correctly!");
-            }
+            localHighestY = Mathf.Clamp(localHighestY, _startGreenLinePosition, _maxHeight);
 
-            // Compute score based on reaching 90% of the screen height
-            GameManager.Instance.CurrentScore = Mathf.RoundToInt((localHighestY / _maxHeight) * _maxScore);
-            Debug.Log($"Score: {GameManager.Instance.CurrentScore}, localHighestY: {localHighestY}, maxHeight: {_maxHeight}");
+            float progress = (localHighestY - _startGreenLinePosition) / (_maxHeight - _startGreenLinePosition);
+            GameManager.Instance.CurrentScore = Mathf.RoundToInt(progress * _maxScore);
 
-            Vector3 localLinePos = Camera.main.ScreenToWorldPoint(new Vector3(0, localHighestY, 0));
-            localLinePos.x = 0;
-            localLinePos.z = 0;
+            Vector3 localLinePos = new Vector3(0, localHighestY, 0);
 
             if (GameManager.Instance.GameState == GameState.Phase1)
             {
-                if (!_wereGreenArrowsShown && localLinePos.y > _startGreenLinePosition)
+                if (!_wereGreenArrowsShown && localHighestY > _startGreenLinePosition)
                 {
                     AnimationManager.Instance.PlayGreenArrows();
                     _wereGreenArrowsShown = true;
@@ -89,12 +83,12 @@ namespace Assets._Scripts
             {
                 LocalHighPinkLine.transform.position = localLinePos;
 
-                if (LocalHighPinkLine.transform.position.y < GameParameters.Instance.MinHeightBeforeBomb && AreBubblesSettled() && !BubbleSpawner.Instance.SpawnBomb)
+                if (localHighestY < GameParameters.Instance.MinHeightBeforeBomb && AreBubblesSettled() && !BubbleSpawner.Instance.SpawnBomb)
                 {
                     BubbleSpawner.Instance.SpawnBomb = true;
                 }
 
-                if (!MinHeightAchieved && LocalHighPinkLine.transform.position.y <= GameParameters.Instance.Phase2MinHeight && AreBubblesSettled())
+                if (!MinHeightAchieved && localHighestY <= GameParameters.Instance.Phase2MinHeight && AreBubblesSettled())
                 {
                     MinHeightAchieved = true;
                     OnMinHeightAchieved?.Invoke();

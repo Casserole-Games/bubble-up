@@ -89,33 +89,37 @@ namespace Assets._Scripts
 
         void OnCollisionStay2D(Collision2D col)
         {
-            if (col.gameObject.CompareTag("Boundary"))
-            {
-                OnBoundaryCollision?.Invoke(col.gameObject);
-                RemoveEvents();
-            }
-
-            if ((Camera.main.WorldToScreenPoint(col.transform.position).y <= HighFinder.Instance.localHighestY) && !alreadyCollided)
+            // touch the bottom
+            if (col.gameObject.CompareTag("Bottom") && !alreadyCollided)
             {
                 alreadyCollided = true;
                 RemoveEvents();
             }
 
-            if (col.contacts.Length > 0 && col.gameObject.CompareTag("Bubble"))
+            // touch another bubble
+            if (col.gameObject.CompareTag("Bubble"))
             {
-                Bubble bubble = col.gameObject.GetComponent<Bubble>();
-                if (bubble == null) return;
-
-                if (alreadyCollided && alreadyDropped && bubble.alreadyDropped)
+                Bubble otherBubble = col.gameObject.GetComponent<Bubble>();
+                if (otherBubble != null)
                 {
-                    // don't call it on both bubbles
-                    if (bubble.Color == Color && col.transform.position.y >= transform.position.y)
+                    if (otherBubble.alreadyCollided && !alreadyCollided)
                     {
-                        var newPos = new Vector2((transform.position.x + col.gameObject.transform.position.x) / 2, Math.Min(transform.position.y, col.gameObject.transform.position.y));
-                        Merge(bubble, newPos);
+                        alreadyCollided = true;
+                        RemoveEvents();
+                    }
+
+                    if (alreadyCollided && alreadyDropped && otherBubble.alreadyDropped)
+                    {
+                        if (otherBubble.Color == Color && col.transform.position.y >= transform.position.y)
+                        {
+                            var newPos = new Vector2(
+                                (transform.position.x + col.gameObject.transform.position.x) / 2,
+                                Math.Min(transform.position.y, col.gameObject.transform.position.y)
+                            );
+                            Merge(otherBubble, newPos);
+                        }
                     }
                 }
-                
             }
         }
     }

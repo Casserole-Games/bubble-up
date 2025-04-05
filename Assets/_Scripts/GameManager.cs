@@ -115,10 +115,6 @@ namespace Assets._Scripts
             }
             else if (GameState == GameState.Phase2)
             {
-                if (BubbleSpawner.RemainingSoap > 0)
-                {
-                    _currentScore += (int)BubbleSpawner.RemainingSoap * 10;
-                }
                 UIManager.Instance.PlayCutsceneGameOver();
             }
         }

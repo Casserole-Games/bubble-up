@@ -169,6 +169,9 @@ namespace Assets._Scripts
         private void HandleBubblePop()
         {
             canInflate = false;
+            SFXManager.Instance.StopMain();
+            bubble = null;
+            isInflating = false;
         }
 
         private void DropBubble()
@@ -295,8 +298,9 @@ namespace Assets._Scripts
         private IEnumerator ExplodeBomb(GameObject bomb)
         {
             bomb.GetComponent<Rigidbody2D>().AddTorque(-100f);
-            SFXManager.Instance.PlayOneShot("fuse", GameParameters.Instance.FuseVolume);
+            SFXManager.Instance.PlayMain("fuse", GameParameters.Instance.FuseVolume);
             yield return new WaitForSeconds(0.65f);
+            SFXManager.Instance.StopMain();
             SFXManager.Instance.PlayOneShot("bomb", GameParameters.Instance.BombVolume);
             bomb.GetComponent<Animator>().Play("bomb_exploding");
             yield return new WaitForSeconds(0.15f);

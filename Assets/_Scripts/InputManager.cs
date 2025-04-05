@@ -28,18 +28,41 @@ public static class InputManager
     public static bool InputDown()
     {
         if (IsPointerOverButton()) return false;
-        return Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
+        if (Input.touchSupported && Input.touchCount > 0)
+        {
+            // Use only touch input on mobile if touch exists
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                return true;
+            }
+            return false;
+        }
+        return Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
     }
 
     public static bool InputHeld()
     {
         if (IsPointerOverButton()) return false;
-        return Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved);
+        if (Input.touchSupported && Input.touchCount > 0)
+        {
+            TouchPhase phase = Input.GetTouch(0).phase;
+            return phase == TouchPhase.Stationary || phase == TouchPhase.Moved;
+        }
+        return Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
     }
 
     public static bool InputUp()
     {
-        return Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended);
+        if (Input.touchSupported && Input.touchCount > 0)
+        {
+            // On mobile, only return true if a touch exists and it ended
+            if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                return true;
+            }
+            return false;
+        }
+        return Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0);
     }
 
     public static bool ControlMusic()

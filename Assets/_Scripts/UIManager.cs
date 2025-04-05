@@ -147,7 +147,16 @@ public class UIManager : SingletonBehaviour<UIManager>
     internal IEnumerator FinalScoreAnimation()
     {
         int finalScore = GameManager.Instance.CurrentScore;
-        yield return ShowAnimatedScore(GameOverText, finalScore);
+
+        if (BubbleSpawner.RemainingSoap > 0)
+        {
+            finalScore += (int)BubbleSpawner.RemainingSoap * 10;
+        }
+
+        if (finalScore > 10) 
+        {
+            yield return ShowAnimatedScore(GameOverText, finalScore);
+        }
 
         // Final display of the account
         Confetti.Play();
@@ -163,7 +172,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         // Fast part of the animation (all values except the last 10)
         for (int currentScore = 0; currentScore < score - 10; currentScore += 10)
         {
-            if (currentScore % 3 == 0)
+            if (currentScore % 50 == 0)
             {
                 SFXManager.Instance.PlayOneShot("score", GameParameters.Instance.ScoreVolume);
             }
