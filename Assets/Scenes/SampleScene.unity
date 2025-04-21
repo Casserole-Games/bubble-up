@@ -8773,6 +8773,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
   m_PrefabInstance: {fileID: 1440082220}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1259745739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1259745740}
+  - component: {fileID: 1259745741}
+  m_Layer: 0
+  m_Name: LeaderboardManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1259745740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259745739}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5561955, y: -1.3685353, z: 0.2618491}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1259745741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259745739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e87cf12cba24cb6418eaa71e59b43222, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseMock: 1
+  mockScoreMin: 0
+  mockScoreMax: 3000
+  mockCount: 30
+  mockPlayerScore: 1
 --- !u!1 &1295971156
 GameObject:
   m_ObjectHideFlags: 0
@@ -26812,3 +26861,4 @@ SceneRoots:
   - {fileID: 665729972}
   - {fileID: 1696057056}
   - {fileID: 1385327887}
+  - {fileID: 1259745740}
