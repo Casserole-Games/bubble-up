@@ -801,11 +801,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: f9d294c5-2977-4ef9-9fa1-69b4e21b0963
+  cloudProjectId: c6dd040f-5e90-4233-8e19-d18c0574c2e3
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: bubble-up
-  organizationId: unity_187c9d5b3c059a600a09
+  projectName: BubbleUp
+  organizationId: casserole-games
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
