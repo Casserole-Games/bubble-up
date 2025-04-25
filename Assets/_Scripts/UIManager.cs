@@ -299,11 +299,11 @@ public class UIManager : SingletonBehaviour<UIManager>
         nextCutscene = PlayCutsceneGameOverPt2;
     }
 
-    public void PlayCutsceneGameOverPt2()
+    public async void PlayCutsceneGameOverPt2()
     {
         DisplayTextBubble(CreditText, true, SkipParameter.CanSkipAfterWait);
 
-        LeaderboardUIManager.Instance.DisplayLeaderboard(GameManager.Instance.CurrentScore);
+        await LeaderboardManager.Instance.SubmitScore(GameManager.Instance.CurrentScore);
 
         nextCutscene = () => { };
     }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.Services.Authentication;
 using Unity.Services.Leaderboards.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,70 +20,69 @@ namespace Assets._Scripts.Leaderboard
 
         public GameObject PlayerScorePrefab;
         public GameObject PlayerScorePrefabInput;
-        public GameObject PlayerScorePrefabTop3;
         public GameObject PlayerScorePrefabDottedLine;
 
-
-        private readonly List<GameObject> uiElements = new();
+        private readonly List<GameObject> UiElements = new();
 
         private async void Start()
         {
            // await UpdateUI(true);
         }
 
-        public async Task UpdateUI(bool isInputScren, int score = 0)
+        protected override void Awake()
+        {
+            base.Awake();
+            LeaderboardManager.Instance.OnLeaderboardUpdated += async () => await UpdateUI();
+        }
+
+        public async Task UpdateUI()
         {
             ClearUI();
-            List<LeaderboardEntry> leaderboardEntries = (await LeaderboardManager.Instance.GetLeaderboardTop7()).Results;
+            LeaderboardEntry playerEntry = await LeaderboardManager.Instance.GetPlayerEntry();
 
-            if (isInputScren) { 
-            
-                var inputFielUIElement = InstantiateInputField(score);
-                uiElements.Add(inputFielUIElement);
-            }
-            for (int i = 0; i < 7; i++)
+            if (playerEntry.Rank < 7)
             {
-                GameObject UIElement;
-                if (i < 3)
+                List<LeaderboardEntry> leaderboardEntries = await LeaderboardManager.Instance.GetLeaderboardTop(8);
+                UiElements.AddRange(leaderboardEntries.Select(entry =>
                 {
-                    UIElement = InstantiateTop3PlayerScore(leaderboardEntries[i]);
-                }
-                else
-                {
-                    UIElement = InstantiatePlayerScore(leaderboardEntries[i]);
-                }
-                if (!isInputScren && i == 2)
-                {
-                    uiElements.Add(Instantiate(PlayerScorePrefabDottedLine, Container));
-                }
-                uiElements.Add(UIElement);
+                    if (entry.PlayerId == AuthenticationService.Instance.PlayerId)
+                    {
+                        return InstantiateInputField(entry);
+                    }
+                    else
+                    {
+                        return InstantiatePlayerScore(entry);
+                    }
+                }).ToList());
+            }
+            else
+            {
+                List<LeaderboardEntry> leaderboardEntries = await LeaderboardManager.Instance.GetLeaderboardTop(3);
+                UiElements.AddRange(leaderboardEntries.Select(entry => InstantiatePlayerScore(entry)));
 
+                UiElements.Add(Instantiate(PlayerScorePrefabDottedLine, Container));
+
+                List<LeaderboardEntry> playerNeighbours = await LeaderboardManager.Instance.GetPlayerNeighbours();
+                UiElements.AddRange(playerNeighbours.Select(entry =>
+                {
+                    if (entry.PlayerId == AuthenticationService.Instance.PlayerId)
+                    {
+                        return InstantiateInputField(entry);
+                    }
+                    else
+                    {
+                        return InstantiatePlayerScore(entry);
+                    }
+                }));
             }
         }
 
-        private async void DisplayInputFieldScreen()
-        {
-
-        }
-
-        private async void DisplayGlobalLeaderboard()
-        {
-
-        }
-
-        private GameObject InstantiateInputField(int score)
+        private GameObject InstantiateInputField(LeaderboardEntry entry)
         {
             GameObject gameObject = Instantiate(PlayerScorePrefabInput, Container);
-            InputFieldLeaderBoard script = gameObject.GetComponent<InputFieldLeaderBoard>();
-            script.UpdateScore(score);
-            return gameObject;
-        }
-        private GameObject InstantiateTop3PlayerScore(LeaderboardEntry entry)
-        {
-            GameObject gameObject = Instantiate(PlayerScorePrefabTop3, Container);
-            PlayerScoreUI playerScoreUI = gameObject.GetComponent<PlayerScoreUITop3>();
-            playerScoreUI.SetEntry(entry);
-            playerScoreUI.UpdateUI();
+            CurrentPlayerScoreUI currentpLayerScoreUI = gameObject.GetComponent<CurrentPlayerScoreUI>();
+            currentpLayerScoreUI.SetEntry(entry);
+            currentpLayerScoreUI.UpdateUI();
             return gameObject;
         }
 
@@ -97,22 +97,18 @@ namespace Assets._Scripts.Leaderboard
 
         private void ClearUI()
         {
-            foreach (GameObject uiElement in uiElements)
+            foreach (GameObject uiElement in UiElements)
             {
                 Destroy(uiElement);
             }
-            uiElements.Clear();
+            UiElements.Clear();
         }
 
-        private void AnimateUI()
+        private async void DisplayLeaderboard(int currentScore)
         {
-            var layoutGroup = Container.GetComponent<VerticalLayoutGroup>();
-        }
-
-        internal async void DisplayLeaderboard(int currentScore)
-        {
+            await LeaderboardManager.Instance.SubmitScore(currentScore);
             LeaderboardFrame.SetActive(true);
-            await UpdateUI(true, currentScore);
+            await UpdateUI();
         }
     }
 }

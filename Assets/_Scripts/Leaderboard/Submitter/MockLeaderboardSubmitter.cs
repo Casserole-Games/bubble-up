@@ -5,7 +5,7 @@ namespace Assets._Scripts.Leaderboard
 {
     internal class MockLeaderboardSubmitter : ILeaderboardSubmitter
     {
-        public Task SubmitScore(string leaderboardID, string playerName, int score)
+        public Task SubmitScore(string leaderboardID, int score)
         {
             throw new NotImplementedException();
         }
