@@ -8,6 +8,7 @@ using DG.Tweening;
 using System.Security;
 using System.Drawing;
 using System.Collections.Generic;
+using Assets._Scripts.Leaderboard;
 
 public enum SkipParameter
 {
@@ -301,7 +302,10 @@ public class UIManager : SingletonBehaviour<UIManager>
     public void PlayCutsceneGameOverPt2()
     {
         DisplayTextBubble(CreditText, true, SkipParameter.CanSkipAfterWait);
-        nextCutscene = () => GameManager.Instance.RestartGame();
+
+        LeaderboardUIManager.Instance.DisplayLeaderboard(GameManager.Instance.CurrentScore);
+
+        nextCutscene = () => { };
     }
 
     public void DisplayTextBubble(string text, bool bigBubble = false, SkipParameter waitBeforeSkipping = SkipParameter.CanSkipImmediately, bool duckSound = true)
