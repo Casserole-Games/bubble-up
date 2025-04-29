@@ -4,9 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using EasyTextEffects;
-using DG.Tweening;
-using System.Security;
-using System.Drawing;
 using System.Collections.Generic;
 using Assets._Scripts.Leaderboard;
 
@@ -15,6 +12,13 @@ public enum SkipParameter
     CanSkipImmediately,
     CanSkipAfterWait,
     NonSkippable
+}
+
+public enum CutsceneState
+{
+    Start,
+    Between,
+    End
 }
 
 public class UIManager : SingletonBehaviour<UIManager>
@@ -62,6 +66,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     private GameState nextGameState;
     private delegate void Cutscene();
     private Cutscene nextCutscene;
+    private CutsceneState _currentCustsceneState;
 
     private void OnEnable()
     {
@@ -163,6 +168,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         Confetti.Play();
         SFXManager.Instance.PlayOneShot("win", GameParameters.Instance.WinVolume);
         DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%><color=#fc699a>" + finalScore + "</color></size></link>", false, SkipParameter.CanSkipAfterWait, false);
+        AnalyticsManager.Instance.SendFinalScore(finalScore);
     }
 
     internal IEnumerator ShowAnimatedScore(string textBeforeScore, int score)
@@ -203,6 +209,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     {
         if (_isReadyToSkipText)
         {
+            AnalyticsManager.Instance.SendCutsceneComplete(GetCutsceneString(_currentCustsceneState));
             HideTextBubble();
             HighlightCharacterElements(false);
             GameManager.Instance.GameState = nextGameState;
@@ -218,6 +225,8 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     public void PlayCutsceneStart()
     {
+        _currentCustsceneState = CutsceneState.Start;
+        AnalyticsManager.Instance.SendCutsceneStart(GetCutsceneString(_currentCustsceneState));
         GameManager.Instance.GameState = GameState.UICutscene;
         nextGameState = GameState.Phase1;
         HideTextBubble();
@@ -227,6 +236,8 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     public void PlayCutsceneBetweenPhases()
     {
+        _currentCustsceneState = CutsceneState.Between;
+        AnalyticsManager.Instance.SendCutsceneStart(GetCutsceneString(_currentCustsceneState));
         GameManager.Instance.GameState = GameState.UICutscene;
         nextGameState = GameState.Phase2;
         AnimationManager.Instance.PlayDimIn(3);
@@ -261,6 +272,8 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     public void PlayCutsceneGameOver()
     {
+        _currentCustsceneState = CutsceneState.End;
+        AnalyticsManager.Instance.SendCutsceneStart(GetCutsceneString(_currentCustsceneState));
         GameManager.Instance.GameState = GameState.UICutscene;
         AnimationManager.Instance.PlayDimIn(3);
         HighFinder.Instance.LocalHighGreenLine.GetComponent<Animator>().Play("green_line_hide");
@@ -364,5 +377,20 @@ public class UIManager : SingletonBehaviour<UIManager>
     {
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeSkipping);
         _isReadyToSkipText = true;
+    }
+
+    private string GetCutsceneString(CutsceneState cutscene)
+    {
+        switch (cutscene)
+        {
+            case CutsceneState.Start:
+                return "cutscene:1";
+            case CutsceneState.Between:
+                return "cutscene:2";
+            case CutsceneState.End:
+                return "cutscene:3";
+            default:
+                return "";
+        }
     }
 }
