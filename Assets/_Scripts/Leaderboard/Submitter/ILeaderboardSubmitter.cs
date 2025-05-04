@@ -2,7 +2,7 @@
 
 namespace Assets._Scripts.Leaderboard
 {
-    internal interface ILeaderboardSubmitter
+    public interface ILeaderboardSubmitter
     {
         public Task SubmitScore(string leaderboardID, int score);
     }

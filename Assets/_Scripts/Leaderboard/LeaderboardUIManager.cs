@@ -1,14 +1,9 @@
 ﻿using DG.Tweening;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using TMPro;
-using Unity.Services.Authentication;
 using Unity.Services.Leaderboards.Models;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets._Scripts.Leaderboard
 {
@@ -19,25 +14,22 @@ namespace Assets._Scripts.Leaderboard
         public GameObject LeaderboardFrame;
 
         public GameObject PlayerScorePrefab;
-        public GameObject PlayerScorePrefabInput;
         public GameObject PlayerScorePrefabDottedLine;
+        public GameObject PlayAgainButtonPrefab;
 
         private readonly List<GameObject> UiElements = new();
 
-        private async void Start()
-        {
-           // await UpdateUI(true);
-        }
 
-        protected override void Awake()
+        protected void Start()
         {
-            base.Awake();
             LeaderboardManager.Instance.OnLeaderboardUpdated += async () => await UpdateUI();
+            EditNameCanvasController.Instance.OnEditNamePanelClose += () => DisplayLeaderboard();
         }
 
         public async Task UpdateUI()
         {
             ClearUI();
+
             LeaderboardEntry playerEntry = await LeaderboardManager.Instance.GetPlayerEntry();
 
             if (playerEntry.Rank < 7)
@@ -45,14 +37,8 @@ namespace Assets._Scripts.Leaderboard
                 List<LeaderboardEntry> leaderboardEntries = await LeaderboardManager.Instance.GetLeaderboardTop(8);
                 UiElements.AddRange(leaderboardEntries.Select(entry =>
                 {
-                    if (entry.PlayerId == AuthenticationService.Instance.PlayerId)
-                    {
-                        return InstantiateInputField(entry);
-                    }
-                    else
-                    {
-                        return InstantiatePlayerScore(entry);
-                    }
+                    return InstantiatePlayerScore(entry);
+                    
                 }).ToList());
             }
             else
@@ -64,33 +50,19 @@ namespace Assets._Scripts.Leaderboard
 
                 List<LeaderboardEntry> playerNeighbours = await LeaderboardManager.Instance.GetPlayerNeighbours();
                 UiElements.AddRange(playerNeighbours.Select(entry =>
-                {
-                    if (entry.PlayerId == AuthenticationService.Instance.PlayerId)
-                    {
-                        return InstantiateInputField(entry);
-                    }
-                    else
-                    {
-                        return InstantiatePlayerScore(entry);
-                    }
-                }));
+                    InstantiatePlayerScore(entry)));
             }
-        }
 
-        private GameObject InstantiateInputField(LeaderboardEntry entry)
-        {
-            GameObject gameObject = Instantiate(PlayerScorePrefabInput, Container);
-            CurrentPlayerScoreUI currentpLayerScoreUI = gameObject.GetComponent<CurrentPlayerScoreUI>();
-            currentpLayerScoreUI.SetEntry(entry);
-            currentpLayerScoreUI.UpdateUI();
-            return gameObject;
+            UiElements.Add(Instantiate(PlayAgainButtonPrefab, Container));
+
+            DisplayLeaderboard();
         }
 
         private GameObject InstantiatePlayerScore(LeaderboardEntry entry)
         {
             GameObject gameObject = Instantiate(PlayerScorePrefab, Container);
             PlayerScoreUI playerScoreUI = gameObject.GetComponent<PlayerScoreUI>();
-            playerScoreUI.SetEntry(entry);
+            playerScoreUI.SetEntryAndIsCurrentPlayer(entry);
             playerScoreUI.UpdateUI();
             return gameObject;
         }
@@ -104,11 +76,12 @@ namespace Assets._Scripts.Leaderboard
             UiElements.Clear();
         }
 
-        private async void DisplayLeaderboard(int currentScore)
+        private void DisplayLeaderboard()
         {
-            await LeaderboardManager.Instance.SubmitScore(currentScore);
             LeaderboardFrame.SetActive(true);
-            await UpdateUI();
+            Container.transform.localScale = Vector3.zero;
+            Container.gameObject.SetActive(true);
+            Container.DOScale(Vector3.one, 0.5f).SetEase(Ease.InBack);
         }
     }
 }
