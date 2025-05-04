@@ -2,6 +2,7 @@
 using Unity.Services.Leaderboards.Models;
 using Unity.Services.Leaderboards;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets._Scripts.Leaderboard
 {

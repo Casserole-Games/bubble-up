@@ -7,11 +7,10 @@ namespace Assets._Scripts.Leaderboard
 {
     internal class UGSLeaderboardSubmitter : ILeaderboardSubmitter
     {
-        public async Task SubmitScore(string leaderboardID, string playerName, int score)
+        public async Task SubmitScore(string leaderboardID, int score)
         {
             try
             {
-                await AuthenticationService.Instance.UpdatePlayerNameAsync(playerName);
                 var response = await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardID, score);
                 Debug.Log("Score submitted: " + response.Score);
             }

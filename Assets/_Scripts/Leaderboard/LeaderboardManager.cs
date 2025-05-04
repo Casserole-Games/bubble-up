@@ -4,91 +4,47 @@ using Unity.Services.Core.Environments;
 using System.Threading.Tasks;
 using Unity.Services.Leaderboards.Models;
 using Unity.Services.Leaderboards;
-using UnityEngine.SocialPlatforms.Impl;
 using System;
-using System.ComponentModel;
-using Mono.Cecil.Cil;
-using Unity.VisualScripting;
 using Unity.Services.Authentication;
 using System.Collections.Generic;
 using System.Linq;
+using Assets._Scripts.Leaderboard.Authentication;
+using Assets._Scripts.Leaderboard.DependenciesContainer;
 
 namespace Assets._Scripts.Leaderboard
 {
-
-
     public class LeaderboardManager : SingletonBehaviour<LeaderboardManager>
     {
         private const string k_leaderboardID = "global-leaderboard";
 
         private ILeaderboardRetriever leaderboardRetriever;
         private ILeaderboardSubmitter leaderboardSubmitter;
+        private IAuthenticationManager authenticationManager;
 
-        [Header("MockData")]
-
-        [SerializeField] private bool useMock = false;
-        [SerializeField] private int mockScoreMin;
-        [SerializeField] private int mockScoreMax;
-        [SerializeField] private int mockCount;
-        [SerializeField] private int mockPlayerScoreToCheck;
-
-        [Header("Force Player Entry with PlayerID")]
-
-        [SerializeField] private string mockPlayerID;
-        [SerializeField] private int mockPlayerScore;
-
+        public event Action OnLeaderboardUpdated;
 
         protected async override void Awake()
         {
             base.Awake();
-            SetupLeaderboardDependencies();
-            try
-            {
-                await UnityServices.InitializeAsync(new InitializationOptions()
-                        .SetEnvironmentName("production"));
 
-                if (!AuthenticationService.Instance.IsSignedIn)
-                    await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                Debug.Log("Player ID : " + AuthenticationService.Instance.PlayerId);
+            leaderboardRetriever = DependencyContainer.LeaderboardRetriever;
+            leaderboardSubmitter = DependencyContainer.LeaderboardSubmitter;
+            authenticationManager = DependencyContainer.AuthenticationManager;
 
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error while initializing Unity Services : " + e);
-            }
+            await DependencyContainer.InitializeGameServices();
+            await AuthenticationHelper.SignInAnonymouslyIfNotSignedIn();
+
+            Debug.Log("Player ID : " + authenticationManager.PlayerId);
+            Debug.Log("Player Name : " + authenticationManager.PlayerName);
         }
 
-        public async void Start()
-        {
-            var test = await GetPlayerNeighbours();
-            foreach (var entry in test)
-            {
-                Debug.Log($"{entry.Rank + 1}: {entry.PlayerName ?? "Anonyme"} - {entry.Score}");
-            }
-        }
-
-        private void SetupLeaderboardDependencies()
-        {
-            if (useMock)
-            {
-                int? mockPlayerScore = this.mockPlayerScore == -1 ? null : this.mockPlayerScore;
-
-                leaderboardRetriever = new MockLeaderboardRetriever(mockScoreMin, mockScoreMax, mockCount, mockPlayerID, mockPlayerScore);
-                leaderboardSubmitter = new MockLeaderboardSubmitter();
-            }
-            else
-            {
-                leaderboardRetriever = new UGSLeaderboardRetriever();
-                leaderboardSubmitter = new UGSLeaderboardSubmitter();
-            }
-        }
-        public async Task<LeaderboardScoresPage> GetLeaderboardTop7()
+        public async Task<List<LeaderboardEntry>> GetLeaderboardTop(int limit)
         {
             try
             {
                 GetScoresOptions options = new()
                 {
-                    Limit = 7,
+                    Limit = limit,
                 };
 
                 LeaderboardScoresPage scoresResponse = await leaderboardRetriever.GetScoresAsync(k_leaderboardID, options);
@@ -98,20 +54,13 @@ namespace Assets._Scripts.Leaderboard
                     Debug.Log($"{entry.Rank + 1}: {entry.PlayerName ?? "Anonyme"} - {entry.Score}");
                 }
 
-                return scoresResponse;
+                return scoresResponse.Results;
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError("Error while getting scores : " + e);
                 return null;
             }
-        }
-
-        [ContextMenu("GetLeaderboardPotentialRank")]
-        public void GetLeaderboardPotentialRankMock()
-        {
-            leaderboardRetriever = new MockLeaderboardRetriever(mockScoreMin, mockScoreMax, mockCount, mockPlayerID, mockPlayerScore);
-            _ = GetLeaderboardPotentialRankAsync(mockPlayerScoreToCheck).Result;
         }
 
         public async Task<LeaderboardPotentialRankResponse> GetLeaderboardPotentialRankAsync(int playerScore)
@@ -131,14 +80,14 @@ namespace Assets._Scripts.Leaderboard
                         Offset = offset,
                         Limit = limit
                     });
-                    
+
                     int count = response.Results.Count;
                     hasMore = count == limit;
 
                     //iterate through the page to check if the payers id is already registered
                     for (int i = 0; i < count; i++)
                     {
-                        if (response.Results[i].PlayerId == AuthenticationService.Instance.PlayerId)
+                        if (response.Results[i].PlayerId == authenticationManager.PlayerId)
                         {
                             if (response.Results[i].Score >= playerScore)
                             {
@@ -183,6 +132,7 @@ namespace Assets._Scripts.Leaderboard
         {
             try
             {
+                await AuthenticationHelper.SignInAnonymouslyIfNotSignedIn();
                 GetPlayerRangeOptions options = new()
                 {
                     RangeLimit = 2,
@@ -195,7 +145,7 @@ namespace Assets._Scripts.Leaderboard
                     Debug.Log($"{entry.Rank + 1}: {entry.PlayerName ?? "Anonyme"} - {entry.Score}");
                 }
 
-                return playerRangeResponse.Results;
+                return playerRangeResponse.Results.Take(4).ToList();
             }
             catch (Exception e)
             {
@@ -204,16 +154,33 @@ namespace Assets._Scripts.Leaderboard
             }
         }
 
-        public async Task SubmitScore(string playerName, int score)
+        public async Task<LeaderboardEntry> GetPlayerEntry()
+        {
+            await AuthenticationHelper.SignInAnonymouslyIfNotSignedIn();
+            return await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
+        }
+
+        public async Task SubmitScore(int score)
         {
             try
             {
-                await leaderboardSubmitter.SubmitScore(k_leaderboardID, playerName, score);
+                await leaderboardSubmitter.SubmitScore(k_leaderboardID, score);
+                OnLeaderboardUpdated?.Invoke();
             }
             catch (Exception e)
             {
                 Debug.LogError("Error while submitting score : " + e);
             }
+        }
+
+        public async Task UpdatePlayerName(string name)
+        {
+            await AuthenticationHelper.SignInAnonymouslyIfNotSignedIn();
+            await authenticationManager.UpdatePlayerNameAsync(name);
+
+            LeaderboardEntry playerEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
+            await leaderboardSubmitter.SubmitScore(k_leaderboardID, (int)playerEntry.Score);
+            OnLeaderboardUpdated?.Invoke();
         }
     }
 }
