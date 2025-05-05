@@ -29,6 +29,7 @@ namespace Assets._Scripts
             SFXManager.Instance.PlayOneShot("pickup", GameParameters.Instance.PickupVolume, 1.25f, 1.25f);
             collectionParticles.GetComponent<ParticleSystem>().Play();
             collectionParticles.GetComponent<MoveParticlesToTarget>().StartMovement();
+            AnalyticsManager.Instance.SendAdditionalSoapCollected();
         }
 
         private void HandleBlockPhase()

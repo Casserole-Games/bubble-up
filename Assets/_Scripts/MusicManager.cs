@@ -21,6 +21,7 @@ public class MusicManager : SingletonPersistent<MusicManager>
 
     public void Toggle()
     {
+        AnalyticsManager.Instance.SendMuteMusicButtonPressed(!audioSource.mute);
         if (!audioSource.mute)
         {
             Mute();

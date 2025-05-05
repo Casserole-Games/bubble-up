@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -70,22 +71,30 @@ namespace Assets._Scripts
 
         public void RestartGame()
         {
+            AnalyticsManager.Instance.SendReplayButtonPressed();
             SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
         }
 
         private void UpdateGameState(GameState newGameState)
         {
+            var _oldGameState = _gameState;
             _gameState = newGameState;
 
             switch (newGameState)
             {
                 case GameState.Phase1:
                     AnimationManager.Instance.PlayDimOut();
+                    AnalyticsManager.Instance.SendPhaseStart(GetPhaseString(GameState.Phase1));
                     break;
                 case GameState.Phase2:
                     PlayPhase2();
+                    AnalyticsManager.Instance.SendPhaseStart(GetPhaseString(GameState.Phase2));
                     break;
                 case GameState.UICutscene:
+                    if (_oldGameState != GameState.UICutscene)
+                    {
+                        AnalyticsManager.Instance.SendPhaseComplete(GetPhaseString(_oldGameState), _currentScore, BubbleSpawner.RemainingSoap);
+                    }
                     break;
             }
 
@@ -135,6 +144,19 @@ namespace Assets._Scripts
             AnimationManager.Instance.PlayScore();
             AnimationManager.Instance.PlayPinkArrows();
             BubbleSpawner.Instance.AddSoap(GameParameters.Instance.Phase2AdditionalSoap, GameParameters.Instance.DurationOfSoapRefill);
+        }
+
+        private string GetPhaseString(GameState gameState)
+        {
+            switch (gameState)
+            {
+                case GameState.Phase1:
+                    return "phase:1";
+                case GameState.Phase2:
+                    return "phase:2";
+                default:
+                    return "";
+            }
         }
     }
 }
