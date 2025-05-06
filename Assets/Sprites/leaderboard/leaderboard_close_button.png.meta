@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      leaderboard_close_button_0: -2938246158873130940
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
