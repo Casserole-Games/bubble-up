@@ -17,11 +17,15 @@ namespace Assets._Scripts.Leaderboard
         public GameObject PlayerScorePrefabDottedLine;
         public GameObject PlayAgainButtonPrefab;
 
+        public float WindowShowAnimTime = 0.25f;
+        public float WindowCloseAnimTime = 0.25f;
+
         private readonly List<GameObject> UiElements = new();
 
 
         protected void Start()
         {
+            Container.transform.localScale = Vector3.zero;
             LeaderboardManager.Instance.OnLeaderboardUpdated += async () => await UpdateUI();
             EditNameCanvasController.Instance.OnEditNamePanelClose += () => DisplayLeaderboard();
         }
@@ -54,8 +58,6 @@ namespace Assets._Scripts.Leaderboard
             }
 
             UiElements.Add(Instantiate(PlayAgainButtonPrefab, Container));
-
-            DisplayLeaderboard();
         }
 
         private GameObject InstantiatePlayerScore(LeaderboardEntry entry)
@@ -76,12 +78,11 @@ namespace Assets._Scripts.Leaderboard
             UiElements.Clear();
         }
 
-        private void DisplayLeaderboard()
+        public void DisplayLeaderboard()
         {
             LeaderboardFrame.SetActive(true);
-            Container.transform.localScale = Vector3.zero;
             Container.gameObject.SetActive(true);
-            Container.DOScale(Vector3.one, 0.5f).SetEase(Ease.InBack);
+            Container.DOScale(Vector3.one, WindowShowAnimTime).SetEase(Ease.OutBack);
         }
     }
 }

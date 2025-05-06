@@ -45,10 +45,10 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
         panel.gameObject.SetActive(true);
 
-        scoreContainer.DOScale(Vector3.zero, 0.3f)//.SetEase(Ease.OutBack)
+        scoreContainer.DOScale(Vector3.zero, LeaderboardUIManager.Instance.WindowCloseAnimTime).SetEase(Ease.InBack)
             .OnComplete(() =>
             {
-                panel.DOScale(Vector3.one, 0.5f).SetEase(Ease.InBack);
+                panel.DOScale(Vector3.one, LeaderboardUIManager.Instance.WindowShowAnimTime).SetEase(Ease.OutBack);
             });
     }
 
@@ -60,7 +60,7 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
     private void ExitPanel()
     {
-        panel.DOScale(Vector3.zero, 0.3f)
+        panel.DOScale(Vector3.zero, LeaderboardUIManager.Instance.WindowCloseAnimTime).SetEase(Ease.InBack)
             .OnComplete(() =>
             {
                 OnEditNamePanelClose?.Invoke();
