@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class PlayAgainButtonController : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(GameManager.Instance.RestartGame);
+        GetComponent<Button>().onClick.AddListener(GameManager.Instance.ReplayButton);
     }
 }

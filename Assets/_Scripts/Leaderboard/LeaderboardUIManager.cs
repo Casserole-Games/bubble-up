@@ -80,9 +80,24 @@ namespace Assets._Scripts.Leaderboard
 
         public void DisplayLeaderboard()
         {
-            LeaderboardFrame.SetActive(true);
+            DisplayLeaderboardFrame();
             Container.gameObject.SetActive(true);
             Container.DOScale(Vector3.one, WindowShowAnimTime).SetEase(Ease.OutBack);
+        }
+
+        public bool IsLeaderboardFrameActive()
+        {
+            return LeaderboardFrame.activeSelf;
+        }
+
+        public void DisplayLeaderboardFrame()
+        {
+            LeaderboardFrame.SetActive(true);
+        }
+
+        public void HideLeaderboardFrame()
+        {
+            LeaderboardFrame.SetActive(false);
         }
     }
 }

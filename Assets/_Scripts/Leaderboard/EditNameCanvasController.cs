@@ -39,6 +39,8 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
     public void DisplayEditNamePanel()
     {
+        LeaderboardUIManager.Instance.DisplayLeaderboardFrame();
+
         nameInputField.text = StringHelpers.RemoveUGSSuffix(DependencyContainer.AuthenticationManager.PlayerName);
 
         panel.localScale = Vector3.zero;

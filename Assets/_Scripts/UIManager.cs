@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using EasyTextEffects;
 using System.Collections.Generic;
 using Assets._Scripts.Leaderboard;
+using System;
 
 public enum SkipParameter
 {
@@ -14,7 +15,7 @@ public enum SkipParameter
     NonSkippable
 }
 
-public enum CutsceneState
+public enum CutsceneType
 {
     Start,
     Between,
@@ -49,6 +50,8 @@ public class UIManager : SingletonBehaviour<UIManager>
     public Button MusicButton;
     public Sprite MusicButtonUnmuteSprite;
     public Sprite MusicButtonMuteSprite;
+    public Button InfoButton;
+    public Button ReplayButton;
 
     // UI Effects
     public ParticleSystem Confetti;
@@ -59,14 +62,14 @@ public class UIManager : SingletonBehaviour<UIManager>
     public GameObject FinishLineBottom;
 
     // flags
-    private bool _isReadyToSkipText;
-    private bool _isStartCutsceneSkipped;
+    private bool _isReadyToSkipCutscene;
+    private bool _isCreditsShown;
+    private bool _wasLeaderboardActive;
 
     // other
-    private GameState nextGameState;
-    private delegate void Cutscene();
-    private Cutscene nextCutscene;
-    private CutsceneState _currentCustsceneState;
+    private Action _onCutsceneFinished;
+    private CutsceneType _currentCustsceneState;
+    private GameState _savedGameState;
 
     private void OnEnable()
     {
@@ -80,26 +83,48 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     private void HandleGameStateChange(GameState currentGameState)
     {
-        if (currentGameState == GameState.UICutscene) _isReadyToSkipText = false;
+        if (currentGameState == GameState.UICutscene) _isReadyToSkipCutscene = false;
     }
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
         MusicButton.onClick.AddListener(MusicManager.Instance.Toggle);
+        InfoButton.onClick.AddListener(ToggleCredits);
+        ReplayButton.onClick.AddListener(GameManager.Instance.ReplayButton);
     }
 
     private void Update()
     {
         if (GameManager.Instance.GameState != GameState.UICutscene) return;
-        if (_isReadyToSkipText && InputManager.InputDown())
+
+        if (_isCreditsShown && InputManager.InputDown())
         {
-            if (nextCutscene != null) 
-            {
-                nextCutscene();
-            } else {
-                SkipText();
-            }
+            ToggleCredits();
+            return;
+        }
+
+        if (_isReadyToSkipCutscene && InputManager.InputDown())
+        {
+            SkipCutscene();
+        }
+    }
+
+    public void ButtonPressed()
+    {
+        if (BubbleSpawner.Instance.IsGameOver && _isReadyToSkipCutscene)
+        {
+            SkipCutscene();
+        }
+    }
+
+    private void SkipCutscene()
+    {
+        if (_isReadyToSkipCutscene)
+        {
+            AnalyticsManager.Instance.SendCutsceneComplete(GetCutsceneString(_currentCustsceneState));
+            HideTextBubble();
+            HighlightCharacterElements(false);
+            _onCutsceneFinished?.Invoke();
         }
     }
 
@@ -118,39 +143,23 @@ public class UIManager : SingletonBehaviour<UIManager>
         PinkScoreText.text = value.ToString();
     }
 
-    internal void HighlightCharacterElements(bool shouldHighlight)
+    public void HighlightCharacterElements(bool shouldHighlight)
     {
         CharacterElementsCanvas.sortingLayerID = shouldHighlight ? SortingLayer.NameToID("foreground") : SortingLayer.NameToID("background");
     }
 
-    internal void DisplayTetBubble(bool shouldDisplay, string text = "")
-    {
-        TextBubble.gameObject.SetActive(shouldDisplay);
-
-        if (text == "") return;
-        TextBubbleContent.text = text;
-    }
-
-    internal void DisplayTextBubbleBig(bool shouldDisplay, string text = "")
-    {
-        TextBubbleBig.gameObject.SetActive(shouldDisplay);
-
-        if (text == "") return;
-        TextBubbleBigContent.text = text;
-    }
-
-    internal void SwitchDuckSprite()
+    public void SwitchDuckSprite()
     {
         DuckBack.gameObject.SetActive(!DuckBack.gameObject.activeSelf);
         DuckFront.gameObject.SetActive(!DuckFront.gameObject.activeSelf);
     }
 
-    internal void GameOver()
+    public void GameOver()
     {
         StartCoroutine(FinalScoreAnimation());
     }
 
-    internal IEnumerator FinalScoreAnimation()
+    public IEnumerator FinalScoreAnimation()
     {
         int finalScore = GameManager.Instance.CurrentScore;
 
@@ -171,7 +180,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         AnalyticsManager.Instance.SendFinalScore(finalScore);
     }
 
-    internal IEnumerator ShowAnimatedScore(string textBeforeScore, int score)
+    public IEnumerator ShowAnimatedScore(string textBeforeScore, int score)
     {
         float delay = 0.0001f; // Fixed delay for the fast part
         float deltaDelay = 0.025f;  // Increasing the delay to slow down
@@ -197,51 +206,30 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
     }
 
-    internal void ButtonPressed()
-    {
-        if (BubbleSpawner.Instance.IsGameOver && _isReadyToSkipText)
-        {
-            SkipText();
-        }
-    }
-
-    private void SkipText()
-    {
-        if (_isReadyToSkipText)
-        {
-            AnalyticsManager.Instance.SendCutsceneComplete(GetCutsceneString(_currentCustsceneState));
-            HideTextBubble();
-            HighlightCharacterElements(false);
-            GameManager.Instance.GameState = nextGameState;
-
-            // Show top finish line
-            if (!_isStartCutsceneSkipped)
-            {
-                FinishLineTop.GetComponent<Animator>().Play("finish_line_show");
-                _isStartCutsceneSkipped = true;
-            }
-        }
-    }
-
     public void PlayCutsceneStart()
     {
-        _currentCustsceneState = CutsceneState.Start;
+        _currentCustsceneState = CutsceneType.Start;
         AnalyticsManager.Instance.SendCutsceneStart(GetCutsceneString(_currentCustsceneState));
         GameManager.Instance.GameState = GameState.UICutscene;
-        nextGameState = GameState.Phase1;
         HideTextBubble();
         HighlightCharacterElements(true);
         DisplayTextBubble(TutorialText, false, SkipParameter.CanSkipImmediately);
+        _onCutsceneFinished = () => {
+            FinishLineTop.GetComponent<Animator>().Play("finish_line_show");
+            GameManager.Instance.PlayPhase1();
+        };
     }
 
     public void PlayCutsceneBetweenPhases()
     {
-        _currentCustsceneState = CutsceneState.Between;
+        _currentCustsceneState = CutsceneType.Between;
         AnalyticsManager.Instance.SendCutsceneStart(GetCutsceneString(_currentCustsceneState));
         GameManager.Instance.GameState = GameState.UICutscene;
-        nextGameState = GameState.Phase2;
         AnimationManager.Instance.PlayDimIn(3);
         StartCoroutine(CutsceneBetweenPhases());
+        _onCutsceneFinished = () => {
+            GameManager.Instance.PlayPhase2();
+        };
     }
 
     private IEnumerator CutsceneBetweenPhases()
@@ -272,7 +260,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     public void PlayCutsceneGameOver()
     {
-        _currentCustsceneState = CutsceneState.End;
+        _currentCustsceneState = CutsceneType.End;
         AnalyticsManager.Instance.SendCutsceneStart(GetCutsceneString(_currentCustsceneState));
         GameManager.Instance.GameState = GameState.UICutscene;
         AnimationManager.Instance.PlayDimIn(3);
@@ -309,19 +297,72 @@ public class UIManager : SingletonBehaviour<UIManager>
         BubbleSpawner.Instance.IsGameOver = true;
         StartCoroutine(GameManager.Instance.PopAllBubbles());
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeShowingTextBubble);
-        nextCutscene = PlayCutsceneGameOverPt2;
+        _onCutsceneFinished = DisplayLeaderboardWindow;
     }
 
-    public async void PlayCutsceneGameOverPt2()
+    private async void DisplayLeaderboardWindow()
     {
-        DisplayTextBubble(CreditText, true, SkipParameter.CanSkipAfterWait);
-
         await LeaderboardManager.Instance.SubmitScore(GameManager.Instance.CurrentScore);
-
-        nextCutscene = () => { };
+        EditNameCanvasController.Instance.DisplayEditNamePanel();
+        _onCutsceneFinished = null;
     }
 
-    public void DisplayTextBubble(string text, bool bigBubble = false, SkipParameter waitBeforeSkipping = SkipParameter.CanSkipImmediately, bool duckSound = true)
+    public void ToggleCredits()
+    {
+        if (_isCreditsShown)
+        {
+            // 1) hide _only_ the credits bubble
+            TextBubbleBig.gameObject.SetActive(false);
+
+            // 2) undim the background
+            if (!TextBubble.gameObject.activeSelf)
+            {
+                AnimationManager.Instance.PlayDimOut();
+                HighlightCharacterElements(false);
+                GameManager.Instance.GameState = _savedGameState;
+            }
+
+            if (_wasLeaderboardActive)
+            {
+                LeaderboardUIManager.Instance.DisplayLeaderboardFrame();
+            }
+
+            _isCreditsShown = false;
+        }
+        else
+        {
+            // ensure we're in cutscene mode
+            if (GameManager.Instance.GameState != GameState.UICutscene)
+            {
+                _savedGameState = GameManager.Instance.GameState;
+                GameManager.Instance.GameState = GameState.UICutscene;
+                AnimationManager.Instance.PlayDimIn(3);
+                HighlightCharacterElements(true);
+            }
+            
+            if (LeaderboardUIManager.Instance.IsLeaderboardFrameActive())
+            {
+                _wasLeaderboardActive = true;
+                LeaderboardUIManager.Instance.HideLeaderboardFrame();
+                AnimationManager.Instance.PlayDimIn(3);
+                HighlightCharacterElements(true);
+            }
+
+            // show the big bubble containing your credits
+            TextBubbleBig.gameObject.SetActive(true);
+            TextBubbleBigContent.text = CreditText;
+            TextBubbleBigContent.GetComponent<TextEffect>().Refresh();
+            TextBubbleBigContent.GetComponent<TextEffect>().StartManualTagEffects();
+
+            // allow the user to skip away from credits if they tap again
+            _isReadyToSkipCutscene = true;
+
+            _isCreditsShown = true;
+            AnalyticsManager.Instance.SendCreditsButtonPressed();
+        }
+    }
+
+    private void DisplayTextBubble(string text, bool bigBubble = false, SkipParameter waitBeforeSkipping = SkipParameter.CanSkipImmediately, bool duckSound = true)
     {
         if (text == "") return;
         if (bigBubble)
@@ -344,7 +385,7 @@ public class UIManager : SingletonBehaviour<UIManager>
                 StartCoroutine(WaitBeforeSkipping());
                 break;
             case SkipParameter.CanSkipImmediately:
-                _isReadyToSkipText = true;
+                _isReadyToSkipCutscene = true;
                 break;
             case SkipParameter.NonSkippable:
                 break;
@@ -356,7 +397,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
     }
 
-    public void HideTextBubble()
+    private void HideTextBubble()
     {
         TextBubbleBig.gameObject.SetActive(false);
         TextBubble.gameObject.SetActive(false);
@@ -376,21 +417,17 @@ public class UIManager : SingletonBehaviour<UIManager>
     private IEnumerator WaitBeforeSkipping()
     {
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeSkipping);
-        _isReadyToSkipText = true;
+        _isReadyToSkipCutscene = true;
     }
 
-    private string GetCutsceneString(CutsceneState cutscene)
+    private string GetCutsceneString(CutsceneType cutscene)
     {
-        switch (cutscene)
+        return cutscene switch
         {
-            case CutsceneState.Start:
-                return "cutscene:1";
-            case CutsceneState.Between:
-                return "cutscene:2";
-            case CutsceneState.End:
-                return "cutscene:3";
-            default:
-                return "";
-        }
+            CutsceneType.Start => "cutscene:1",
+            CutsceneType.Between => "cutscene:2",
+            CutsceneType.End => "cutscene:3",
+            _ => "",
+        };
     }
 }
