@@ -2,6 +2,7 @@
 using Assets._Scripts.Leaderboard;
 using Assets._Scripts.Leaderboard.DependenciesContainer;
 using DG.Tweening;
+using EasyTextEffects.Editor.MyBoxCopy.Extensions;
 using System;
 using TMPro;
 using UnityEngine;
@@ -37,16 +38,13 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
         exitButton.onClick.AddListener(ExitPanel);
     }
 
-    public void DisplayEditNamePanel()
+    public void DisplayEditNamePanel(bool hideExitButton = false)
     {
         LeaderboardUIManager.Instance.DisplayLeaderboardFrame();
-
+        exitButton.gameObject.SetActive(!hideExitButton);
         nameInputField.text = StringHelpers.RemoveUGSSuffix(DependencyContainer.AuthenticationManager.PlayerName);
-
         panel.localScale = Vector3.zero;
-
         panel.gameObject.SetActive(true);
-
         scoreContainer.DOScale(Vector3.zero, LeaderboardUIManager.Instance.WindowCloseAnimTime).SetEase(Ease.InBack)
             .OnComplete(() =>
             {
