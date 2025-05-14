@@ -325,7 +325,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
             if (_wasLeaderboardActive)
             {
-                LeaderboardUIManager.Instance.DisplayLeaderboardFrame();
+                LeaderboardUIManager.Instance.DisplayLeaderboard();
                 HighlightCharacterElements(false);
             }
 

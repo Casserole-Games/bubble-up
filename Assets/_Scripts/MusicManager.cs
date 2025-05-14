@@ -12,13 +12,6 @@ public class MusicManager : SingletonPersistent<MusicManager>
         if (!audioSource.isPlaying) audioSource.Play();
     }
 
-    private void Update()
-    {
-        if (!InputManager.ControlMusic()) return;
-        Toggle();
-        
-    }
-
     public void Toggle()
     {
         AnalyticsManager.Instance.SendMuteMusicButtonPressed(!audioSource.mute);

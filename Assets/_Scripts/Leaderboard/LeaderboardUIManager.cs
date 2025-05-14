@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Unity.Services.Leaderboards.Models;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Assets._Scripts.Leaderboard
 {
@@ -83,6 +85,8 @@ namespace Assets._Scripts.Leaderboard
             DisplayLeaderboardFrame();
             Container.gameObject.SetActive(true);
             Container.DOScale(Vector3.one, WindowShowAnimTime).SetEase(Ease.OutBack);
+            var playAgainButton = Container.transform.Find("PlayAgainButton(Clone)").GetComponent<Button>();
+            EventSystem.current.SetSelectedGameObject(playAgainButton.gameObject);
         }
 
         public bool IsLeaderboardFrameActive()

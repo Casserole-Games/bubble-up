@@ -6,6 +6,7 @@ using EasyTextEffects.Editor.MyBoxCopy.Extensions;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasController>
@@ -36,6 +37,29 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
         submitButton.onClick.AddListener(Submit);
         exitButton.onClick.AddListener(ExitPanel);
+    }
+
+    private void Update()
+    {
+        if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) &&
+            EventSystem.current.currentSelectedGameObject == nameInputField.gameObject)
+        {
+            submitButton.onClick.Invoke();
+        }
+
+        string input = Input.inputString;
+        if (!string.IsNullOrEmpty(input))
+        {
+            foreach (char c in input)
+            {
+                if (char.IsLetter(c))
+                {
+                    EventSystem.current.SetSelectedGameObject(nameInputField.gameObject);
+                    nameInputField.ActivateInputField();
+                    return;
+                }
+            }
+        }
     }
 
     public void DisplayEditNamePanel(bool hideExitButton = false)

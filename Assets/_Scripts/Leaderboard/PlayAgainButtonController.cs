@@ -6,6 +6,6 @@ public class PlayAgainButtonController : MonoBehaviour
 {
     private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(GameManager.Instance.ReplayButton);
+        GetComponent<Button>().onClick.AddListener(GameManager.Instance.RestartGame);
     }
 }

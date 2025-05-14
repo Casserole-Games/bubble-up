@@ -64,9 +64,4 @@ public static class InputManager
         }
         return Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0);
     }
-
-    public static bool ControlMusic()
-    {
-        return Input.GetKeyUp(KeyCode.M);
-    }
 }
