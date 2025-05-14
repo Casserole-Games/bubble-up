@@ -296,6 +296,8 @@ public class UIManager : SingletonBehaviour<UIManager>
         BubbleSpawner.Instance.PauseSpawner();
         BubbleSpawner.Instance.IsGameOver = true;
         StartCoroutine(GameManager.Instance.PopAllBubbles());
+        FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;
+        FinishLineBottom.GetComponent<Animator>().Play("finish_line_hide");
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeShowingTextBubble);
         _onCutsceneFinished = DisplayLeaderboardWindow;
     }
@@ -315,26 +317,28 @@ public class UIManager : SingletonBehaviour<UIManager>
             TextBubbleBig.gameObject.SetActive(false);
 
             // 2) undim the background
-            if (!TextBubble.gameObject.activeSelf)
+            if (!TextBubble.gameObject.activeSelf && !_wasLeaderboardActive)
             {
                 AnimationManager.Instance.PlayDimOut();
                 HighlightCharacterElements(false);
-                GameManager.Instance.GameState = _savedGameState;
             }
 
             if (_wasLeaderboardActive)
             {
                 LeaderboardUIManager.Instance.DisplayLeaderboardFrame();
+                HighlightCharacterElements(false);
             }
 
+            if (_savedGameState != GameManager.Instance.GameState) GameManager.Instance.GameState = _savedGameState;
             _isCreditsShown = false;
         }
         else
         {
+            _savedGameState = GameManager.Instance.GameState;
+
             // ensure we're in cutscene mode
             if (GameManager.Instance.GameState != GameState.UICutscene)
             {
-                _savedGameState = GameManager.Instance.GameState;
                 GameManager.Instance.GameState = GameState.UICutscene;
                 AnimationManager.Instance.PlayDimIn(3);
                 HighlightCharacterElements(true);
@@ -344,7 +348,6 @@ public class UIManager : SingletonBehaviour<UIManager>
             {
                 _wasLeaderboardActive = true;
                 LeaderboardUIManager.Instance.HideLeaderboardFrame();
-                AnimationManager.Instance.PlayDimIn(3);
                 HighlightCharacterElements(true);
             }
 

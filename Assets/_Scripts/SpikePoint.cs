@@ -29,7 +29,7 @@ public class SpikePoint : MonoBehaviour
 
     private void IncreaseColliders(GameState gameState)
     {
-        if (gameObject.GetComponent<CircleCollider2D>())
+        if (gameObject.GetComponent<CircleCollider2D>() && (gameState == GameState.Phase2))
         {
             gameObject.GetComponent<CircleCollider2D>().radius = phase2Radius;
         }
