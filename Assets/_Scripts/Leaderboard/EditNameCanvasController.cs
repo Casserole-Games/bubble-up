@@ -2,9 +2,11 @@
 using Assets._Scripts.Leaderboard;
 using Assets._Scripts.Leaderboard.DependenciesContainer;
 using DG.Tweening;
+using EasyTextEffects.Editor.MyBoxCopy.Extensions;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasController>
@@ -37,18 +39,40 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
         exitButton.onClick.AddListener(ExitPanel);
     }
 
-    public void DisplayEditNamePanel()
+    private void Update()
     {
+        if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) &&
+            EventSystem.current.currentSelectedGameObject == nameInputField.gameObject)
+        {
+            submitButton.onClick.Invoke();
+        }
+
+        string input = Input.inputString;
+        if (!string.IsNullOrEmpty(input))
+        {
+            foreach (char c in input)
+            {
+                if (char.IsLetter(c))
+                {
+                    EventSystem.current.SetSelectedGameObject(nameInputField.gameObject);
+                    nameInputField.ActivateInputField();
+                    return;
+                }
+            }
+        }
+    }
+
+    public void DisplayEditNamePanel(bool hideExitButton = false)
+    {
+        LeaderboardUIManager.Instance.DisplayLeaderboardFrame();
+        exitButton.gameObject.SetActive(!hideExitButton);
         nameInputField.text = StringHelpers.RemoveUGSSuffix(DependencyContainer.AuthenticationManager.PlayerName);
-
         panel.localScale = Vector3.zero;
-
         panel.gameObject.SetActive(true);
-
-        scoreContainer.DOScale(Vector3.zero, 0.3f)//.SetEase(Ease.OutBack)
+        scoreContainer.DOScale(Vector3.zero, LeaderboardUIManager.Instance.WindowCloseAnimTime).SetEase(Ease.InBack)
             .OnComplete(() =>
             {
-                panel.DOScale(Vector3.one, 0.5f).SetEase(Ease.InBack);
+                panel.DOScale(Vector3.one, LeaderboardUIManager.Instance.WindowShowAnimTime).SetEase(Ease.OutBack);
             });
     }
 
@@ -60,7 +84,7 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
     private void ExitPanel()
     {
-        panel.DOScale(Vector3.zero, 0.3f)
+        panel.DOScale(Vector3.zero, LeaderboardUIManager.Instance.WindowCloseAnimTime).SetEase(Ease.InBack)
             .OnComplete(() =>
             {
                 OnEditNamePanelClose?.Invoke();

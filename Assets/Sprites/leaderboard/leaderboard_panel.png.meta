@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9f01beb0a02fb9441b1f63b50d52a004
+guid: e1a914a2171d58f4487185543da5b8e2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2938246158873130940
-    second: leaderboard_close_button_0
+      213: 7502132822696516551
+    second: leaderboard_panel_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: leaderboard_close_button_0
+      name: leaderboard_panel_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 11
-        height: 11
+        width: 165
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 44806bd9fa04937d0800000000000000
-      internalID: -2938246158873130940
+      spriteID: 7cbdf92ed0eec1860800000000000000
+      internalID: 7502132822696516551
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      leaderboard_close_button_0: -2938246158873130940
+      leaderboard_panel_0: 7502132822696516551
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

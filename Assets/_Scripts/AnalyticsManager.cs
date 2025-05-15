@@ -1,9 +1,8 @@
 using GameAnalyticsSDK;
-using System.Diagnostics;
 
 public class AnalyticsManager : SingletonPersistent<AnalyticsManager>
 {
-    protected override void Awake()
+    override protected void Awake()
     {
         base.Awake();
         GameAnalytics.Initialize();
@@ -49,5 +48,10 @@ public class AnalyticsManager : SingletonPersistent<AnalyticsManager>
     public void SendMuteMusicButtonPressed(bool isMuted)
     {
         GameAnalytics.NewDesignEvent("ui:mute_music", isMuted ? 1 : 0);
+    }
+
+    public void SendCreditsButtonPressed()
+    {
+        GameAnalytics.NewDesignEvent("ui:credits");
     }
 }

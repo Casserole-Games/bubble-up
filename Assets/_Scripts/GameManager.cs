@@ -69,32 +69,28 @@ namespace Assets._Scripts
             UIManager.Instance.GameOver();
         }
 
-        public void RestartGame()
+        public void ReplayButton()
         {
             AnalyticsManager.Instance.SendReplayButtonPressed();
+            RestartGame();
+        }
+
+        public void RestartGame()
+        {
             SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
         }
 
         private void UpdateGameState(GameState newGameState)
         {
-            var _oldGameState = _gameState;
             _gameState = newGameState;
 
             switch (newGameState)
             {
                 case GameState.Phase1:
-                    AnimationManager.Instance.PlayDimOut();
-                    AnalyticsManager.Instance.SendPhaseStart(GetPhaseString(GameState.Phase1));
                     break;
                 case GameState.Phase2:
-                    PlayPhase2();
-                    AnalyticsManager.Instance.SendPhaseStart(GetPhaseString(GameState.Phase2));
                     break;
                 case GameState.UICutscene:
-                    if (_oldGameState != GameState.UICutscene)
-                    {
-                        AnalyticsManager.Instance.SendPhaseComplete(GetPhaseString(_oldGameState), _currentScore, BubbleSpawner.RemainingSoap);
-                    }
                     break;
             }
 
@@ -118,6 +114,8 @@ namespace Assets._Scripts
 
         private void HandlePhaseEnd()
         {
+            AnalyticsManager.Instance.SendPhaseComplete(GetPhaseString(GameState), _currentScore, BubbleSpawner.RemainingSoap);
+
             if (GameState == GameState.Phase1)
             {
                 SetupPhase2();
@@ -137,9 +135,18 @@ namespace Assets._Scripts
             UIManager.Instance.PlayCutsceneBetweenPhases();
         }
 
-        private void PlayPhase2()
+        public void PlayPhase1()
+        {
+            AnalyticsManager.Instance.SendPhaseStart(GetPhaseString(GameState.Phase1));
+            AnimationManager.Instance.PlayDimOut();
+            GameState = GameState.Phase1;
+        }
+
+        public void PlayPhase2()
         {
             Debug.Log("Resume Game");
+            AnalyticsManager.Instance.SendPhaseStart(GetPhaseString(GameState.Phase2));
+            GameState = GameState.Phase2;
             BubbleSpawner.Instance.ResumeSpawner();
             AnimationManager.Instance.PlayScore();
             AnimationManager.Instance.PlayPinkArrows();
