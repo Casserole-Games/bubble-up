@@ -55,7 +55,13 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
                 if (char.IsLetter(c))
                 {
                     EventSystem.current.SetSelectedGameObject(nameInputField.gameObject);
-                    nameInputField.ActivateInputField();
+                    if (!nameInputField.isFocused)
+                    {
+                        nameInputField.ActivateInputField();
+                        nameInputField.text = c.ToString();
+                        nameInputField.selectionFocusPosition = 0;
+                        nameInputField.MoveTextEnd(false);
+                    }
                     return;
                 }
             }
