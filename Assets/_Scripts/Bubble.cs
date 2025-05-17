@@ -37,7 +37,6 @@ namespace Assets._Scripts
             Debug.Log("Starting popping!");
             if (this == null) return;
             burstEffect = Instantiate(burstEffect, transform.position, Quaternion.identity);
-            // burstEffect.transform.localScale = transform.localScale / 4;
 
             ParticleSystem particleSystem = burstEffect.GetComponent<ParticleSystem>();
             ParticleSystem.MainModule main = particleSystem.main;

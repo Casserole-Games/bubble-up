@@ -42,8 +42,8 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
         UIManager.Instance.FinishLineBottom.GetComponent<Animator>().Play("finish_line_show");
         yield return new WaitForSeconds(1.5f);
         PlayDimOut();
-        yield return new WaitForSeconds(0.3f);
-        UIManager.Instance.FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;
+        /*yield return new WaitForSeconds(0.3f);
+        UIManager.Instance.FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;*/
     }
 
     public void PlayDimIn(int layer = 0)
