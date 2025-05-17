@@ -329,6 +329,11 @@ public class UIManager : SingletonBehaviour<UIManager>
                 HighlightCharacterElements(false);
             }
 
+            if (TextBubble.gameObject.activeSelf)
+            {
+                SFXManager.Instance.PlayRandom(new List<string> { "duck1", "duck2", "duck3" });
+            }
+
             if (_wasLeaderboardActive)
             {
                 LeaderboardUIManager.Instance.DisplayLeaderboardFrame();
@@ -367,6 +372,7 @@ public class UIManager : SingletonBehaviour<UIManager>
             _isReadyToSkipCutscene = true;
 
             _isCreditsShown = true;
+            SFXManager.Instance.PlayRandom(new List<string> { "duck1", "duck2", "duck3" });
             AnalyticsManager.Instance.SendCreditsButtonPressed();
         }
     }

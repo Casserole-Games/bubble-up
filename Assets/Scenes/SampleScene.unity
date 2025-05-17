@@ -5878,7 +5878,7 @@ MonoBehaviour:
   DuckBack: {fileID: 1672039329}
   DuckFront: {fileID: 738117278}
   TutorialText: I'M A DIRTY DUCK, \nSOAP ME UP. \n<link=bounce><color=#fc699a>HOLD
-    [SPACE]</color></link>
+    [TAP]</color></link>
   Phase2Text: TIME TO <link=bounce><color=#fc699a>POP</link></color> YOUR BUBBLE
     MESS
   GameOverText: SHOWER TIME \nIS OVER! \n FINAL SCORE:\n
@@ -6742,8 +6742,8 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 30
-  Phase2AdditionalSoap: 10
+  StartSoapAmount: 100
+  Phase2AdditionalSoap: 25
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
   DurationBeforeDuckTurnsAround: 0.5
