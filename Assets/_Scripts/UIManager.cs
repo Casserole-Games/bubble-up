@@ -7,6 +7,7 @@ using EasyTextEffects;
 using System.Collections.Generic;
 using Assets._Scripts.Leaderboard;
 using System;
+using DG.Tweening;
 
 public enum SkipParameter
 {
@@ -67,6 +68,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     private bool _wasLeaderboardActive;
 
     // other
+    public TMP_Text HoldHint;
     private Action _onCutsceneFinished;
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
@@ -74,11 +76,15 @@ public class UIManager : SingletonBehaviour<UIManager>
     private void OnEnable()
     {
         GameManager.OnGameStateChanged += HandleGameStateChange;
+        BubbleSpawner.OnTooManyShortHolds += DisplayHoldHint;
+        BubbleSpawner.OnLongHold += HideHoldHint;
     }
 
     private void OnDisable()
     {
         GameManager.OnGameStateChanged -= HandleGameStateChange;
+        BubbleSpawner.OnTooManyShortHolds -= DisplayHoldHint;
+        BubbleSpawner.OnLongHold -= HideHoldHint;
     }
 
     private void HandleGameStateChange(GameState currentGameState)
@@ -362,6 +368,27 @@ public class UIManager : SingletonBehaviour<UIManager>
 
             _isCreditsShown = true;
             AnalyticsManager.Instance.SendCreditsButtonPressed();
+        }
+    }
+
+    public void DisplayHoldHint()
+    {
+        StartCoroutine(DisplayHoldHintCoroutine());
+        IEnumerator DisplayHoldHintCoroutine() {
+            FinishLineTop.GetComponent<Animator>().Play("finish_line_hide");
+            yield return new WaitForSeconds(0.2f);
+            HoldHint.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
+        }
+    }
+
+    public void HideHoldHint()
+    {
+        StartCoroutine(HideHoldHintCoroutine());
+        IEnumerator HideHoldHintCoroutine()
+        {
+            HoldHint.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
+            yield return new WaitForSeconds(0.2f);
+            FinishLineTop.GetComponent<Animator>().Play("finish_line_show");
         }
     }
 
