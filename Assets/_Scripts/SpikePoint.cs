@@ -7,6 +7,8 @@ public class SpikePoint : MonoBehaviour
     public static float phase1Radius = 0.036f;
     public static float phase2Radius = 0.06f;
 
+    private Animator _highlightAnimator;
+
     private void OnEnable()
     {
         GameManager.OnGameStateChanged += IncreaseColliders;
@@ -17,6 +19,11 @@ public class SpikePoint : MonoBehaviour
         GameManager.OnGameStateChanged -= IncreaseColliders;
     }
 
+    private void Start()
+    {
+        _highlightAnimator = GetComponentInChildren<Animator>();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("Spike pointy end: Collision");
@@ -24,6 +31,7 @@ public class SpikePoint : MonoBehaviour
         {
             Debug.Log("Spike pointy end: Collision with bubble");
             collision.gameObject.GetComponent<Bubble>().Pop();
+            _highlightAnimator.Play("spike_highlight");
         }
     }
 

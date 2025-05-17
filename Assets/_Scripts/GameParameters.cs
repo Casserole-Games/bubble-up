@@ -46,5 +46,10 @@ namespace Assets._Scripts
         public float Phase1MaxHeight = 1000f;
         public float Phase2MinHeight = -4.3f;
         public float MinHeightBeforeBomb = -3.5f;
+
+        [Header("Hold Hint")]
+        public float ShortHoldThresholdSeconds = 0.25f;
+        public float LongHoldThresholdSeconds = 0.5f;
+        public float ShortHoldsToHint = 3f;
     }
 }

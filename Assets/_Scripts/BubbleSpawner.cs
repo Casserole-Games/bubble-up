@@ -9,6 +9,8 @@ namespace Assets._Scripts
     internal class BubbleSpawner : SingletonBehaviour<BubbleSpawner>
     {
         static public event Action OnEmptyTank;
+        static public event Action OnTooManyShortHolds;
+        static public event Action OnLongHold;
 
         public GameObject BubblePrefab;
         public GameObject BombPrefab;
@@ -52,6 +54,10 @@ namespace Assets._Scripts
         };
         private bool emptyTankTriggered;
 
+        private float _holdStartTime;
+        private int _shortHoldsCounter;
+        private bool _holdCounterStopped = false;
+
         void Start()
         {
             RemainingSoap = GameParameters.Instance.StartSoapAmount;
@@ -93,12 +99,41 @@ namespace Assets._Scripts
                 isInflating = true;
                 lastRemainingSoap = RemainingSoap;
                 InflateBubble();
+
+                if (!_holdCounterStopped && _holdStartTime <= 0f)
+                    _holdStartTime = Time.time;
             }
 
             bool hasBubbleReachedMaxSize = bubble != null && bubble.transform.localScale.x >= GameParameters.Instance.MaximalBubbleSize;
             bool isKeyReleased = InputManager.InputUp();
             if (isInflating && bubble != null && (isKeyReleased || hasBubbleReachedMaxSize))
             {
+                if (!_holdCounterStopped)
+                {
+                    float holdDuration = Time.time - _holdStartTime;
+                    _holdStartTime = 0f;
+                    Debug.Log("HOLD: " + holdDuration);
+
+                    if (holdDuration < GameParameters.Instance.ShortHoldThresholdSeconds)
+                    {
+                        _shortHoldsCounter++;
+                        if (_shortHoldsCounter >= GameParameters.Instance.ShortHoldsToHint)
+                        {
+                            OnTooManyShortHolds?.Invoke();
+                            _shortHoldsCounter = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (holdDuration >= GameParameters.Instance.LongHoldThresholdSeconds)
+                        {
+                            OnLongHold?.Invoke();
+                            _holdCounterStopped = true;
+                        }
+                        _shortHoldsCounter = 0;
+                    }
+                }
+               
                 if (hasBubbleReachedMaxSize) canInflate = false;
                 if (!bubble.CompareTag("Bomb")) DropBubble(); else DropBomb();
                 if (lastRemainingSoap - RemainingSoap < minimumSoapConsumption)
