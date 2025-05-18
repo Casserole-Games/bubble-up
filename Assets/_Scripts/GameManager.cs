@@ -109,12 +109,15 @@ namespace Assets._Scripts
                 var phase2Score = Math.Max(_phase1Score - localHighestY, 0);
                 _currentScore = _phase1Score  + phase2Score;
                 UIManager.Instance.SetPinkScore(phase2Score);
+            } else
+            {
+                _currentScore = localHighestY;
             }
         }
 
         private void HandlePhaseEnd()
         {
-            AnalyticsManager.Instance.SendPhaseComplete(GetPhaseString(GameState), _currentScore, BubbleSpawner.RemainingSoap);
+            var score = _currentScore;
 
             if (GameState == GameState.Phase1)
             {
@@ -122,8 +125,11 @@ namespace Assets._Scripts
             }
             else if (GameState == GameState.Phase2)
             {
+                score = _currentScore - _phase1Score;
                 UIManager.Instance.PlayCutsceneGameOver();
             }
+
+            AnalyticsManager.Instance.SendPhaseComplete(GetPhaseString(GameState), score, BubbleSpawner.RemainingSoap);
         }
 
         private void SetupPhase2()

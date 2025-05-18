@@ -183,6 +183,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         Confetti.Play();
         SFXManager.Instance.PlayOneShot("win", GameParameters.Instance.WinVolume);
         DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%><color=#fc699a>" + finalScore + "</color></size></link>", false, SkipParameter.CanSkipAfterWait, false);
+        GameManager.Instance.CurrentScore = finalScore;
         AnalyticsManager.Instance.SendFinalScore(finalScore);
     }
 
