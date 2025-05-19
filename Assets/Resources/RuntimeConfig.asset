@@ -18,4 +18,4 @@ MonoBehaviour:
   MockScoreMin: 0
   MockScoreMax: 3000
   MockCount: 100
-  PlayerScore: 1549
+  PlayerScore: -1

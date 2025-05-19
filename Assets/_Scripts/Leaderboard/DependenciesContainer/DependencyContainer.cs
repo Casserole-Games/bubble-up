@@ -24,7 +24,7 @@ namespace Assets._Scripts.Leaderboard.DependenciesContainer
 
             config = Resources.Load<RuntimeConfig>("RuntimeConfig");
 
-            if (!config || config.UseMocks)
+            if (config && config.UseMocks)
             {
                 var leaderboardMockRepository = new LeaderboardMockRepository();
                 AuthenticationManager = new MockAuthenticationManager(config);

@@ -305,7 +305,6 @@ public class UIManager : SingletonBehaviour<UIManager>
     private async void DisplayLeaderboardWindow()
     {
         await LeaderboardManager.Instance.SubmitScore(GameManager.Instance.CurrentScore);
-        EditNameCanvasController.Instance.DisplayEditNamePanel(true);
         _onCutsceneFinished = null;
     }
 

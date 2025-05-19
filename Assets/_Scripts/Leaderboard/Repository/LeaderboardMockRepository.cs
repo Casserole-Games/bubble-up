@@ -47,7 +47,7 @@ namespace Assets._Scripts.Leaderboard
             }
         }
 
-        public void SetEntries(int scoreMin, int scoreMax, int count, string forcedPlayerID, string forcedPlayerName, int forcedPlayerScore)
+        public void SetEntries(int scoreMin, int scoreMax, int count, int forcedPlayerScore)
         {
             MockLeaderboardEntries.Clear();
 
