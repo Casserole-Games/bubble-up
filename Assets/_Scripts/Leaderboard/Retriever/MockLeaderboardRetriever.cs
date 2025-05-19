@@ -17,7 +17,7 @@ namespace Assets._Scripts.Leaderboard
         {
             this.config = config;
             this.leaderboardMockRepository = leaderboardMockRepository;
-            leaderboardMockRepository.SetEntries(config.MockScoreMin, config.MockScoreMax, config.MockCount, DependencyContainer.AuthenticationManager.PlayerId, DependencyContainer.AuthenticationManager.PlayerName, config.PlayerScore);
+            leaderboardMockRepository.SetEntries(config.MockScoreMin, config.MockScoreMax, config.MockCount, config.PlayerScore);
         }
 
         public Task<LeaderboardScoresPage> GetScoresAsync(string leaderboardId, GetScoresOptions options = null)
