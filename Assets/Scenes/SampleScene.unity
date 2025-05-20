@@ -6744,7 +6744,7 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 100
+  StartSoapAmount: 10
   Phase2AdditionalSoap: 25
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
@@ -6911,6 +6911,7 @@ GameObject:
   - component: {fileID: 459187160}
   - component: {fileID: 459187162}
   - component: {fileID: 459187163}
+  - component: {fileID: 459187164}
   m_Layer: 5
   m_Name: FinishLineTop
   m_TagString: Untagged
@@ -6938,7 +6939,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.0034179688, y: -11.5}
-  m_SizeDelta: {x: 1435.4868, y: 1911.9999}
+  m_SizeDelta: {x: 1079.487, y: 1919.995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &459187160
 MonoBehaviour:
@@ -6952,7 +6953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Padding: {x: 198.3, y: 0, z: 206.5, w: 0}
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
 --- !u!222 &459187161
 CanvasRenderer:
@@ -6996,6 +6997,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!223 &459187164
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459187158}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 2139680109
+  m_SortingOrder: 4
+  m_TargetDisplay: 0
 --- !u!1 &474184652
 GameObject:
   m_ObjectHideFlags: 0

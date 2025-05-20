@@ -20,7 +20,12 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
 
     private IEnumerator WaitForGreenArrowsEnd()
     {
+        /*yield return new WaitForSeconds(2f);
+        PlayDimOut();*/
+
+        UIManager.Instance.FinishLineTop.GetComponent<Canvas>().sortingLayerName = "foreground";
         yield return new WaitForSeconds(2f);
+        UIManager.Instance.FinishLineTop.GetComponent<Canvas>().sortingLayerName = "background";
         PlayDimOut();
     }
 
