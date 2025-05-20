@@ -318,8 +318,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.21, y: 789.31}
-  m_SizeDelta: {x: 164.1, y: 16.4}
+  m_AnchoredPosition: {x: -6.21, y: 788.18}
+  m_SizeDelta: {x: 164.1, y: 16.78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &82636780
 MonoBehaviour:
@@ -6744,7 +6744,7 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 10
+  StartSoapAmount: 100
   Phase2AdditionalSoap: 25
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
