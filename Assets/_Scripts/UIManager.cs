@@ -69,6 +69,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     // other
     public TMP_Text HoldHint;
+    public Image HoldHintFrame;
     private Action _onCutsceneFinished;
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
@@ -388,6 +389,7 @@ public class UIManager : SingletonBehaviour<UIManager>
             }
             yield return new WaitForSeconds(0.2f);
             HoldHint.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintFrame.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
         }
     }
 
@@ -397,6 +399,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         IEnumerator HideHoldHintCoroutine()
         {
             HoldHint.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintFrame.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
             yield return new WaitForSeconds(0.2f);
             if (GameManager.Instance.GameState == GameState.Phase1)
             {
