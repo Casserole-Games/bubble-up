@@ -5877,8 +5877,8 @@ MonoBehaviour:
   CharacterElementsCanvas: {fileID: 884447107}
   DuckBack: {fileID: 1672039329}
   DuckFront: {fileID: 738117278}
-  TutorialText: I'M A DIRTY DUCK, \nSOAP ME UP. \n<link=bounce><color=#fc699a>HOLD
-    [TAP]</color></link>
+  TutorialText: <link=bounce><color=#fc699a>TAP AND HOLD</color></link>\nTO BLOW
+    A BUBBLE!
   Phase2Text: TIME TO <link=bounce><color=#fc699a>POP</link></color> YOUR BUBBLE
     MESS
   GameOverText: SHOWER TIME \nIS OVER! \n FINAL SCORE:\n
