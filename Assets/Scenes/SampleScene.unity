@@ -5879,7 +5879,7 @@ MonoBehaviour:
   DuckFront: {fileID: 738117278}
   TutorialText: <link=bounce><color=#fc699a>TAP AND HOLD</color></link>\nTO BLOW
     A BUBBLE!
-  Phase2Text: GOAL REVERSED! <link=bounce><color=#fc699a>POP ALL YOUR BUBBLES!</link></color>
+  Phase2Text: GOAL REVERSED! <link=bounce><color=#fc699a>POP ALL BUBBLES!</link></color>
   GameOverText: SHOWER TIME \nIS OVER! \n FINAL SCORE:\n
   CreditText: "<size=110%>GGJ BERLIN 2025:</size>\\n\\n<color=#fc699a>-Antoine Bodin\\n-Dmitrii
     Tarbaev\\n-Tim-Niclas Oelschl\xE4ger\\n-Russell Stephen Thomas</color>"
