@@ -86,7 +86,7 @@ namespace Assets._Scripts
             OnBoundaryCollision = null;
         }
 
-        void OnCollisionStay2D(Collision2D col)
+        void OnCollisionEnter2D(Collision2D col)
         {
             // touch the bottom
             if (col.gameObject.CompareTag("Bottom") && !alreadyCollided)
