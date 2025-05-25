@@ -6743,7 +6743,7 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 10
+  StartSoapAmount: 100
   Phase2AdditionalSoap: 25
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
@@ -10383,7 +10383,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.78431374}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.88235295}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
