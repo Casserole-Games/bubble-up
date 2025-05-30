@@ -29,7 +29,7 @@ namespace Assets._Scripts
 
         public bool IsSettled() {
             if (_rb == null) return false;
-            return Math.Abs(_rb.linearVelocityY) < 0.1f; 
+            return alreadyDropped && alreadyCollided && Math.Abs(_rb.linearVelocityY) < 0.1f;
         }
 
         public void Pop()

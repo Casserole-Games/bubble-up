@@ -1,4 +1,5 @@
 using DG.Tweening;
+using GameAnalyticsSDK;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Assets._Scripts
         static public event Action OnEmptyTank;
         static public event Action OnTooManyShortHolds;
         static public event Action OnLongHold;
+        static public event Action<GameObject> OnStartInflating;
 
         public GameObject BubblePrefab;
         public GameObject BombPrefab;
@@ -96,6 +98,11 @@ namespace Assets._Scripts
 
             if (canInflate && InputManager.InputHeld() && RemainingSoap > 0)
             {
+                if (!isInflating)
+                {
+                    OnStartInflating?.Invoke(bubble);
+                }
+
                 isInflating = true;
                 lastRemainingSoap = RemainingSoap;
                 InflateBubble();
@@ -112,7 +119,6 @@ namespace Assets._Scripts
                 {
                     float holdDuration = Time.time - _holdStartTime;
                     _holdStartTime = 0f;
-                    Debug.Log("HOLD: " + holdDuration);
 
                     if (holdDuration < GameParameters.Instance.ShortHoldThresholdSeconds)
                     {

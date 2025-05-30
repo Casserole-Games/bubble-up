@@ -8,6 +8,8 @@ public class SpikePoint : MonoBehaviour
     public static float phase2Radius = 0.06f;
 
     private Animator _highlightAnimator;
+    private CameraShake _camShake;
+    
 
     private void OnEnable()
     {
@@ -22,6 +24,7 @@ public class SpikePoint : MonoBehaviour
     private void Start()
     {
         _highlightAnimator = GetComponentInChildren<Animator>();
+        _camShake = Camera.main.GetComponentInParent<CameraShake>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -32,6 +35,7 @@ public class SpikePoint : MonoBehaviour
             Debug.Log("Spike pointy end: Collision with bubble");
             collision.gameObject.GetComponent<Bubble>().Pop();
             _highlightAnimator.Play("spike_highlight", -1, 0f);
+            _camShake.Shake();
         }
     }
 
