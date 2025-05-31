@@ -1,4 +1,5 @@
-﻿using Assets._Scripts.Helpers;
+﻿using Assets._Scripts;
+using Assets._Scripts.Helpers;
 using Assets._Scripts.Leaderboard;
 using Assets._Scripts.Leaderboard.DependenciesContainer;
 using DG.Tweening;
@@ -84,6 +85,7 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
     private async void Submit()
     {
+        SFXManager.Instance.PlayOneShot("button", 0.5f);
         await LeaderboardManager.Instance.UpdatePlayerName(nameInputField.text);
         ExitPanel();
     }
