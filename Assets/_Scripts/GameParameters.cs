@@ -51,5 +51,6 @@ namespace Assets._Scripts
         public float ShortHoldThresholdSeconds = 0.25f;
         public float LongHoldThresholdSeconds = 0.5f;
         public float ShortHoldsToHint = 3f;
+        public float ShortHoldsToRepeatHint = 5f;
     }
 }
