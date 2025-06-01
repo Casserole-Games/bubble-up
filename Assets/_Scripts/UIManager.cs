@@ -274,6 +274,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         AnimationManager.Instance.PlayDimIn(3);
         HighFinder.Instance.LocalHighGreenLine.GetComponent<Animator>().Play("green_line_hide");
         HighFinder.Instance.LocalHighPinkLine.GetComponent<Animator>().Play("pink_line_hide");
+        HideHoldHint();
         StartCoroutine(CutsceneGameOver());
     }
 
