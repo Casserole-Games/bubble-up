@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   burstEffect: {fileID: 8739111431910360721, guid: cb05b3194daeec2f7a214f84b18c5526, type: 3}
+  mergeEffect: {fileID: 8739111431910360721, guid: 8c80a631945f05f4784f61c22db4471c, type: 3}
   alreadyCollided: 0
   alreadyDropped: 0
 --- !u!1 &5488988538608556983
@@ -180,7 +181,7 @@ GameObject:
   - component: {fileID: 4970661478737119528}
   - component: {fileID: 5778532494266329250}
   m_Layer: 0
-  m_Name: particles_0
+  m_Name: glare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
