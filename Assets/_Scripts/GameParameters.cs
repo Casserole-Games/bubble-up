@@ -41,6 +41,7 @@ namespace Assets._Scripts
         public float DuckVolume = 1f;
         public float FuseVolume = 1f;
         public float BombVolume = 1f;
+        public float UIClickVolume = 1f;
 
         [Header("Heights")]
         public float Phase1MaxHeight = 1000f;

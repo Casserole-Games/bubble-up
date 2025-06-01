@@ -6743,7 +6743,7 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 100
+  StartSoapAmount: 10
   Phase2AdditionalSoap: 25
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
@@ -6762,6 +6762,7 @@ MonoBehaviour:
   DuckVolume: 1.25
   FuseVolume: 1
   BombVolume: 0.5
+  UIClickVolume: 0.25
   Phase1MaxHeight: 1000
   Phase2MinHeight: -4.3
   MinHeightBeforeBomb: -3

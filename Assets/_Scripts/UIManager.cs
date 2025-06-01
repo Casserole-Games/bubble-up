@@ -96,7 +96,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     private void Start()
     {
         MusicButton.onClick.AddListener(MusicManager.Instance.Toggle);
-        InfoButton.onClick.AddListener(ToggleCredits);
+        InfoButton.onClick.AddListener(() => { ToggleCredits(true); });
         ReplayButton.onClick.AddListener(GameManager.Instance.ReplayButton);
     }
 
@@ -317,10 +317,12 @@ public class UIManager : SingletonBehaviour<UIManager>
         _onCutsceneFinished = null;
     }
 
-    public void ToggleCredits()
+    public void ToggleCredits(bool triggeredByButton = false)
     {
         if (_isCreditsShown)
         {
+            if (triggeredByButton) SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 0.9f, 0.9f);
+
             // 1) hide _only_ the credits bubble
             TextBubbleBig.gameObject.SetActive(false);
 
@@ -347,6 +349,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
         else
         {
+            if (triggeredByButton) SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 1.1f, 1.1f);
             _savedGameState = GameManager.Instance.GameState;
 
             // ensure we're in cutscene mode

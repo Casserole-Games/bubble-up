@@ -1,3 +1,4 @@
+using Assets._Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,10 +18,12 @@ public class MusicManager : SingletonPersistent<MusicManager>
         AnalyticsManager.Instance.SendMuteMusicButtonPressed(!audioSource.mute);
         if (!audioSource.mute)
         {
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 1.1f, 1.1f);
             Mute();
         }
         else
         {
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 0.9f, 0.9f);
             Unmute();
         }
     }

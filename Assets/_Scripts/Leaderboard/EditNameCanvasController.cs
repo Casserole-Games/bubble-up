@@ -36,8 +36,14 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
             }
         });
 
-        submitButton.onClick.AddListener(Submit);
-        exitButton.onClick.AddListener(ExitPanel);
+        submitButton.onClick.AddListener(() => {
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 1.1f, 1.1f);
+            Submit();
+        });
+        exitButton.onClick.AddListener(() => {
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 0.9f, 0.9f);
+            ExitPanel(); 
+        });
     }
 
     private void Update()
@@ -85,7 +91,6 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
     private async void Submit()
     {
-        SFXManager.Instance.PlayOneShot("button", 0.5f);
         await LeaderboardManager.Instance.UpdatePlayerName(nameInputField.text);
         ExitPanel();
     }

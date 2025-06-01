@@ -72,6 +72,7 @@ namespace Assets._Scripts
         public void ReplayButton()
         {
             AnalyticsManager.Instance.SendReplayButtonPressed();
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 1.1f, 1.1f);
             RestartGame();
         }
 
