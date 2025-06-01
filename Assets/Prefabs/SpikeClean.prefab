@@ -14,15 +14,15 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: b2dbe7bc8b4010927bc9054f7e2c5ba7, type: 3}
     - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_SortingOrder
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_SortingLayerID
-      value: 2139680109
+      value: 536301299
       objectReference: {fileID: 0}
     - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_MaskInteraction
@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 4757632627476672483, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_Name
-      value: Spike (1) Variant
+      value: SpikeClean
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalScale.x

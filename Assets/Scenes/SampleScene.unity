@@ -6374,8 +6374,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 2139680109
-  m_SortingOrder: 4
+  m_SortingLayerID: 536301299
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!1 &307668548
 GameObject:
@@ -6743,7 +6743,7 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 100
+  StartSoapAmount: 10
   Phase2AdditionalSoap: 25
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
@@ -7019,7 +7019,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 2139680109
-  m_SortingOrder: 4
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!1 &474184652
 GameObject:
@@ -8022,7 +8022,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 536301299
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &738117274
 GameObject:
@@ -10562,9 +10562,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2139680109
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.88235295}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -11001,26 +11001,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 812016411}
     m_Modifications:
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 2139680109
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_MaskInteraction
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 4757632627476672483, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_Name
       value: Spike
@@ -11039,7 +11019,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.29
+      value: -1.46
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11187,7 +11167,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_SortingOrder
-      value: 5
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_SortingLayerID
@@ -11394,7 +11374,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 536301299
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!1 &1391428597
 GameObject:
@@ -11954,26 +11934,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 812016411}
     m_Modifications:
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 2139680109
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: m_MaskInteraction
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 261931819468736314, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 4757632627476672483, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_Name
       value: Spike
@@ -11996,7 +11956,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.47
+      value: -2.65
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.z
@@ -17358,9 +17318,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 2139680109
-  m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingLayerID: 536301299
+  m_SortingLayer: 2
+  m_SortingOrder: -1
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -27590,7 +27550,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 536301299
   m_SortingLayer: 2
-  m_SortingOrder: 3
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: d513d0a22b4711fd5bf65d99046ea64d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -27863,9 +27823,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 2139680109
-  m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingLayerID: 536301299
+  m_SortingLayer: 2
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 02ea914cd3dda5be883b8775f305d67e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

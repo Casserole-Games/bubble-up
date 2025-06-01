@@ -25,10 +25,14 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _FogSize: 10
+    - _FogSize: 26
+    - _Generator1Size: 20
+    - _Generator2Size: 32
     m_Colors:
-    - _FogColor: {r: 1, g: 1, b: 1, a: 0.7490196}
-    - _FogSpeed: {r: 0, g: -0.3, b: 0, a: 0}
+    - _FogColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FogSpeed: {r: 0, g: -0.15, b: 0, a: 0}
+    - _Generator1Speed: {r: 0, g: -0.08, b: 0, a: 0}
+    - _Generator2Speed: {r: 0, g: -0.16, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &571409107094759956
