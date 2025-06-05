@@ -6,6 +6,9 @@ public class PlayAgainButtonController : MonoBehaviour
 {
     private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(GameManager.Instance.RestartGame);
+        GetComponent<Button>().onClick.AddListener(() => {
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 0.9f, 0.9f);
+            GameManager.Instance.RestartGame(); 
+        });
     }
 }

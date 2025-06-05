@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class AnimationManager : SingletonBehaviour<AnimationManager>
 {
@@ -20,7 +21,9 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
 
     private IEnumerator WaitForGreenArrowsEnd()
     {
-        yield return new WaitForSeconds(2f);
+        UIManager.Instance.FinishLineTop.GetComponent<Canvas>().sortingLayerName = "foreground";
+        yield return new WaitForSeconds(3.4f);
+        UIManager.Instance.FinishLineTop.GetComponent<Canvas>().sortingLayerName = "background";
         PlayDimOut();
     }
 
@@ -40,13 +43,11 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
     {
         yield return new WaitForSeconds(0.5f);
         UIManager.Instance.FinishLineBottom.GetComponent<Animator>().Play("finish_line_show");
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.9f);
         PlayDimOut();
-        /*yield return new WaitForSeconds(0.3f);
-        UIManager.Instance.FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;*/
     }
 
-    public void PlayDimIn(int layer = 0)
+    public void PlayDimIn(int layer = 1)
     {
         Dimmer.GetComponent<Canvas>().sortingOrder = layer;
         Dimmer.GetComponentInChildren<Animator>().Play("dim_in");

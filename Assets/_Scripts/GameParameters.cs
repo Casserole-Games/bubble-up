@@ -41,6 +41,7 @@ namespace Assets._Scripts
         public float DuckVolume = 1f;
         public float FuseVolume = 1f;
         public float BombVolume = 1f;
+        public float UIClickVolume = 1f;
 
         [Header("Heights")]
         public float Phase1MaxHeight = 1000f;
@@ -51,5 +52,6 @@ namespace Assets._Scripts
         public float ShortHoldThresholdSeconds = 0.25f;
         public float LongHoldThresholdSeconds = 0.5f;
         public float ShortHoldsToHint = 3f;
+        public float ShortHoldsToRepeatHint = 5f;
     }
 }

@@ -24,7 +24,10 @@ namespace Assets._Scripts.Leaderboard
 
         private void Awake()
         {
-            EditNameButton.onClick.AddListener(() => EditNameCanvasController.Instance.DisplayEditNamePanel());
+            EditNameButton.onClick.AddListener(() => {
+                SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 1.1f, 1.1f);
+                EditNameCanvasController.Instance.DisplayEditNamePanel(); 
+            });
         }
 
         internal void SetEntryAndIsCurrentPlayer(LeaderboardEntry entry)

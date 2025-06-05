@@ -1,4 +1,5 @@
-﻿using Assets._Scripts.Helpers;
+﻿using Assets._Scripts;
+using Assets._Scripts.Helpers;
 using Assets._Scripts.Leaderboard;
 using Assets._Scripts.Leaderboard.DependenciesContainer;
 using DG.Tweening;
@@ -36,8 +37,14 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
             }
         });
 
-        submitButton.onClick.AddListener(Submit);
-        exitButton.onClick.AddListener(ExitPanel);
+        submitButton.onClick.AddListener(() => {
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 1.1f, 1.1f);
+            Submit();
+        });
+        exitButton.onClick.AddListener(() => {
+            SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 0.9f, 0.9f);
+            ExitPanel(); 
+        });
     }
 
     private void Update()

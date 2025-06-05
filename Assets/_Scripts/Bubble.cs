@@ -8,6 +8,7 @@ namespace Assets._Scripts
         public event Action OnBubblePopped;
 
         public GameObject burstEffect;
+        public GameObject mergeEffect;
 
         public bool alreadyCollided;
         public bool alreadyDropped;
@@ -29,7 +30,7 @@ namespace Assets._Scripts
 
         public bool IsSettled() {
             if (_rb == null) return false;
-            return Math.Abs(_rb.linearVelocityY) < 0.1f; 
+            return alreadyDropped && alreadyCollided && Math.Abs(_rb.linearVelocityY) < 0.1f;
         }
 
         public void Pop()
@@ -77,6 +78,22 @@ namespace Assets._Scripts
             newBubble.GetComponent<Rigidbody2D>().mass = newScale;
             newBubble.transform.parent = transform.parent;
 
+            // playing merge particles
+            if (mergeEffect != null)
+            {
+                var fx = Instantiate(mergeEffect, pos, Quaternion.identity);
+                var particleSystem = fx.GetComponent<ParticleSystem>();
+                var main = particleSystem.main;
+                main.startColor = Color;
+                main.startSize = Mathf.Min(newScale / 8f, 0.2f);
+
+                var shape = particleSystem.shape;
+                shape.radius = newScale / 4f;
+
+                var burst = particleSystem.emission.GetBurst(0).count;
+                burst.constant = (int)(newScale * 100f);
+            }
+
             Destroy(otherBubble.gameObject);
             Destroy(gameObject);
         }
@@ -86,7 +103,7 @@ namespace Assets._Scripts
             OnBoundaryCollision = null;
         }
 
-        void OnCollisionStay2D(Collision2D col)
+        void OnCollisionEnter2D(Collision2D col)
         {
             // touch the bottom
             if (col.gameObject.CompareTag("Bottom") && !alreadyCollided)

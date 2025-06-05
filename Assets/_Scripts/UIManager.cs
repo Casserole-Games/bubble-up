@@ -69,6 +69,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     // other
     public TMP_Text HoldHint;
+    public Image HoldHintFrame;
     private Action _onCutsceneFinished;
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
@@ -95,7 +96,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     private void Start()
     {
         MusicButton.onClick.AddListener(MusicManager.Instance.Toggle);
-        InfoButton.onClick.AddListener(ToggleCredits);
+        InfoButton.onClick.AddListener(() => { ToggleCredits(true); });
         ReplayButton.onClick.AddListener(GameManager.Instance.ReplayButton);
     }
 
@@ -273,6 +274,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         AnimationManager.Instance.PlayDimIn(3);
         HighFinder.Instance.LocalHighGreenLine.GetComponent<Animator>().Play("green_line_hide");
         HighFinder.Instance.LocalHighPinkLine.GetComponent<Animator>().Play("pink_line_hide");
+        HideHoldHint();
         StartCoroutine(CutsceneGameOver());
     }
 
@@ -315,10 +317,12 @@ public class UIManager : SingletonBehaviour<UIManager>
         _onCutsceneFinished = null;
     }
 
-    public void ToggleCredits()
+    public void ToggleCredits(bool triggeredByButton = false)
     {
         if (_isCreditsShown)
         {
+            if (triggeredByButton) SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 0.9f, 0.9f);
+
             // 1) hide _only_ the credits bubble
             TextBubbleBig.gameObject.SetActive(false);
 
@@ -345,6 +349,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
         else
         {
+            if (triggeredByButton) SFXManager.Instance.PlayOneShot("button", GameParameters.Instance.UIClickVolume, 1.1f, 1.1f);
             _savedGameState = GameManager.Instance.GameState;
 
             // ensure we're in cutscene mode
@@ -387,6 +392,7 @@ public class UIManager : SingletonBehaviour<UIManager>
             }
             yield return new WaitForSeconds(0.2f);
             HoldHint.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintFrame.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
         }
     }
 
@@ -396,6 +402,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         IEnumerator HideHoldHintCoroutine()
         {
             HoldHint.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintFrame.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
             yield return new WaitForSeconds(0.2f);
             if (GameManager.Instance.GameState == GameState.Phase1)
             {

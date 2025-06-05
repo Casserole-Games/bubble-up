@@ -1,4 +1,5 @@
 using DG.Tweening;
+using GameAnalyticsSDK;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Assets._Scripts
         static public event Action OnEmptyTank;
         static public event Action OnTooManyShortHolds;
         static public event Action OnLongHold;
+        static public event Action<GameObject> OnStartInflating;
 
         public GameObject BubblePrefab;
         public GameObject BombPrefab;
@@ -56,7 +58,7 @@ namespace Assets._Scripts
 
         private float _holdStartTime;
         private int _shortHoldsCounter;
-        private bool _holdCounterStopped = false;
+        private bool _holdHintShowed = false;
 
         void Start()
         {
@@ -96,11 +98,16 @@ namespace Assets._Scripts
 
             if (canInflate && InputManager.InputHeld() && RemainingSoap > 0)
             {
+                if (!isInflating)
+                {
+                    OnStartInflating?.Invoke(bubble);
+                }
+
                 isInflating = true;
                 lastRemainingSoap = RemainingSoap;
                 InflateBubble();
 
-                if (!_holdCounterStopped && _holdStartTime <= 0f)
+                if (_holdStartTime <= 0f)
                     _holdStartTime = Time.time;
             }
 
@@ -108,32 +115,29 @@ namespace Assets._Scripts
             bool isKeyReleased = InputManager.InputUp();
             if (isInflating && bubble != null && (isKeyReleased || hasBubbleReachedMaxSize))
             {
-                if (!_holdCounterStopped)
-                {
-                    float holdDuration = Time.time - _holdStartTime;
-                    _holdStartTime = 0f;
-                    Debug.Log("HOLD: " + holdDuration);
+                float holdDuration = Time.time - _holdStartTime;
+                _holdStartTime = 0f;
 
-                    if (holdDuration < GameParameters.Instance.ShortHoldThresholdSeconds)
+                if ((GameManager.Instance.GameState != GameState.Phase2) && (holdDuration < GameParameters.Instance.ShortHoldThresholdSeconds))
+                {
+                    _shortHoldsCounter++;
+                    if ((!_holdHintShowed && (_shortHoldsCounter >= GameParameters.Instance.ShortHoldsToHint)) ||
+                        (_holdHintShowed && (_shortHoldsCounter >= GameParameters.Instance.ShortHoldsToRepeatHint)))
                     {
-                        _shortHoldsCounter++;
-                        if (_shortHoldsCounter >= GameParameters.Instance.ShortHoldsToHint)
-                        {
-                            OnTooManyShortHolds?.Invoke();
-                            _shortHoldsCounter = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (holdDuration >= GameParameters.Instance.LongHoldThresholdSeconds)
-                        {
-                            OnLongHold?.Invoke();
-                            _holdCounterStopped = true;
-                        }
+                        OnTooManyShortHolds?.Invoke();
                         _shortHoldsCounter = 0;
                     }
                 }
-               
+                else
+                {
+                    if (holdDuration >= GameParameters.Instance.LongHoldThresholdSeconds)
+                    {
+                        OnLongHold?.Invoke();
+                        _holdHintShowed = true;
+                    }
+                    _shortHoldsCounter = 0;
+                }
+
                 if (hasBubbleReachedMaxSize) canInflate = false;
                 if (!bubble.CompareTag("Bomb")) DropBubble(); else DropBomb();
                 if (lastRemainingSoap - RemainingSoap < minimumSoapConsumption)
@@ -343,6 +347,7 @@ namespace Assets._Scripts
 
             ParticleSystem ps = bomb.GetComponentInChildren<ParticleSystem>();
             ps.Play();
+            Camera.main.GetComponentInParent<CameraShake>().Shake();
             yield return new WaitWhile(() => ps.isPlaying);
 
             Destroy(bomb);
