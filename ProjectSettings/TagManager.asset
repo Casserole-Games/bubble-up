@@ -2,8 +2,15 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Spike
+  - Bubble
+  - Boundary
+  - SoapRefillZone
+  - GreenLine
+  - Bomb
+  - Bottom
   layers:
   - Default
   - TransparentFX
@@ -12,11 +19,11 @@ TagManager:
   - Water
   - UI
   - 
+  - Boundaries
   - 
   - 
-  - 
-  - 
-  - 
+  - ShooterBubble
+  - Bubble
   - 
   - 
   - 
@@ -41,3 +48,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: background
+    uniqueID: 2139680109
+    locked: 0
+  - name: foreground
+    uniqueID: 536301299
+    locked: 0
+  m_RenderingLayers:
+  - Default
