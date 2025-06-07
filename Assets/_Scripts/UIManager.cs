@@ -98,6 +98,8 @@ public class UIManager : SingletonBehaviour<UIManager>
         MusicButton.onClick.AddListener(MusicManager.Instance.Toggle);
         InfoButton.onClick.AddListener(() => { ToggleCredits(true); });
         ReplayButton.onClick.AddListener(GameManager.Instance.ReplayButton);
+
+        ShowMuteMusicButton(MusicManager.Instance.IsMusicMuted());
     }
 
     private void Update()

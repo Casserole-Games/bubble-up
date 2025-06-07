@@ -43,4 +43,9 @@ public class MusicManager : SingletonPersistent<MusicManager>
         UIManager.Instance.ShowMuteMusicButton(false);
         EventSystem.current.SetSelectedGameObject(null);
     }
+
+    public bool IsMusicMuted()
+    {
+        return audioSource.mute;
+    }
 }
