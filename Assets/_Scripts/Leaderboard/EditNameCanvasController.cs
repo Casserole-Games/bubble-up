@@ -19,6 +19,7 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
     [SerializeField] private Button exitButton;
 
     public event Action OnEditNamePanelClose;
+    public event Action OnEditNamePanelOpen;
 
     protected override void Awake()
     {

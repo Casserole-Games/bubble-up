@@ -105,6 +105,16 @@ namespace Assets._Scripts
 
         void OnCollisionEnter2D(Collision2D col)
         {
+            ProceedCollision(col);
+        }
+
+        void OnCollisionStay2D(Collision2D col)
+        {
+            ProceedCollision(col);
+        }
+
+        private void ProceedCollision(Collision2D col)
+        {
             // touch the bottom
             if (col.gameObject.CompareTag("Bottom") && !alreadyCollided)
             {

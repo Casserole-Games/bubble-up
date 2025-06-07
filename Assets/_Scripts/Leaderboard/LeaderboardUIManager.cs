@@ -29,6 +29,11 @@ namespace Assets._Scripts.Leaderboard
         {
             Container.transform.localScale = Vector3.zero;
             LeaderboardManager.Instance.OnLeaderboardUpdated += async () => await UpdateUI();
+            LeaderboardManager.Instance.OnScoreSubmitted += async () =>
+            {
+                await UpdateUI();
+                DisplayLeaderboard();
+            };
             EditNameCanvasController.Instance.OnEditNamePanelClose += () => DisplayLeaderboard();
         }
 

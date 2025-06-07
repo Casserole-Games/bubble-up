@@ -22,6 +22,7 @@ namespace Assets._Scripts.Leaderboard
         private IAuthenticationManager authenticationManager;
 
         public event Action OnLeaderboardUpdated;
+        public event Action OnScoreSubmitted;
 
         protected async override void Awake()
         {
@@ -164,8 +165,16 @@ namespace Assets._Scripts.Leaderboard
         {
             try
             {
+                LeaderboardEntry playerEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
                 await leaderboardSubmitter.SubmitScore(k_leaderboardID, score);
-                OnLeaderboardUpdated?.Invoke();
+                if (playerEntry == null)
+                {
+                    EditNameCanvasController.Instance.DisplayEditNamePanel(true);
+                }
+                else
+                {
+                    OnScoreSubmitted?.Invoke();
+                }
             }
             catch (Exception e)
             {

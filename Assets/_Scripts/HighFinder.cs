@@ -60,7 +60,7 @@ namespace Assets._Scripts
             localHighestY = Mathf.Clamp(localHighestY, _startGreenLinePosition, _maxHeight);
 
             float progress = (localHighestY - _startGreenLinePosition) / (_maxHeight - _startGreenLinePosition);
-            GameManager.Instance.CurrentScore = Mathf.RoundToInt(progress * _maxScore);
+            GameManager.Instance.CalculateCurrentScore(Mathf.RoundToInt(progress * _maxScore));
 
             Vector3 localLinePos = new Vector3(0, localHighestY, 0);
 
