@@ -6763,7 +6763,7 @@ MonoBehaviour:
   FuseVolume: 1
   BombVolume: 0.5
   UIClickVolume: 0.25
-  Phase1MaxHeight: 1000
+  Phase1MaxHeight: 1050
   Phase2MinHeight: -4.3
   MinHeightBeforeBomb: -3
   ShortHoldThresholdSeconds: 0.3
