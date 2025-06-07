@@ -6744,7 +6744,7 @@ MonoBehaviour:
   SoapFlowRate: 6
   MaxSoapAmount: 100
   StartSoapAmount: 100
-  Phase2AdditionalSoap: 25
+  Phase2AdditionalSoap: 50
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
   DurationBeforeDuckTurnsAround: 0.5
