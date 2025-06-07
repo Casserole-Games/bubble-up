@@ -23,7 +23,7 @@ namespace Assets._Scripts
         public int CurrentScore 
         {
             get { return _currentScore;  }
-            set { SetCurrentScore(value);  }
+            set { _currentScore = value;  }
         }
 
         private GameState _gameState;
@@ -98,24 +98,6 @@ namespace Assets._Scripts
             OnGameStateChanged?.Invoke(newGameState);
         }
 
-        private void SetCurrentScore(int localHighestY)
-        {
-            if (GameState == GameState.Phase1)
-            {
-                _currentScore = localHighestY;
-                UIManager.Instance.SetGreenScore(_currentScore);
-            }
-            else if (GameState == GameState.Phase2)
-            {
-                var phase2Score = Math.Max(_phase1Score - localHighestY, 0);
-                _currentScore = _phase1Score  + phase2Score;
-                UIManager.Instance.SetPinkScore(phase2Score);
-            } else
-            {
-                _currentScore = localHighestY;
-            }
-        }
-
         private void HandlePhaseEnd()
         {
             var score = _currentScore;
@@ -140,6 +122,21 @@ namespace Assets._Scripts
             Debug.Log("SetupPhase2");
             BubbleSpawner.Instance.PauseSpawner();
             UIManager.Instance.PlayCutsceneBetweenPhases();
+        }
+
+        public void CalculateCurrentScore(int localHighestY)
+        {
+            if (GameState == GameState.Phase1)
+            {
+                _currentScore = localHighestY;
+                UIManager.Instance.SetGreenScore(_currentScore);
+            }
+            else if (GameState == GameState.Phase2)
+            {
+                var phase2Score = Math.Max(_phase1Score - localHighestY, 0);
+                _currentScore = _phase1Score + phase2Score;
+                UIManager.Instance.SetPinkScore(phase2Score);
+            }
         }
 
         public void PlayPhase1()

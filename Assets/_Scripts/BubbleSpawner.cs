@@ -42,6 +42,8 @@ namespace Assets._Scripts
         public bool CanFinishPhase = true;
         public bool SpawnBomb = false;
 
+        public Vector3 SpawnPointOffset = Vector3.zero;
+
         private static List<Color> colors = new(){
             new Color32(0x4C, 0xBF, 0xFF, 0xFF), // Cyan
             //new Color32(0xFD, 0xFE, 0xFF, 0xFF), // White
@@ -183,7 +185,7 @@ namespace Assets._Scripts
                 var diff = GameParameters.Instance.BubbleInflationRate * Time.deltaTime * multiplier;
 
                 bubble.transform.localScale += diff * Vector3.one;
-                var divider = localScale + diff > 1.5 && localScale + diff < 2.5 ? 2 : 4;
+                var divider = localScale + diff > 1.5 && localScale + diff < 2.5 ? 2 : 3.5f;
                 bubble.transform.position += (diff * Vector3.down) / divider;
                 bubble.GetComponent<Rigidbody2D>().mass = bubble.transform.localScale.x;
             }
@@ -192,7 +194,7 @@ namespace Assets._Scripts
         private GameObject CreateBubble(Color color)
         {
             Debug.Log("Creating bubble with color " + color.ToString());
-            GameObject newBubble = Instantiate(BubblePrefab, transform.position, Quaternion.identity);
+            GameObject newBubble = Instantiate(BubblePrefab, transform.position + SpawnPointOffset, Quaternion.identity);
             newBubble.transform.parent = transform;
             newBubble.GetComponent<Rigidbody2D>().simulated = true;
             newBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
