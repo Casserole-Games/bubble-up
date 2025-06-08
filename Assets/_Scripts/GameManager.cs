@@ -1,3 +1,4 @@
+using Assets._Scripts.Leaderboard;
 using DG.Tweening;
 using System;
 using System.Collections;
@@ -25,6 +26,8 @@ namespace Assets._Scripts
             get { return _currentScore;  }
             set { _currentScore = value;  }
         }
+
+        public int ServerScore { get; set; }
 
         private GameState _gameState;
         private int _currentScore;
@@ -109,10 +112,22 @@ namespace Assets._Scripts
             else if (GameState == GameState.Phase2)
             {
                 score = _currentScore - _phase1Score;
+                if (BubbleSpawner.RemainingSoap > 0)
+                {
+                    _currentScore += (int)BubbleSpawner.RemainingSoap * 10;
+                }
+                LoadServerScore();
+                AnalyticsManager.Instance.SendFinalScore(_currentScore);
                 UIManager.Instance.PlayCutsceneGameOver();
             }
 
             AnalyticsManager.Instance.SendPhaseComplete(GetPhaseString(GameState), score, BubbleSpawner.RemainingSoap);
+        }
+
+        private async void LoadServerScore()
+        {
+            var entry = await LeaderboardManager.Instance.GetPlayerEntry();
+            ServerScore = (int)entry.Score;
         }
 
         private void SetupPhase2()

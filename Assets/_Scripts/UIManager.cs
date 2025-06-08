@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Assets._Scripts.Leaderboard;
 using System;
 using DG.Tweening;
+using UnityEngine.SocialPlatforms.Impl;
 
 public enum SkipParameter
 {
@@ -99,7 +100,15 @@ public class UIManager : SingletonBehaviour<UIManager>
         InfoButton.onClick.AddListener(() => { ToggleCredits(true); });
         ReplayButton.onClick.AddListener(GameManager.Instance.ReplayButton);
 
-        ShowMuteMusicButton(MusicManager.Instance.IsMusicMuted());
+        if (MusicManager.Instance.IsMusicMuted())
+        {
+            ShowMuteMusicButton(true);
+            AnimationManager.Instance.PauseRadio();
+        } else
+        {
+            ShowMuteMusicButton(false);
+            AnimationManager.Instance.PlayRadio();
+        }
     }
 
     private void Update()
@@ -171,10 +180,11 @@ public class UIManager : SingletonBehaviour<UIManager>
     public IEnumerator FinalScoreAnimation()
     {
         int finalScore = GameManager.Instance.CurrentScore;
+        bool isNewRecord = GameManager.Instance.CurrentScore > GameManager.Instance.ServerScore;
 
-        if (BubbleSpawner.RemainingSoap > 0)
+        if (isNewRecord)
         {
-            finalScore += (int)BubbleSpawner.RemainingSoap * 10;
+            AnimationManager.Instance.PlaySunglasses();
         }
 
         if (finalScore > 10) 
@@ -185,9 +195,12 @@ public class UIManager : SingletonBehaviour<UIManager>
         // Final display of the account
         Confetti.Play();
         SFXManager.Instance.PlayOneShot("win", GameParameters.Instance.WinVolume);
-        DisplayTextBubble("FINAL SCORE:\n<link=scale><size=180%><color=#fc699a>" + finalScore + "</color></size></link>", false, SkipParameter.CanSkipAfterWait, false);
-        GameManager.Instance.CurrentScore = finalScore;
-        AnalyticsManager.Instance.SendFinalScore(finalScore);
+        string header = isNewRecord ? "<link=fade><size=125%>NEW RECORD</size></link>" : "FINAL SCORE";
+        string bubbleContent =
+        $"{header}:\n" +
+            $"<link=scale><size=180%><color=#fc699a>{finalScore}</color></size></link>";
+
+        DisplayTextBubble(bubbleContent, false, SkipParameter.CanSkipAfterWait, false);
     }
 
     public IEnumerator ShowAnimatedScore(string textBeforeScore, int score)
@@ -289,11 +302,6 @@ public class UIManager : SingletonBehaviour<UIManager>
             FinishLineBottom.GetComponent<Animator>().Play("finish_line_accent");
             yield return new WaitForSeconds(1.5f);
             FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;
-        }
-
-        if (HighFinder.Instance.MaxHeightAchieved && HighFinder.Instance.MinHeightAchieved)
-        {
-            AnimationManager.Instance.PlaySunglasses();
         }
 
         if (BubbleSpawner.RemainingSoap > 0)
