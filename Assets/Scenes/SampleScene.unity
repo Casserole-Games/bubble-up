@@ -6744,7 +6744,7 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 100
+  StartSoapAmount: 10
   Phase2AdditionalSoap: 50
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
@@ -10072,15 +10072,15 @@ RectTransform:
   m_GameObject: {fileID: 1091617722}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 727391105}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0.00012207031}
+  m_SizeDelta: {x: 0, y: -336.00012}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1091617724
 MonoBehaviour:
