@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using Assets._Scripts.Leaderboard;
 using System;
 using DG.Tweening;
-using UnityEngine.SocialPlatforms.Impl;
 
 public enum SkipParameter
 {
@@ -24,6 +23,13 @@ public enum CutsceneType
     End
 }
 
+[Serializable]
+public struct RewardPhraseEntry
+{
+    public string phrase;
+    public int thresholdScore;
+}
+
 public class UIManager : SingletonBehaviour<UIManager>
 {
     // UI top
@@ -36,6 +42,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     public TMP_Text TextBubbleContent;
     public Image TextBubbleBig;
     public TMP_Text TextBubbleBigContent;
+    public ParticleSystem TextBubbleParticles;
 
     // duck
     public Canvas CharacterElementsCanvas;
@@ -74,6 +81,8 @@ public class UIManager : SingletonBehaviour<UIManager>
     private Action _onCutsceneFinished;
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
+    string _lastRewardPhrase;
+    private CameraShake _camShake;
 
     private void OnEnable()
     {
@@ -109,6 +118,8 @@ public class UIManager : SingletonBehaviour<UIManager>
             ShowMuteMusicButton(false);
             AnimationManager.Instance.PlayRadio();
         }
+
+        _camShake = Camera.main.GetComponentInParent<CameraShake>();
     }
 
     private void Update()
@@ -189,44 +200,72 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         if (finalScore > 10) 
         {
-            yield return ShowAnimatedScore(GameOverText, finalScore);
+            yield return ShowAnimatedScore(finalScore);
         }
 
         // Final display of the account
         Confetti.Play();
         SFXManager.Instance.PlayOneShot("win", GameParameters.Instance.WinVolume);
-        string header = isNewRecord ? "<link=fade><size=125%>NEW RECORD</size></link>" : "FINAL SCORE";
+        string header = isNewRecord ? "NEW RECORD!" : GetRewardPhrase(finalScore);
         string bubbleContent =
-        $"{header}:\n" +
-            $"<link=scale><size=180%><color=#fc699a>{finalScore}</color></size></link>";
+        $"<link=fade><size=150%>{header}</size></link>\n" +
+            $"<link=scale><size=170%><color=#fc699a>{finalScore}</color></size></link>";
 
+        TextBubbleContent.transform.DOScale(1.1f, 0.1f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine);
+        _camShake.Shake();
         DisplayTextBubble(bubbleContent, false, SkipParameter.CanSkipAfterWait, false);
     }
 
-    public IEnumerator ShowAnimatedScore(string textBeforeScore, int score)
+    public IEnumerator ShowAnimatedScore(int score)
     {
         float delay = 0.0001f; // Fixed delay for the fast part
         float deltaDelay = 0.025f;  // Increasing the delay to slow down
 
         // Fast part of the animation (all values except the last 10)
-        for (int currentScore = 0; currentScore < score - 10; currentScore += 10)
+        for (int current = 0; current < score - 10; current += 10)
         {
-            if (currentScore % 50 == 0)
-            {
+            if (current % 50 == 0)
                 SFXManager.Instance.PlayOneShot("score", GameParameters.Instance.ScoreVolume);
-            }
-            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#fc699a>" + currentScore + "</color></size></link>", false, SkipParameter.NonSkippable, false);
+
+            DisplayTextBubble(
+                $"<size=150%>{GetRewardPhrase(current)}</size>\n<link=scaleBig><size=170%><color=#fc699a>{current}</color></size></link>",
+                false, SkipParameter.NonSkippable, false
+            );
             yield return new WaitForSecondsRealtime(delay);
         }
 
         // Slow part of the animation (last 10 values)
-        for (int currentScore = score - 10; currentScore <= score; currentScore++)
+        for (int current = score - 10; current <= score; current++)
         {
             SFXManager.Instance.PlayOneShot("score", GameParameters.Instance.ScoreVolume);
-            DisplayTextBubble(textBeforeScore + "<link=scaleBig><size=130%><color=#fc699a>" + currentScore + "</color></size></link>", false, SkipParameter.NonSkippable, false);
+
+            DisplayTextBubble(
+                $"<size=150%>{GetRewardPhrase(current)}</size>\n<link=scaleBig><size=170%><color=#fc699a>{current}</color></size></link>",
+                false, SkipParameter.NonSkippable, false
+            );
             yield return new WaitForSecondsRealtime(delay);
             delay += deltaDelay; // Gradually increase the delay
         }
+    }
+
+    private string GetRewardPhrase(int currentScore)
+    {
+        string result = "";
+        foreach (var entry in GameParameters.Instance.RewardPhrases)
+        {
+            if (currentScore >= entry.thresholdScore)
+                result = entry.phrase;
+            else
+                break;
+        }
+        if (_lastRewardPhrase != result)
+        {
+            _lastRewardPhrase = result;
+            TextBubbleParticles.Play();
+            _camShake.Shake();
+            TextBubbleContent.transform.DOScale(1.1f, 0.1f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine);
+        }
+        return result;
     }
 
     public void PlayCutsceneStart()
@@ -421,7 +460,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
     }
 
-    private void DisplayTextBubble(string text, bool bigBubble = false, SkipParameter waitBeforeSkipping = SkipParameter.CanSkipImmediately, bool duckSound = true)
+    private void DisplayTextBubble(string text, bool bigBubble = false, SkipParameter waitBeforeSkipping = SkipParameter.CanSkipImmediately, bool duckSound = true, bool restartTextFX = true)
     {
         if (text == "") return;
         if (bigBubble)

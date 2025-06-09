@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets._Scripts
 {
@@ -53,5 +54,9 @@ namespace Assets._Scripts
         public float LongHoldThresholdSeconds = 0.5f;
         public float ShortHoldsToHint = 3f;
         public float ShortHoldsToRepeatHint = 5f;
+
+        [Header("Reward Phrases")]
+        public List<RewardPhraseEntry> RewardPhrases = new List<RewardPhraseEntry>();
+        public ParticleSystem rewardPhraseParticles;
     }
 }

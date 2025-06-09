@@ -34,7 +34,7 @@ public class SpikePoint : MonoBehaviour
         {
             Debug.Log("Spike pointy end: Collision with bubble");
             collision.gameObject.GetComponent<Bubble>().Pop();
-            _highlightAnimator.Play("spike_highlight", -1, 0f);
+            _highlightAnimator?.Play("spike_highlight", -1, 0f);
             _camShake.Shake();
         }
     }
