@@ -43,6 +43,7 @@ namespace Assets._Scripts
         public float FuseVolume = 1f;
         public float BombVolume = 1f;
         public float UIClickVolume = 1f;
+        public float RewardPhraseVolume = 1f;
 
         [Header("Heights")]
         public float Phase1MaxHeight = 1000f;

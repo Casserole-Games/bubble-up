@@ -82,7 +82,9 @@ public class UIManager : SingletonBehaviour<UIManager>
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
     string _lastRewardPhrase;
+    float _lastRewardPhraseSfxPitch = 1f;
     private CameraShake _camShake;
+    private const float _semiToneRatio = 1.059463094359f;
 
     private void OnEnable()
     {
@@ -261,6 +263,8 @@ public class UIManager : SingletonBehaviour<UIManager>
         if (_lastRewardPhrase != result)
         {
             _lastRewardPhrase = result;
+            _lastRewardPhraseSfxPitch *= _semiToneRatio;
+            SFXManager.Instance.PlayOneShot("reward_phrase", GameParameters.Instance.RewardPhraseVolume, _lastRewardPhraseSfxPitch, _lastRewardPhraseSfxPitch);
             TextBubbleParticles.Play();
             _camShake.Shake();
             TextBubbleContent.transform.DOScale(1.1f, 0.1f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine);

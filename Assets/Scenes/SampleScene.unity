@@ -5878,8 +5878,8 @@ MonoBehaviour:
   CharacterElementsCanvas: {fileID: 884447107}
   DuckBack: {fileID: 1672039329}
   DuckFront: {fileID: 738117278}
-  TutorialText: <link=bounce><color=#fc699a>TAP AND HOLD</color></link>\nTO BLOW
-    A BUBBLE!
+  TutorialText: <size=110%><link=bounce><color=#fc699a>TAP AND HOLD</color></link>\nTO
+    BLOW A BUBBLE!</size>
   Phase2Text: GOAL REVERSED! <link=bounce><color=#fc699a>POP ALL THE BUBBLES!</link></color>
   GameOverText: SHOWER TIME \nIS OVER! \n FINAL SCORE:\n
   CreditText: "<size=110%>GGJ BERLIN 2025:</size>\\n\\n<color=#fc699a>-Antoine Bodin\\n-Dmitrii
@@ -5949,7 +5949,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0034165615, y: 498.49997}
+  m_AnchoredPosition: {x: 0.0034165615, y: 435}
   m_SizeDelta: {x: 401.21, y: 149.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &197443165
@@ -6744,7 +6744,7 @@ MonoBehaviour:
   BubbleMinimumSoapConsumption: 1
   SoapFlowRate: 6
   MaxSoapAmount: 100
-  StartSoapAmount: 10
+  StartSoapAmount: 100
   Phase2AdditionalSoap: 50
   BonusSoap: 25
   DurationBeforeShowingTextBubble: 0.5
@@ -6764,7 +6764,8 @@ MonoBehaviour:
   FuseVolume: 1
   BombVolume: 0.5
   UIClickVolume: 0.25
-  Phase1MaxHeight: 1050
+  RewardPhraseVolume: 0.6
+  Phase1MaxHeight: 1015
   Phase2MinHeight: -4.3
   MinHeightBeforeBomb: -3
   ShortHoldThresholdSeconds: 0.3
@@ -6780,8 +6781,10 @@ MonoBehaviour:
     thresholdScore: 1000
   - phrase: EXCELLENT!
     thresholdScore: 1500
-  - phrase: LEGENDARY!
+  - phrase: EPIC!
     thresholdScore: 2000
+  - phrase: LEGENDARY!
+    thresholdScore: 2500
   - phrase: DON'T CHEAT!
     thresholdScore: 5000
   rewardPhraseParticles: {fileID: 0}
@@ -6954,7 +6957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0034179688, y: -11.5}
+  m_AnchoredPosition: {x: 0.0034179688, y: -57.91}
   m_SizeDelta: {x: 1079.487, y: 1919.995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &459187160
@@ -9201,7 +9204,7 @@ Transform:
   m_GameObject: {fileID: 884624952}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.3, z: 0}
+  m_LocalPosition: {x: 0, y: 3.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
