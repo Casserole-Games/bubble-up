@@ -6764,7 +6764,7 @@ MonoBehaviour:
   FuseVolume: 1
   BombVolume: 0.5
   UIClickVolume: 0.25
-  RewardPhraseVolume: 0.6
+  RewardPhraseVolume: 0.3
   Phase1MaxHeight: 1015
   Phase2MinHeight: -4.3
   MinHeightBeforeBomb: -3

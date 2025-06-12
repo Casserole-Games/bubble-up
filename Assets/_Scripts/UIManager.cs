@@ -82,7 +82,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
     string _lastRewardPhrase;
-    float _lastRewardPhraseSfxPitch = 1f;
+    float _lastRewardPhraseSfxPitch = 0.85f;
     private CameraShake _camShake;
     private const float _semiToneRatio = 1.059463094359f;
 
