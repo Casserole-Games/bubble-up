@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets._Scripts
@@ -58,6 +59,8 @@ namespace Assets._Scripts
 
         [Header("Reward Phrases")]
         public List<RewardPhraseEntry> RewardPhrases = new List<RewardPhraseEntry>();
-        public ParticleSystem rewardPhraseParticles;
+
+        [Header("Bubble colors")]
+        public Color[] BubbleColors;
     }
 }
