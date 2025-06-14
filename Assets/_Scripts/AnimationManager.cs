@@ -41,6 +41,7 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
     {
         yield return new WaitForSeconds(0.5f);
         UIManager.Instance.FinishLineBottom.GetComponent<Animator>().Play("finish_line_show");
+        UIManager.Instance.FinishLineBottomShadow.GetComponent<Animator>().Play("finish_line_show");
         yield return new WaitForSeconds(2.9f);
         PlayDimOut();
     }

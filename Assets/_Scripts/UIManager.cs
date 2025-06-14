@@ -68,7 +68,9 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     // UI Finish Lines
     public GameObject FinishLineTop;
+    public GameObject FinishLineTopShadow;
     public GameObject FinishLineBottom;
+    public GameObject FinishLineBottomShadow;
 
     // flags
     private bool _isReadyToSkipCutscene;
@@ -78,6 +80,8 @@ public class UIManager : SingletonBehaviour<UIManager>
     // other
     public TMP_Text HoldHint;
     public Image HoldHintFrame;
+    public TMP_Text HoldHintShadow;
+    public Image HoldHintFrameShadow;
     private Action _onCutsceneFinished;
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
@@ -282,6 +286,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         DisplayTextBubble(TutorialText, false, SkipParameter.CanSkipImmediately);
         _onCutsceneFinished = () => {
             FinishLineTop.GetComponent<Animator>().Play("finish_line_show");
+            FinishLineTopShadow.GetComponent<Animator>().Play("finish_line_show");
             GameManager.Instance.PlayPhase1();
         };
     }
@@ -311,6 +316,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         AnimationManager.Instance.PlayGreenLineFade();
         FinishLineTop.GetComponent<Animator>().Play("finish_line_hide");
+        FinishLineTopShadow.GetComponent<Animator>().Play("finish_line_hide");
 
         // put text bubble, duck and bathtub in front of everything
         HighlightCharacterElements(true);
@@ -360,6 +366,8 @@ public class UIManager : SingletonBehaviour<UIManager>
         StartCoroutine(GameManager.Instance.PopAllBubbles());
         FinishLineBottom.GetComponent<Canvas>().sortingOrder = -1;
         FinishLineBottom.GetComponent<Animator>().Play("finish_line_hide");
+        FinishLineBottomShadow.GetComponent<Canvas>().sortingOrder = -1;
+        FinishLineBottomShadow.GetComponent<Animator>().Play("finish_line_hide");
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeShowingTextBubble);
         _onCutsceneFinished = DisplayLeaderboardWindow;
     }
@@ -442,10 +450,13 @@ public class UIManager : SingletonBehaviour<UIManager>
             if (GameManager.Instance.GameState == GameState.Phase1)
             {
                 FinishLineTop.GetComponent<Animator>().Play("finish_line_hide");
+                FinishLineTopShadow.GetComponent<Animator>().Play("finish_line_hide");
             }
             yield return new WaitForSeconds(0.2f);
             HoldHint.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
             HoldHintFrame.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintShadow.DOFade(0.7f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintFrameShadow.DOFade(0.7f, 0.2f).SetEase(Ease.InOutSine);
         }
     }
 
@@ -456,10 +467,13 @@ public class UIManager : SingletonBehaviour<UIManager>
         {
             HoldHint.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
             HoldHintFrame.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintShadow.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
+            HoldHintFrameShadow.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
             yield return new WaitForSeconds(0.2f);
             if (GameManager.Instance.GameState == GameState.Phase1)
             {
                 FinishLineTop.GetComponent<Animator>().Play("finish_line_show");
+                FinishLineTopShadow.GetComponent<Animator>().Play("finish_line_show");
             }
         }
     }
