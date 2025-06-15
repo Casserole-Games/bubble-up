@@ -81,7 +81,6 @@ public class UIManager : SingletonBehaviour<UIManager>
     public TMP_Text HoldHint;
     public Image HoldHintFrame;
     public TMP_Text HoldHintShadow;
-    public Image HoldHintFrameShadow;
     private Action _onCutsceneFinished;
     private CutsceneType _currentCustsceneState;
     private GameState _savedGameState;
@@ -456,7 +455,6 @@ public class UIManager : SingletonBehaviour<UIManager>
             HoldHint.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
             HoldHintFrame.DOFade(1f, 0.2f).SetEase(Ease.InOutSine);
             HoldHintShadow.DOFade(0.7f, 0.2f).SetEase(Ease.InOutSine);
-            HoldHintFrameShadow.DOFade(0.7f, 0.2f).SetEase(Ease.InOutSine);
         }
     }
 
@@ -468,7 +466,6 @@ public class UIManager : SingletonBehaviour<UIManager>
             HoldHint.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
             HoldHintFrame.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
             HoldHintShadow.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
-            HoldHintFrameShadow.DOFade(0f, 0.2f).SetEase(Ease.InOutSine);
             yield return new WaitForSeconds(0.2f);
             if (GameManager.Instance.GameState == GameState.Phase1)
             {

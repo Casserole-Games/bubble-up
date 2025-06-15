@@ -5973,7 +5973,6 @@ MonoBehaviour:
   HoldHint: {fileID: 197443165}
   HoldHintFrame: {fileID: 444837067}
   HoldHintShadow: {fileID: 1694170506}
-  HoldHintFrameShadow: {fileID: 0}
 --- !u!114 &192794647
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -128,6 +128,8 @@ namespace Assets._Scripts
                 Bubble otherBubble = col.gameObject.GetComponent<Bubble>();
                 if (otherBubble != null)
                 {
+                    if (!alreadyDropped || !otherBubble.alreadyDropped) return;
+
                     if (otherBubble.alreadyCollided && !alreadyCollided)
                     {
                         alreadyCollided = true;
