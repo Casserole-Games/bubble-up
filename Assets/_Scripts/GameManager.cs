@@ -127,7 +127,9 @@ namespace Assets._Scripts
         private async void LoadServerScore()
         {
             var entry = await LeaderboardManager.Instance.GetPlayerEntry();
-            ServerScore = (int)entry?.Score;
+            if (entry != null) {
+                ServerScore = (int)entry.Score;
+            }
         }
 
         private void SetupPhase2()

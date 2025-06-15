@@ -11621,23 +11621,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalScale.x
-      value: 3.2799997
+      value: 3.290717
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.2799997
+      value: 3.2869914
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.2799997
+      value: 3.2869914
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.00316381
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.714
+      value: 2.71356
       objectReference: {fileID: 0}
     - target: {fileID: 9091043291136218458, guid: 24dbba41c858fcb4cb9d763919f1ff65, type: 3}
       propertyPath: m_LocalPosition.z
@@ -17580,7 +17580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Padding: {x: 20, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
 --- !u!222 &1544967511
 CanvasRenderer:
