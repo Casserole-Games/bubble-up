@@ -313,7 +313,7 @@ public class UIManager : SingletonBehaviour<UIManager>
             FinishLineTop.GetComponentInParent<Canvas>().sortingLayerID = SortingLayer.NameToID("background");
         }
 
-        AnimationManager.Instance.PlayGreenLineFade();
+        HighFinder.Instance.LocalHighGreenLine.GetComponent<Animator>().Play("green_line_hide");
         FinishLineTop.GetComponent<Animator>().Play("finish_line_hide");
         FinishLineTopShadow.GetComponent<Animator>().Play("finish_line_hide");
 

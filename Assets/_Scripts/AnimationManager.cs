@@ -25,11 +25,6 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
         PlayDimOut();
     }
 
-    public void PlayGreenLineFade()
-    {
-        GreenLineAnimator.Play("green_line_fade");
-    }
-
     public void PlayPinkArrows()
     {
         PlayDimIn();
@@ -44,6 +39,8 @@ public class AnimationManager : SingletonBehaviour<AnimationManager>
         UIManager.Instance.FinishLineBottomShadow.GetComponent<Animator>().Play("finish_line_show");
         yield return new WaitForSeconds(2.9f);
         PlayDimOut();
+        yield return new WaitForSeconds(0.2f);
+        GreenLineAnimator.Play("green_line_show_transparent");
     }
 
     public void PlayDimIn(int layer = 1)
