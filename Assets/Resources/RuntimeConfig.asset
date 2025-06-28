@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ec196f942ff444c93e70413b1de110, type: 3}
   m_Name: RuntimeConfig
   m_EditorClassIdentifier: 
-  UseMocks: 1
+  UseMocks: 0
   PlayerId: MockPlayerId
   PlayerName: MockPlayer#1234
   MockScoreMin: 0

@@ -239,8 +239,6 @@ namespace Assets._Scripts
 
         private Color GetNextColor()
         {
-            int colorIndex = 0;
-
             if (GameManager.Instance.GameState == GameState.Phase2)
             {
                 // collect used colors
@@ -263,7 +261,7 @@ namespace Assets._Scripts
 
             } else
             {
-                colorIndex = UnityEngine.Random.Range(0, Math.Min(GameParameters.Instance.BubbleColorsCount, colors.Count));
+                int colorIndex = UnityEngine.Random.Range(0, Math.Min(GameParameters.Instance.BubbleColorsCount, colors.Count));
                 return colors[colorIndex];
             }
         }
