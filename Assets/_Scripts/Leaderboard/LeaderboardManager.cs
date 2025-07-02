@@ -163,22 +163,30 @@ namespace Assets._Scripts.Leaderboard
 
         public async Task SubmitScore(int score)
         {
+            LeaderboardEntry existingEntry = null;
             try
             {
-                LeaderboardEntry playerEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
-                await leaderboardSubmitter.SubmitScore(k_leaderboardID, score);
-                if (playerEntry == null)
-                {
-                    EditNameCanvasController.Instance.DisplayEditNamePanel(true);
-                }
-                else
-                {
-                    OnScoreSubmitted?.Invoke();
-                }
+                // this will throw RequestFailedException with ErrorCode=27009 if no entry exists
+                existingEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
             }
-            catch (Exception e)
+            catch (RequestFailedException e) when (e.ErrorCode == 27009)
             {
-                Debug.LogError("Error while submitting score : " + e);
+                // Leaderboard entry not found—first time playing
+                existingEntry = null;
+            }
+
+            // Always submit the new score, even if there was no prior entry
+            await leaderboardSubmitter.SubmitScore(k_leaderboardID, score);
+
+            if (existingEntry == null)
+            {
+                // first-ever score: prompt for name
+                EditNameCanvasController.Instance.DisplayEditNamePanel(true);
+            }
+            else
+            {
+                // existing player: fire UI update
+                OnScoreSubmitted?.Invoke();
             }
         }
 
