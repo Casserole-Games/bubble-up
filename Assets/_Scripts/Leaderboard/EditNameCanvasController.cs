@@ -27,7 +27,7 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
         nameInputField.onValueChanged.AddListener((playerName) =>
         {
-            if (playerName.Length < 3)
+            if (playerName.Length < 3 || BadWordsFilter.ContainsBadWords(playerName))
             {
                 submitButton.interactable = false;
             }
