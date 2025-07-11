@@ -24,6 +24,9 @@ namespace Assets._Scripts.Leaderboard
         public event Action OnLeaderboardUpdated;
         public event Action OnScoreSubmitted;
 
+        public static event Action OnLoadingStarted;
+        public static event Action OnLoadingCompleted;
+
         protected async override void Awake()
         {
             base.Awake();
@@ -43,6 +46,7 @@ namespace Assets._Scripts.Leaderboard
         {
             try
             {
+                OnLoadingStarted?.Invoke();
                 GetScoresOptions options = new()
                 {
                     Limit = limit,
@@ -62,6 +66,10 @@ namespace Assets._Scripts.Leaderboard
                 Debug.LogError("Error while getting scores : " + e);
                 return null;
             }
+            finally
+            {
+                OnLoadingCompleted?.Invoke();
+            }
         }
 
         public async Task<LeaderboardPotentialRankResponse> GetLeaderboardPotentialRankAsync(int playerScore)
@@ -71,6 +79,7 @@ namespace Assets._Scripts.Leaderboard
 
             try
             {
+                OnLoadingStarted?.Invoke();
                 LeaderboardScoresPage response = null;
 
                 bool hasMore = true;
@@ -127,12 +136,17 @@ namespace Assets._Scripts.Leaderboard
                 Debug.LogError("Error while getting scores : " + e);
                 return LeaderboardPotentialRankResponse.Failure(LeaderboardPotentialRankReponseErrorType.NetworkError);
             }
+            finally
+            {
+                OnLoadingCompleted?.Invoke();
+            }
         }
 
         public async Task<List<LeaderboardEntry>> GetPlayerNeighbours()
         {
             try
             {
+                OnLoadingStarted?.Invoke();
                 await AuthenticationHelper.SignInAnonymouslyIfNotSignedIn();
                 GetPlayerRangeOptions options = new()
                 {
@@ -153,6 +167,10 @@ namespace Assets._Scripts.Leaderboard
                 Debug.LogError("Error while getting scores : " + e);
                 return null;
             }
+            finally
+            {
+                OnLoadingCompleted?.Invoke();
+            }
         }
 
         public async Task<LeaderboardEntry> GetPlayerEntry()
@@ -163,41 +181,57 @@ namespace Assets._Scripts.Leaderboard
 
         public async Task SubmitScore(int score)
         {
-            LeaderboardEntry existingEntry = null;
             try
             {
-                // this will throw RequestFailedException with ErrorCode=27009 if no entry exists
-                existingEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
-            }
-            catch (RequestFailedException e) when (e.ErrorCode == 27009)
-            {
-                // Leaderboard entry not found—first time playing
-                existingEntry = null;
-            }
+                OnLoadingStarted?.Invoke();
+                LeaderboardEntry existingEntry = null;
+                try
+                {
+                    // this will throw RequestFailedException with ErrorCode=27009 if no entry exists
+                    existingEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
+                }
+                catch (RequestFailedException e) when (e.ErrorCode == 27009)
+                {
+                    // Leaderboard entry not found—first time playing
+                    existingEntry = null;
+                }
 
-            // Always submit the new score, even if there was no prior entry
-            await leaderboardSubmitter.SubmitScore(k_leaderboardID, score);
+                // Always submit the new score, even if there was no prior entry
+                await leaderboardSubmitter.SubmitScore(k_leaderboardID, score);
 
-            if (existingEntry == null)
-            {
-                // first-ever score: prompt for name
-                EditNameCanvasController.Instance.DisplayEditNamePanel(true);
+                if (existingEntry == null)
+                {
+                    // first-ever score: prompt for name
+                    EditNameCanvasController.Instance.DisplayEditNamePanel(true);
+                }
+                else
+                {
+                    // existing player: fire UI update
+                    OnScoreSubmitted?.Invoke();
+                }
             }
-            else
+            finally
             {
-                // existing player: fire UI update
-                OnScoreSubmitted?.Invoke();
+                OnLoadingCompleted?.Invoke();
             }
         }
 
         public async Task UpdatePlayerName(string name)
-        {
-            await AuthenticationHelper.SignInAnonymouslyIfNotSignedIn();
-            await authenticationManager.UpdatePlayerNameAsync(name);
+        { 
+            try
+            {
+                OnLoadingStarted?.Invoke();
+                await AuthenticationHelper.SignInAnonymouslyIfNotSignedIn();
+                await authenticationManager.UpdatePlayerNameAsync(name);
 
-            LeaderboardEntry playerEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
-            await leaderboardSubmitter.SubmitScore(k_leaderboardID, (int)playerEntry.Score);
-            OnLeaderboardUpdated?.Invoke();
+                LeaderboardEntry playerEntry = await leaderboardRetriever.GetPlayerScoreAsync(k_leaderboardID);
+                await leaderboardSubmitter.SubmitScore(k_leaderboardID, (int)playerEntry.Score);
+                OnLeaderboardUpdated?.Invoke();
+            } 
+            finally
+            {
+                OnLoadingCompleted?.Invoke();
+            }
         }
     }
 }

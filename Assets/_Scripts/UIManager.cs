@@ -77,6 +77,10 @@ public class UIManager : SingletonBehaviour<UIManager>
     private bool _isCreditsShown;
     private bool _wasLeaderboardActive;
 
+    // loading
+    public GameObject LoadingIcon;
+    private Tween _loadingTween;
+
     // other
     public TMP_Text HoldHint;
     public Image HoldHintFrame;
@@ -94,6 +98,8 @@ public class UIManager : SingletonBehaviour<UIManager>
         GameManager.OnGameStateChanged += HandleGameStateChange;
         BubbleSpawner.OnTooManyShortHolds += DisplayHoldHint;
         BubbleSpawner.OnLongHold += HideHoldHint;
+        LeaderboardManager.OnLoadingStarted += ShowLoading;
+        LeaderboardManager.OnLoadingCompleted += HideLoading;
     }
 
     private void OnDisable()
@@ -101,6 +107,8 @@ public class UIManager : SingletonBehaviour<UIManager>
         GameManager.OnGameStateChanged -= HandleGameStateChange;
         BubbleSpawner.OnTooManyShortHolds -= DisplayHoldHint;
         BubbleSpawner.OnLongHold -= HideHoldHint;
+        LeaderboardManager.OnLoadingStarted -= ShowLoading;
+        LeaderboardManager.OnLoadingCompleted -= HideLoading;
     }
 
     private void HandleGameStateChange(GameState currentGameState)
@@ -367,6 +375,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         FinishLineBottom.GetComponent<Animator>().Play("finish_line_hide");
         FinishLineBottomShadow.GetComponent<Canvas>().sortingOrder = -1;
         FinishLineBottomShadow.GetComponent<Animator>().Play("finish_line_hide");
+        HighFinder.Instance.LocalHighGreenLine.GetComponent<Animator>().Play("green_line_hide");
         yield return new WaitForSeconds(GameParameters.Instance.DurationBeforeShowingTextBubble);
         _onCutsceneFinished = DisplayLeaderboardWindow;
     }
@@ -542,5 +551,28 @@ public class UIManager : SingletonBehaviour<UIManager>
             CutsceneType.End => "cutscene:3",
             _ => "",
         };
+    }
+
+    public void ShowLoading()
+    {
+        if (_loadingTween == null)
+        {
+            _loadingTween = LoadingIcon.transform
+                .DOLocalRotate(new Vector3(0, 0, -360), 1f, RotateMode.FastBeyond360)
+                .SetLoops(-1, LoopType.Restart)
+                .SetEase(Ease.Linear)
+                .SetAutoKill(false);
+        }
+        else
+        {
+            _loadingTween.Play();
+        }
+        LoadingIcon.SetActive(true);
+    }
+
+    public void HideLoading()
+    {
+        _loadingTween?.Pause();
+        LoadingIcon.SetActive(false);
     }
 }

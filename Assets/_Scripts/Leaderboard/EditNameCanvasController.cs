@@ -92,16 +92,16 @@ internal class EditNameCanvasController : SingletonBehaviour<EditNameCanvasContr
 
     private async void Submit()
     {
+        ExitPanel(true);
         await LeaderboardManager.Instance.UpdatePlayerName(nameInputField.text);
-        ExitPanel();
     }
 
-    private void ExitPanel()
+    private void ExitPanel(bool skipAction = false)
     {
         panel.DOScale(Vector3.zero, LeaderboardUIManager.Instance.WindowCloseAnimTime).SetEase(Ease.InBack)
             .OnComplete(() =>
             {
-                OnEditNamePanelClose?.Invoke();
+                if (!skipAction) OnEditNamePanelClose?.Invoke();
                 panel.gameObject.SetActive(false);
             });
     }

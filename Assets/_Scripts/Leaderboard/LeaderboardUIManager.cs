@@ -28,7 +28,11 @@ namespace Assets._Scripts.Leaderboard
         protected void Start()
         {
             Container.transform.localScale = Vector3.zero;
-            LeaderboardManager.Instance.OnLeaderboardUpdated += async () => await UpdateUI();
+            LeaderboardManager.Instance.OnLeaderboardUpdated += async () =>
+            {
+                await UpdateUI();
+                DisplayLeaderboard();
+            };
             LeaderboardManager.Instance.OnScoreSubmitted += async () =>
             {
                 await UpdateUI();
