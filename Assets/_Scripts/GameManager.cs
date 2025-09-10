@@ -179,9 +179,9 @@ namespace Assets._Scripts
             switch (gameState)
             {
                 case GameState.Phase1:
-                    return "phase:1";
+                    return "phase-1";
                 case GameState.Phase2:
-                    return "phase:2";
+                    return "phase-2";
                 default:
                     return "";
             }

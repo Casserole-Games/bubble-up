@@ -546,9 +546,9 @@ public class UIManager : SingletonBehaviour<UIManager>
     {
         return cutscene switch
         {
-            CutsceneType.Start => "cutscene:1",
-            CutsceneType.Between => "cutscene:2",
-            CutsceneType.End => "cutscene:3",
+            CutsceneType.Start => "cutscene-1",
+            CutsceneType.Between => "cutscene-2",
+            CutsceneType.End => "cutscene-3",
             _ => "",
         };
     }

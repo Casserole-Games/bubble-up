@@ -26,32 +26,32 @@ public class AnalyticsManager : SingletonPersistent<AnalyticsManager>
     public void SendPhaseComplete(string phase, int score, float soapRemaining)
     {
         GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, phase);
-        GameAnalytics.NewDesignEvent($"phase:{phase}:score", score);
-        GameAnalytics.NewDesignEvent($"phase:{phase}:soap_remaining", soapRemaining);
+        GameAnalytics.NewDesignEvent($"phase-{phase}-score", score);
+        GameAnalytics.NewDesignEvent($"phase-{phase}-soap-remaining", soapRemaining);
     }
 
     public void SendFinalScore(int score)
     {
-        GameAnalytics.NewDesignEvent("game:final_score", score);
+        GameAnalytics.NewDesignEvent("game-final-score", score);
     }
 
     public void SendAdditionalSoapCollected()
     {
-        GameAnalytics.NewDesignEvent("game:additional_soap");
+        GameAnalytics.NewDesignEvent("game-additional-soap");
     }
 
     public void SendReplayButtonPressed()
     {
-        GameAnalytics.NewDesignEvent("ui:replay");
+        GameAnalytics.NewDesignEvent("ui-replay");
     }
 
     public void SendMuteMusicButtonPressed(bool isMuted)
     {
-        GameAnalytics.NewDesignEvent("ui:mute_music", isMuted ? 1 : 0);
+        GameAnalytics.NewDesignEvent("ui-mute-music", isMuted ? 1 : 0);
     }
 
     public void SendCreditsButtonPressed()
     {
-        GameAnalytics.NewDesignEvent("ui:credits");
+        GameAnalytics.NewDesignEvent("ui-credits");
     }
 }
